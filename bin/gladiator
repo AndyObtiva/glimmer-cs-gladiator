@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'glimmer/launcher'
+
+gladiator_runner = File.expand_path('../gladiator_runner.rb', __FILE__)
+Glimmer::Launcher.new([gladiator_runner, '-J-Xrs'] + ARGV).launch

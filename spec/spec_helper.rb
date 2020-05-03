@@ -25,5 +25,10 @@ require 'glimmer-cs-gladiator'
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
+  # The following ensures rspec tests that instantiate and set Glimmer DSL widgets in @target get cleaned after
+  config.after do
+    @target.dispose if @target && @target.respond_to?(:dispose)
+    Glimmer::DSL::Engine.reset
+  end
 
 end
