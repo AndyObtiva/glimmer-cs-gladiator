@@ -10,4 +10,4 @@
 - Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
-
+- Support multiple tabs

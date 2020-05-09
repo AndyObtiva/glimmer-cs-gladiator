@@ -4,6 +4,8 @@ module Glimmer
   class Gladiator
     class Dir
       include Glimmer
+
+      REFRESH_DELAY = 2
   
       class << self
         def local_dir
@@ -12,7 +14,7 @@ module Glimmer
             @filewatcher = Filewatcher.new(dir.path)
             @thread = Thread.new(@filewatcher) do |fw| 
               fw.watch do |filename, event|
-                if @last_update.nil? || (Time.now.to_f - @last_update) > 10
+                if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
                   dir.refresh if filename != dir.selected_child_path
                 end
                 @last_update = Time.now.to_f

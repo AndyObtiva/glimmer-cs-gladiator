@@ -282,7 +282,12 @@ module Glimmer
                 key_code = verify_event.keyCode
                 case key_code
                 when swt(:tab)
-                  verify_event.text = '  '
+                  if Gladiator::Dir.local_dir.selected_child.selection_count.to_i > 0
+                    Gladiator::Dir.local_dir.selected_child.indent!
+                    verify_event.doit = false
+                  else
+                    verify_event.text = '  '
+                  end
                 end
               }
             }
