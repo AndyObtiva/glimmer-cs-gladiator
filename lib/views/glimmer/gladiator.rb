@@ -20,7 +20,8 @@ module Glimmer
     #
     before_body {
       Display.setAppName('Gladiator')
-      @config_file_path = '.gladiator'
+      local_dir = ENV['LOCAL_DIR'] || '.'
+      @config_file_path = ::File.join(local_dir, '.gladiator')
       @config = {}
       Gladiator::Dir.local_dir.all_children # pre-caches children
       load_config

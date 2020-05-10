@@ -61,10 +61,16 @@ module Glimmer
         new_dirty_content = "#{dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"      
         self.dirty_content = new_dirty_content if new_dirty_content != self.dirty_content
         ::File.write(path, dirty_content) if ::File.exists?(path) && dirty_content.to_s.strip.size > 0
+      rescue => e
+        puts "Error in writing dirty content for #{path}"
+        puts e.full_message
       end
   
       def write_raw_dirty_content
         ::File.write(path, dirty_content) if ::File.exists?(path) && dirty_content.to_s.strip.size > 0
+      rescue => e
+        puts "Error in writing raw dirty content for #{path}"
+        puts e.full_message
       end
   
       def comment_line!

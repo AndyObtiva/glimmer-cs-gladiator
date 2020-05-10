@@ -5,7 +5,7 @@ module Glimmer
     class Dir
       include Glimmer
 
-      REFRESH_DELAY = 2
+      REFRESH_DELAY = 7
   
       class << self
         def local_dir
