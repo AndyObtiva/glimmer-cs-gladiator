@@ -98,6 +98,7 @@ module Glimmer
                   key_event.keyCode == swt(:lf) ||
                   key_event.keyCode == swt(:arrow_up) ||
                   key_event.keyCode == swt(:arrow_down)
+                @list.swt_widget.select(0) if @list.swt_widget.getSelectionIndex() == -1
                 @list.swt_widget.setFocus
               elsif key_event.keyCode == swt(:esc)
                 @text.swt_widget.setFocus
@@ -115,7 +116,7 @@ module Glimmer
               on_widget_selected {
                 Gladiator::Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
               }
-         	  on_key_pressed { |key_event|
+              on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr) || Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :lf)
                   Gladiator::Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
                   @text.swt_widget.setFocus

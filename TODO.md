@@ -11,4 +11,3 @@
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Support multiple tabs
 - Make CMD+SHIFT+C copy file path with line number you're on
-- Make entering the file lookup list automatically highlight the first element
