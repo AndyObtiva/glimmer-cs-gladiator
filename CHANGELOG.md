@@ -3,6 +3,7 @@
 ## 0.1.2
 
 - Fix issue with file name on top being clipped
+- Fix issue with Find/Replace not working correctly for first line in the file (being off by one character)
 
 ## 0.1.1
 

@@ -26,7 +26,8 @@ module Glimmer
           end
           observe(self, :line_number) do
             if line_number
-              new_caret_position = lines[0...(line_number.to_i - 1)].map(&:size).sum + line_number.to_i - 1
+              line_index = line_number - 1
+              new_caret_position = caret_position_for_line_index(line_index)
               self.caret_position = new_caret_position unless line_index_for_caret_position(new_caret_position) == line_index_for_caret_position(caret_position)
             end
           end
@@ -318,7 +319,9 @@ module Glimmer
       end
   
       def caret_position_for_line_index(line_index)
-        lines[0...line_index].join("\n").size + 1
+        cp = lines[0...line_index].join("\n").size
+        cp += 1 if line_index > 0
+        cp
       end
   
       def caret_position_for_caret_position_start_of_line(caret_position)

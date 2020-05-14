@@ -7,7 +7,6 @@
 - Fix issue with not autosaving right away when making changes with Find/Replace (until focusing in and out of text editor area)
 - Fix issue with Find/Replace not updating file on disk sometimes
 - Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
-- Fix issue with Find/Replace not working correctly for first line in the file (being off by one character)
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Support multiple tabs
