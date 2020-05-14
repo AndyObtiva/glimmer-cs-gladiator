@@ -17,6 +17,7 @@ Gladiator currently supports the following text editing features:
 - Remember last opened file, caret position, and top line
 - Autosave on focus out/quit/open new file
 - Watch open file for external changes to reflect in editor
+- Watch subdirectories for changes to reflect in file explorer/file lookup
 - Duplicate Line(s)
 - Kill Line(s)
 - Move up one line
