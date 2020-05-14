@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem 'glimmer', '~> 0.7.0'
+gem 'glimmer', '~> 0.7.2'
 gem 'filewatcher', '~> 1.1.1'
 gem 'clipboard', '~> 1.3.4'
 

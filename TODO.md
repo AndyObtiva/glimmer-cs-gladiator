@@ -7,7 +7,11 @@
 - Fix issue with not autosaving right away when making changes with Find/Replace (until focusing in and out of text editor area)
 - Fix issue with Find/Replace not updating file on disk sometimes
 - Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
+- Fix issue with Find/Replace not working correctly for first line in the file (being off by one character)
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Support multiple tabs
-- Make CMD+SHIFT+C copy file path with line number you're on
+- Make CMD+T auto-reveal open file in file explorer tree
+- Make gladiator command work globally and not just for application that has gem configured
+- Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in
+- Package gladidator as a DMG/APP

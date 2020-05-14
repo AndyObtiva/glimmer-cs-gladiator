@@ -55,6 +55,9 @@ module Glimmer
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
+      observe(Gladiator::Dir.local_dir, 'selected_child') do
+        @field_container.swt_widget.pack
+      end
       observe(Gladiator::Dir.local_dir, 'selected_child.line_numbers_content') do
         if @last_line_numbers_content != Gladiator::Dir.local_dir.selected_child.line_numbers_content
           body_root.pack_same_size
@@ -134,7 +137,7 @@ module Glimmer
               }
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr) || Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :lf)
-                  Gladiator::Dir.local_dir.selected_child_path = @tree.swt_widget.getSelection.first.getText
+                  Gladiator::Dir.local_dir.selected_child_path = @tree.swt_widget.getSelection&.first&.getText
                   @text.swt_widget.setFocus
                 end
               }
@@ -150,7 +153,7 @@ module Glimmer
         composite {
           grid_layout 1, false
           layout_data :fill, :fill, true, true
-          composite {
+          @field_container = composite {
             grid_layout 2, false
             @file_path_label = styled_text(:none) {
               layout_data(:fill, :fill, true, false) {
@@ -175,7 +178,7 @@ module Glimmer
                 minimum_width 300
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
-      	     on_key_pressed { |key_event|
+              on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
                   @text.swt_widget.setFocus
                 end
@@ -186,10 +189,10 @@ module Glimmer
             }
             @find_text = text {
               layout_data(:fill, :fill, true, false) {
-                minimum_width 200
+                minimum_width 300
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.find_text')
-      	     on_key_pressed { |key_event|
+              on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
                   Gladiator::Dir.local_dir.selected_child.find_next
                 elsif key_event.keyCode == swt(:esc)
@@ -202,13 +205,13 @@ module Glimmer
             }
             @replace_text = text {
               layout_data(:fill, :fill, true, false) {
-                minimum_width 200
+                minimum_width 300
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.replace_text')
               on_focus_gained {              
                 Gladiator::Dir.local_dir.selected_child.ensure_find_next
               }
-      	     on_key_pressed { |key_event|
+              on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
                   Gladiator::Dir.local_dir.selected_child.replace_next!
                 elsif key_event.keyCode == swt(:esc)

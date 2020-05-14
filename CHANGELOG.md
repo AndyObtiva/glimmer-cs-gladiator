@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.2
+
+- Fix issue with file name on top being clipped
+
 ## 0.1.1
 
 - Fix issue with tab button killing selection (make it indent instead)
