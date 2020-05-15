@@ -28,7 +28,7 @@ module Glimmer
             if line_number
               line_index = line_number - 1
               new_caret_position = caret_position_for_line_index(line_index)
-              self.caret_position = new_caret_position unless line_index_for_caret_position(new_caret_position) == line_index_for_caret_position(caret_position)
+              self.caret_position = new_caret_position unless self.caret_position && line_index_for_caret_position(new_caret_position) == line_index_for_caret_position(caret_position)
             end
           end
         rescue
@@ -267,23 +267,18 @@ module Glimmer
         return if old_lines.size < 2
         old_selection_count = self.selection_count
         old_caret_position = self.caret_position
-        old_caret_position_line_index = line_index_for_caret_position(old_caret_position)
-        old_caret_position_line_caret_position = caret_position_for_caret_position_start_of_line(old_caret_position_line_index)
+        old_caret_position_line_caret_position = caret_position_for_caret_position_start_of_line(old_caret_position)
+        old_caret_position_line_position = old_caret_position - old_caret_position_line_caret_position
         old_end_caret_line_index = end_caret_position_line_index(caret_position, selection_count)
         new_lines = lines
         the_line_indices = line_indices_for_selection(caret_position, selection_count)
         the_lines = lines_for_selection(caret_position, selection_count)
         new_line_index = [the_line_indices.first - 1, 0].max
-        delta = -1 * (new_lines[new_line_index].size + 1)
         new_lines[the_line_indices.first..the_line_indices.last] = []
         new_lines[new_line_index...new_line_index] = the_lines
         self.dirty_content = new_lines.join("\n")
-        if old_selection_count.to_i > 0
-          self.caret_position = caret_position_for_line_index(old_caret_position_line_index) + delta
-          self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position + delta)
-        else
-          self.caret_position = old_caret_position + delta
-        end
+        self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
+        self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end
   
       def move_down!
@@ -291,23 +286,18 @@ module Glimmer
         return if old_lines.size < 2
         old_selection_count = self.selection_count
         old_caret_position = self.caret_position
-        old_caret_position_line_index = line_index_for_caret_position(old_caret_position)
-        old_caret_position_line_caret_position = caret_position_for_caret_position_start_of_line(old_caret_position_line_index)
+        old_caret_position_line_caret_position = caret_position_for_caret_position_start_of_line(old_caret_position)
+        old_caret_position_line_position = old_caret_position - old_caret_position_line_caret_position
         old_end_caret_line_index = end_caret_position_line_index(caret_position, selection_count)
         new_lines = lines
         the_line_indices = line_indices_for_selection(caret_position, selection_count)
         the_lines = lines_for_selection(caret_position, selection_count)
         new_line_index = [the_line_indices.first + 1, new_lines.size - 1].min
-        delta = new_lines[new_line_index].size + 1
         new_lines[the_line_indices.first..the_line_indices.last] = []
         new_lines[new_line_index...new_line_index] = the_lines
         self.dirty_content = new_lines.join("\n")
-        if old_selection_count.to_i > 0
-          self.caret_position = caret_position_for_line_index(old_caret_position_line_index) + delta
-          self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position + delta)
-        else
-          self.caret_position = old_caret_position + delta
-        end
+        self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
+        self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end
   
       def lines

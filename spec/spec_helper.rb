@@ -1,7 +1,6 @@
 SPEC_ROOT = File.expand_path('..', __FILE__)
 $LOAD_PATH.unshift(SPEC_ROOT)
 
-
 require 'bundler/setup'
 Bundler.require(:default, :development)
 
