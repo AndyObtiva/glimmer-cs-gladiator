@@ -22,91 +22,63 @@ describe Glimmer::Gladiator::File do
     context 'in a one line file' do
       let(:file) { one_line_file }
  
+      let(:expected_caret_positions) do
+        [4, 22, 40, 4]
+      end
+ 
       it 'finds hello (case-insensitive) 3 times and then cycles back to 1st occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'hello'
-   
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(4)
 
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(22)
-
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(40)
-
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(4)
+        expected_caret_positions.each do |expected_caret_position|
+          subject.find_next
+     
+          expect(subject.caret_position).to eq(expected_caret_position)
+        end
       end
     end
 
     context 'in a two line file' do
       let(:file) { two_line_file }
  
-      it 'finds And (case-insensitive) 3 times and then cycles back to 1st occurrence' do
+      let(:expected_caret_positions) do
+        [18, 36, 75, 96, 18]
+      end
+ 
+      it 'finds And (case-insensitive) 4 times and then cycles back to 1st occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'And'
-   
-        subject.find_next
 
-        expect(subject.caret_position).to eq(18)
-
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(36)
-
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(75)
-
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(96)
-
-        subject.find_next
-   
-        expect(subject.caret_position).to eq(18)
+        expected_caret_positions.each do |expected_caret_position|
+          subject.find_next
+     
+          expect(subject.caret_position).to eq(expected_caret_position)
+        end
       end  
     end
-end 
-#     context 'in a ten line file' do
-#       let(:file) { two_line_file }
-# 
-#       it 'moves two lines up' do
-#         subject.selection_count = 175
-#   
-#         expect(subject.caret_position).to eq(117)
-#   
-#         subject.move_up!
-#   
-#         expect(subject.caret_position).to eq(54)
-#         expect(subject.selection_count).to eq(175)
-#         expect(subject.line_number).to eq(2)
-# 
-#         subject.format_dirty_content_for_writing!
-#   
-#         expect(subject.dirty_content).to eq(<<~MULTI
-#           one Hello, World! and Hello, World! and Hello, World!
-#           three Hello, World! and Hello, World! and Hello, World!
-#           four Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
-#           five Hello, World! and Hello, World! and Hello, World!
-#           two Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
-#           six Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
-#           seven Hello, World! and Hello, World! and Hello, World!
-#           eight Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
-#           nine Hello, World! and Hello, World! and Hello, World!
-#           ten Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
-#         MULTI
-#         )
-#       end
-#     end
-#   end
+
+    context 'in a ten line file' do
+      let(:file) { ten_line_file }
+
+      let(:expected_caret_positions) do
+        [4, 22, 40, 123, 141, 159, 242, 260, 278, 361, 379, 397, 481, 499, 517]
+      end
+ 
+      it 'finds HELLO (case-insensitive) 15 times and then cycles back to 1st occurrence' do
+        subject.caret_position = 0
+
+        subject.find_text = 'HELLO'
+   
+        expected_caret_positions.each do |expected_caret_position|
+          subject.find_next
+     
+          expect(subject.caret_position).to eq(expected_caret_position)
+        end
+      end
+    end
+  end
 
   describe '#move_up!' do
     context 'in an empty file' do
