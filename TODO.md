@@ -15,3 +15,5 @@
 - Make gladiator command work globally and not just for application that has gem configured
 - Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in
 - Package gladidator as a DMG/APP
+- Add a new file through File Explorer
+- Support autocomplete
