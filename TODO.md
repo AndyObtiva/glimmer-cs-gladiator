@@ -1,12 +1,13 @@
 # TODO
 
 - Fix issue with Find not working for more than one occurrence in a line
+- Fix issue with Find/Replace not updating file on disk sometimes
+- Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
+- Fix issue with kill line sometimes jumping to the next line afterwards. Seems to happen if following line is empty
 - Fix issue with file lookup list and file explorer tree not showing up upon launching in a new directory until resizing window
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
 - Fix issue with line numbers sometimes getting clipped when openig a new file until resizing window
 - Fix issue with not autosaving right away when making changes with Find/Replace (until focusing in and out of text editor area)
-- Fix issue with Find/Replace not updating file on disk sometimes
-- Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Support multiple tabs
@@ -17,3 +18,5 @@
 - Add a new file through File Explorer
 - Support autocomplete
 - Support jumping between parts of a programming expression underscores or dots instead of an entire expression on ALT LEFT & RIGHT
+- Support collapsing blocks of code (e.g. class Name {...}) and expanding them again, collapsing line numbers next to them too. 
+This allows easy copying/pasting of big blocks of code without making mistakes in grabbing the end of the block that matches the beginning.

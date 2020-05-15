@@ -206,12 +206,21 @@ module Glimmer
         return if find_text.to_s.empty?
         all_lines = lines
         the_line_index = line_index_for_caret_position(caret_position)
-        all_lines.rotate(the_line_index + 1).each_with_index do |the_line, the_index|
-          the_index = (the_index + the_line_index + 1)%all_lines.size
-          if the_line.downcase.include?(find_text.to_s.downcase)
-            self.caret_position = the_line.downcase.index(find_text.to_s.downcase) + caret_position_for_line_index(the_index)
-            self.selection_count = find_text.to_s.size
-            return
+        line_position = line_position_for_caret_position(caret_position)
+        found = found_text?(caret_position)
+        2.times do |i|
+          found = false if i > 0
+          all_lines.rotate(the_line_index + 1).each_with_index do |the_line, the_index|
+            the_index = (the_index + the_line_index + 1)%all_lines.size
+            start_position = 0
+            start_position = line_position + find_text.to_s.size if the_index == the_line_index && found
+            text_to_find_in = the_line.downcase[start_position..-1]
+            occurrence_index = text_to_find_in.index(find_text.to_s.downcase)
+            if occurrence_index
+              self.caret_position = start_position + occurrence_index + caret_position_for_line_index(the_index)
+              self.selection_count = find_text.to_s.size
+              return
+            end
           end
         end
       end
@@ -234,7 +243,11 @@ module Glimmer
   
       def ensure_find_next
         return if find_text.to_s.empty? || dirty_content.to_s.strip.size < 1
-        find_next unless dirty_content[caret_position.to_i, find_text.to_s.size] == find_text
+        find_next unless found_text?(self.caret_position)
+      end
+
+      def found_text?(caret_position)
+        dirty_content[caret_position.to_i, find_text.to_s.size].to_s.downcase == find_text.to_s.downcase
       end
   
       def replace_next!
@@ -320,6 +333,12 @@ module Glimmer
   
       def caret_position_for_caret_position_start_of_line(caret_position)
         caret_position_for_line_index(line_index_for_caret_position(caret_position))
+      end
+
+      # position within line containing "caret position" (e.g. for caret position 5 in 1st line, they match as 5, for 15 in line 2 with line 1 having 10 characters, line position is 4)
+      # TODO consider renaming to line_character_position_for_caret_position
+      def line_position_for_caret_position(caret_position)
+        caret_position - caret_position_for_caret_position_start_of_line(caret_position)
       end
   
       def line_caret_positions_for_selection(caret_position, selection_count)
