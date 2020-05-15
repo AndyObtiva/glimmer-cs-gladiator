@@ -44,30 +44,37 @@ describe Glimmer::Gladiator::File do
         expect(subject.caret_position).to eq(4)
       end
     end
-end
-#     context 'in a two line file' do
-#       let(:file) { two_line_file }
-# 
-#       it 'moves one line up' do
-#         subject.line_number = 2
-#   
-#         expect(subject.caret_position).to eq(54)
-#   
-#         subject.move_up!
-#   
-#         expect(subject.caret_position).to eq(0)
-#         expect(subject.line_number).to eq(1)
-#   
-#         subject.format_dirty_content_for_writing!
-#   
-#         expect(subject.dirty_content).to eq(<<~MULTI
-#           two Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
-#           one Hello, World! and Hello, World! and Hello, World!
-#         MULTI
-#         )
-#       end  
-#     end
-# 
+
+    context 'in a two line file' do
+      let(:file) { two_line_file }
+ 
+      it 'finds And (case-insensitive) 3 times and then cycles back to 1st occurrence' do
+        subject.caret_position = 0
+
+        subject.find_text = 'And'
+   
+        subject.find_next
+
+        expect(subject.caret_position).to eq(18)
+
+        subject.find_next
+   
+        expect(subject.caret_position).to eq(36)
+
+        subject.find_next
+   
+        expect(subject.caret_position).to eq(75)
+
+        subject.find_next
+   
+        expect(subject.caret_position).to eq(96)
+
+        subject.find_next
+   
+        expect(subject.caret_position).to eq(18)
+      end  
+    end
+end 
 #     context 'in a ten line file' do
 #       let(:file) { two_line_file }
 # 

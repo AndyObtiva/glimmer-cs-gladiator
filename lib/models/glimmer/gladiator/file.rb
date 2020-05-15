@@ -210,13 +210,20 @@ module Glimmer
         found = found_text?(caret_position)
         2.times do |i|
           found = false if i > 0
-          all_lines.rotate(the_line_index + 1).each_with_index do |the_line, the_index|
-            the_index = (the_index + the_line_index + 1)%all_lines.size
+#           pd the_line_index
+          rotation = the_line_index
+          all_lines.rotate(rotation).each_with_index do |the_line, the_index|
+            the_index = (the_index + rotation)%all_lines.size
             start_position = 0
             start_position = line_position + find_text.to_s.size if the_index == the_line_index && found
+#             pd start_position
             text_to_find_in = the_line.downcase[start_position..-1]
+#             pd text_to_find_in
             occurrence_index = text_to_find_in.index(find_text.to_s.downcase)
+#             pd occurrence_index
             if occurrence_index
+#               pd the_index
+#               pd caret_position_for_line_index(the_index)
               self.caret_position = start_position + occurrence_index + caret_position_for_line_index(the_index)
               self.selection_count = find_text.to_s.size
               return
