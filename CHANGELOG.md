@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.3
+
+- Fix issue with selection getting out of wack when moving a group of lines up or down
+
 ## 0.1.2
 
 - Fix issue with file name on top being clipped

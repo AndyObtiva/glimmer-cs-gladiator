@@ -1,4 +1,4 @@
-# Gladiator (Glimmer Editor) 0.1.2 - Glimmer Custom Shell
+# Gladiator (Glimmer Editor) 0.1.3 - Glimmer Custom Shell
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
 ![Gladiator](images/glimmer-gladiator.png)
@@ -50,7 +50,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '0.1.2'
+gem 'glimmer-cs-gladiator', '0.1.3'
 ```
 
 Run:

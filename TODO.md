@@ -7,7 +7,6 @@
 - Fix issue with not autosaving right away when making changes with Find/Replace (until focusing in and out of text editor area)
 - Fix issue with Find/Replace not updating file on disk sometimes
 - Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
-- Fix issue with selection getting out of wack when moving a group of lines up or down
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Support multiple tabs
@@ -17,3 +16,4 @@
 - Package gladidator as a DMG/APP
 - Add a new file through File Explorer
 - Support autocomplete
+- Support jumping between parts of a programming expression underscores or dots instead of an entire expression on ALT LEFT & RIGHT
