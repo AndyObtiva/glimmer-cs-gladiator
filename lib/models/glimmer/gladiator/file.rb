@@ -210,21 +210,17 @@ module Glimmer
         found = found_text?(caret_position)
         2.times do |i|
           found = false if i > 0
-#           pd the_line_index
           rotation = the_line_index
-          all_lines.rotate(rotation).each_with_index do |the_line, the_index|
+          all_lines.rotate(rotation).each_with_index.map do |the_line, the_index|
             the_index = (the_index + rotation)%all_lines.size
+            [the_line, the_index]
+          end.each do |the_line, the_index|
             start_position = 0
             start_position = line_position + find_text.to_s.size if the_index == the_line_index && found
-#             pd start_position
             text_to_find_in = the_line.downcase[start_position..-1]
-#             pd text_to_find_in
             occurrence_index = text_to_find_in.index(find_text.to_s.downcase)
-#             pd occurrence_index
             if occurrence_index
-#               pd the_index
-#               pd caret_position_for_line_index(the_index)
-              self.caret_position = start_position + occurrence_index + caret_position_for_line_index(the_index)
+              self.caret_position = caret_position_for_line_index(the_index) + start_position + occurrence_index
               self.selection_count = find_text.to_s.size
               return
             end
@@ -236,14 +232,24 @@ module Glimmer
         return if find_text.to_s.empty?
         all_lines = lines
         the_line_index = line_index_for_caret_position(caret_position)
-        all_lines.rotate(the_line_index).each_with_index.map do |the_line, the_index|
-          the_index = (the_index + the_line_index)%all_lines.size
-          [the_line, the_index]
-        end.reverse.each do |the_line, the_index|
-          if the_line.downcase.include?(find_text.to_s.downcase)
-            self.caret_position = the_line.downcase.index(find_text.to_s.downcase) + caret_position_for_line_index(the_index)
-            self.selection_count = find_text.to_s.size
-            return
+        line_position = line_position_for_caret_position(caret_position)
+        found = found_text?(caret_position)
+        2.times do |i|
+          found = false if i > 0
+          rotation = the_line_index
+          all_lines.rotate(rotation).each_with_index.map do |the_line, the_index|
+            the_index = (the_index + rotation)%all_lines.size
+            [the_line, the_index]
+          end.reverse.each do |the_line, the_index|
+            start_position = 0
+            start_position = ((the_line.size - line_position) + find_text.to_s.size) if the_index == the_line_index && found if the_index == the_line_index && found
+            text_to_find_in = the_line.downcase.reverse[start_position..-1].to_s
+            occurrence_index = text_to_find_in.index(find_text.to_s.downcase.reverse)
+            if occurrence_index
+              self.caret_position = caret_position_for_line_index(the_index) + (the_line.size - (start_position + occurrence_index)) - find_text.to_s.size
+              self.selection_count = find_text.to_s.size
+              return
+            end
           end
         end
       end

@@ -8,7 +8,7 @@ describe Glimmer::Gladiator::File do
   
   subject { described_class.new(file) }
 
-  describe 'find_next' do
+  describe '#find_next' do
     context 'in an empty file' do
       let(:file) { empty_file }
   
@@ -26,7 +26,7 @@ describe Glimmer::Gladiator::File do
         [4, 22, 40, 4]
       end
  
-      it 'finds hello (case-insensitive) 3 times and then cycles back to 1st occurrence' do
+      it 'finds hello (case-insensitive) 3 times and then cycles to 1st occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'hello'
@@ -46,7 +46,7 @@ describe Glimmer::Gladiator::File do
         [18, 36, 75, 96, 18]
       end
  
-      it 'finds And (case-insensitive) 4 times and then cycles back to 1st occurrence' do
+      it 'finds And (case-insensitive) 4 times and then cycles to 1st occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'And'
@@ -66,13 +66,85 @@ describe Glimmer::Gladiator::File do
         [4, 22, 40, 123, 141, 159, 242, 260, 278, 361, 379, 397, 481, 499, 517]
       end
  
-      it 'finds HELLO (case-insensitive) 15 times and then cycles back to 1st occurrence' do
+      it 'finds HELLO (case-insensitive) 15 times and then cycles to 1st occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'HELLO'
    
         expected_caret_positions.each do |expected_caret_position|
           subject.find_next
+     
+          expect(subject.caret_position).to eq(expected_caret_position)
+        end
+      end
+    end
+  end
+
+  describe '#find_previous' do
+    context 'in an empty file' do
+      let(:file) { empty_file }
+  
+      it 'does not find anything' do
+        subject.find_previous
+   
+        expect(subject.caret_position).to be_nil
+      end
+    end
+
+    context 'in a one line file' do
+      let(:file) { one_line_file }
+ 
+      let(:expected_caret_positions) do
+        [40, 22, 4, 40]
+      end
+ 
+      it 'finds hello (case-insensitive) 3 times and then cycles to last occurrence' do
+        subject.caret_position = 0
+
+        subject.find_text = 'hello'
+   
+        expected_caret_positions.each do |expected_caret_position|
+          subject.find_previous
+     
+          expect(subject.caret_position).to eq(expected_caret_position)
+        end
+      end
+    end
+
+    context 'in a two line file' do
+      let(:file) { two_line_file }
+ 
+      let(:expected_caret_positions) do
+        [18, 36, 75, 96, 18]
+      end
+ 
+      xit 'finds And (case-insensitive) 4 times and then cycles to last occurrence' do
+        subject.caret_position = 0
+
+        subject.find_text = 'And'
+
+        expected_caret_positions.each do |expected_caret_position|
+          subject.find_previous
+     
+          expect(subject.caret_position).to eq(expected_caret_position)
+        end
+      end  
+    end
+
+    context 'in a ten line file' do
+      let(:file) { ten_line_file }
+
+      let(:expected_caret_positions) do
+        [4, 22, 40, 123, 141, 159, 242, 260, 278, 361, 379, 397, 481, 499, 517]
+      end
+ 
+      xit 'finds HELLO (case-insensitive) 15 times and then cycles to last occurrence' do
+        subject.caret_position = 0
+
+        subject.find_text = 'HELLO'
+   
+        expected_caret_positions.each do |expected_caret_position|
+          subject.find_previous
      
           expect(subject.caret_position).to eq(expected_caret_position)
         end
