@@ -45,15 +45,15 @@ module Glimmer
               file&.write_dirty_content
             }
       	     on_key_pressed { |key_event|
-              if Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == '/'
+              if key_event.stateMask == swt(:command) && key_event.character.chr.downcase == '/'
                 file.comment_line!
-              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'k'
+              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == 'k'
                 file.kill_line!
-              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'd'
+              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == 'd'
                 file.duplicate_line!
-              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == '['
+              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == '['
                 file.outdent!
-              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == ']'
+              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == ']'
                 file.indent!
               elsif key_event.keyCode == swt(:page_up)
                 file.page_up

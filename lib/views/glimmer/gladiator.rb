@@ -38,6 +38,26 @@ module Glimmer
             Clipboard.copy(Gladiator::Dir.local_dir.selected_child.path)
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr.downcase == 'g'
             Gladiator::Dir.local_dir.selected_child.find_previous
+#           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr.downcase == 'w'
+#             @tab_folder.swt_widget.getItems.each(&:dispose)
+#           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :alt) && key_event.character.chr.downcase == 'w'
+#             @tab_folder.swt_widget.getItems.each do |ti|
+#               ti.dispose unless ti == @tab_folder.swt_widget.getSelection()
+#             end
+#           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'w'
+#             @tab_folder.swt_widget.getSelection.each(&:dispose)
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr.downcase == ']'
+            @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() + 1, @tab_folder.swt_widget.getItemCount - 1].min) if @tab_folder.swt_widget.getItemCount > 0
+            @text_editor.text_widget.setFocus
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr.downcase == '['
+            @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() - 1, 0].max) if @tab_folder.swt_widget.getItemCount > 0
+            @text_editor.text_widget.setFocus
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == '1'
+            @tab_folder.swt_widget.setSelection(0) if @tab_folder.swt_widget.getItemCount > 0
+            @text_editor.text_widget.setFocus
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == '9'
+            @tab_folder.swt_widget.setSelection(@tab_folder.swt_widget.getItemCount - 1) if @tab_folder.swt_widget.getItemCount > 0
+            @text_editor.text_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'g'
             Gladiator::Dir.local_dir.selected_child.find_next
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'l'

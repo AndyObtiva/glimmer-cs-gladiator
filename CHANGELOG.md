@@ -8,6 +8,7 @@
 - Fix issue with line numbers sometimes getting clipped when openig a new file until resizing window
 - Support multiple tabs
 - Remember window size and location
+- Support tab keyboard shortcuts for next tab, previous tab, first tab, last tab
 
 ## 0.1.2
 
