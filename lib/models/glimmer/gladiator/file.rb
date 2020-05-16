@@ -174,8 +174,11 @@ module Glimmer
         line_indices = line_indices_for_selection(caret_position, selection_count)
         new_lines = new_lines[0...line_indices.first] + new_lines[(line_indices.last+1)...new_lines.size]
         old_caret_position = self.caret_position
+        old_line_index = self.line_number - 1
+        line_position = line_position_for_caret_position(old_caret_position)
         self.dirty_content = "#{new_lines.join("\n")}\n"
-        self.caret_position = old_caret_position
+        self.caret_position = caret_position_for_line_index(old_line_index) + [line_position, lines[old_line_index].to_s.size].min
+        self.selection_count = 0
       end
   
       def duplicate_line!

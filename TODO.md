@@ -2,7 +2,6 @@
 
 - Fix issue with Find/Replace not updating file on disk sometimes
 - Fix issue with Find/Replace pasting in replace text upon hitting enter even when find text is no longer found (all replaced) 
-- Fix issue with kill line sometimes jumping to the next line afterwards. Seems to happen if following line is empty
 - Fix issue with file lookup list and file explorer tree not showing up upon launching in a new directory until resizing window
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
 - Fix issue with line numbers sometimes getting clipped when openig a new file until resizing window

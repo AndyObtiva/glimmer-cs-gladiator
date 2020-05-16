@@ -72,15 +72,15 @@ describe Glimmer::Gladiator::File do
     context 'in a ten line file' do
       let(:file) { ten_line_file }
 
-      xit 'kills two lines' do
-        subject.line_number = 2
-        subject.selection_count = 119
+      it 'kills three lines and caret lands at the end of a shorter line than original line it was on' do
+        subject.caret_position = 116
+        subject.selection_count = 121
   
-        expect(subject.caret_position).to eq(54)
+        expect(subject.line_number).to eq(2)
   
         subject.kill_line!
   
-        expect(subject.caret_position).to eq(54)
+        expect(subject.caret_position).to eq(108)
         expect(subject.selection_count).to eq(0)
         expect(subject.line_number).to eq(2)
 
@@ -88,7 +88,6 @@ describe Glimmer::Gladiator::File do
   
         expect(subject.dirty_content).to eq(<<~MULTI
           one Hello, World! and Hello, World! and Hello, World!
-          four Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
           five Hello, World! and Hello, World! and Hello, World!
           six Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
           seven Hello, World! and Hello, World! and Hello, World!
