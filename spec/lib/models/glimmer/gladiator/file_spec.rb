@@ -118,9 +118,7 @@ describe Glimmer::Gladiator::File do
         [4, 22, 40, 4]
       end
  
-      it 'finds hello (case-insensitive) 3 times and then cycles to 1st occurrence' do
-        subject.caret_position = 0
-
+      it 'finds hello (case-insensitive) 3 times and then cycles to 1st occurrence (caret position is assumed as 0 when not set)' do
         subject.find_text = 'hello'
 
         expected_caret_positions.each do |expected_caret_position|

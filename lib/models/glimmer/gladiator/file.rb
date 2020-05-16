@@ -350,6 +350,7 @@ module Glimmer
       # position within line containing "caret position" (e.g. for caret position 5 in 1st line, they match as 5, for 15 in line 2 with line 1 having 10 characters, line position is 4)
       # TODO consider renaming to line_character_position_for_caret_position
       def line_position_for_caret_position(caret_position)
+        caret_position = caret_position.to_i
         caret_position - caret_position_for_caret_position_start_of_line(caret_position)
       end
   
