@@ -115,10 +115,10 @@ describe Glimmer::Gladiator::File do
       let(:file) { two_line_file }
  
       let(:expected_caret_positions) do
-        [18, 36, 75, 96, 18]
+        [96, 75, 36, 18, 96]
       end
  
-      xit 'finds And (case-insensitive) 4 times and then cycles to last occurrence' do
+      it 'finds And (case-insensitive) 4 times and then cycles to last occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'And'
@@ -135,10 +135,10 @@ describe Glimmer::Gladiator::File do
       let(:file) { ten_line_file }
 
       let(:expected_caret_positions) do
-        [4, 22, 40, 123, 141, 159, 242, 260, 278, 361, 379, 397, 481, 499, 517]
+        [517, 499, 481, 397, 379, 361, 278, 260, 242, 159, 141, 123, 40, 22, 4, 517]
       end
  
-      xit 'finds HELLO (case-insensitive) 15 times and then cycles to last occurrence' do
+      it 'finds HELLO (case-insensitive) 15 times and then cycles to last occurrence' do
         subject.caret_position = 0
 
         subject.find_text = 'HELLO'

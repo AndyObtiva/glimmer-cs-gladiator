@@ -3,6 +3,7 @@
 ## 0.1.3
 
 - Fix issue with selection getting out of wack when moving a group of lines up or down
+- Fix issue with Find not working for more than one occurrence in a line
 
 ## 0.1.2
 
