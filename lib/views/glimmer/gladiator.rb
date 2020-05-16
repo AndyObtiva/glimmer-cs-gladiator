@@ -55,15 +55,9 @@ module Glimmer
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
-      observe(Gladiator::Dir.local_dir, 'selected_child') do
-        @editor_container.pack_same_size
-#         @editor_container.swt_widget.pack
-#         body_root.pack_same_size
-#         body_root.pack
-      end
       observe(Gladiator::Dir.local_dir, 'selected_child.line_numbers_content') do
         if @last_line_numbers_content != Gladiator::Dir.local_dir.selected_child.line_numbers_content
-#           body_root.pack_same_size
+          body_root.pack_same_size
           @last_line_numbers_content = Gladiator::Dir.local_dir.selected_child.line_numbers_content
         end
       end
