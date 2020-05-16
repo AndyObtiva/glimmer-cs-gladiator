@@ -65,14 +65,14 @@ module Glimmer
   
       def write_dirty_content
         format_dirty_content_for_writing!
-        ::File.write(path, dirty_content) if ::File.exists?(path) && dirty_content.to_s.strip.size > 0
+        ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
         puts "Error in writing dirty content for #{path}"
         puts e.full_message
       end
   
       def write_raw_dirty_content
-        ::File.write(path, dirty_content) if ::File.exists?(path) && dirty_content.to_s.strip.size > 0
+        ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
         puts "Error in writing raw dirty content for #{path}"
         puts e.full_message
@@ -170,11 +170,11 @@ module Glimmer
   
       def kill_line!
         new_lines = lines
-        return if new_lines.size < 2
+        return if new_lines.size < 1
         line_indices = line_indices_for_selection(caret_position, selection_count)
         new_lines = new_lines[0...line_indices.first] + new_lines[(line_indices.last+1)...new_lines.size]
         old_caret_position = self.caret_position
-        self.dirty_content = new_lines.join("\n")
+        self.dirty_content = "#{new_lines.join("\n")}\n"
         self.caret_position = old_caret_position
       end
   

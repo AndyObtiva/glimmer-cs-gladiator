@@ -8,6 +8,99 @@ describe Glimmer::Gladiator::File do
   
   subject { described_class.new(file) }
 
+  describe '#kill_line!' do
+    context 'in an empty file' do
+      let(:file) { empty_file }
+
+      it 'does nothing' do
+        subject.line_number = 1
+  
+        expect(subject.caret_position).to eq(0)
+  
+        subject.kill_line!
+  
+        expect(subject.caret_position).to eq(0)
+        expect(subject.line_number).to eq(1)
+
+        subject.format_dirty_content_for_writing!
+  
+        expect(subject.dirty_content).to eq("\n")
+      end
+    end
+
+    context 'in a one line file' do
+      let(:file) { one_line_file }
+
+      it 'kills only line' do
+        subject.line_number = 1
+  
+        expect(subject.caret_position).to eq(0)
+  
+        subject.kill_line!
+  
+        expect(subject.caret_position).to eq(0)
+        expect(subject.line_number).to eq(1)
+
+        subject.format_dirty_content_for_writing!
+  
+        expect(subject.dirty_content).to eq("\n")
+      end
+    end
+
+    context 'in a two line file' do
+      let(:file) { two_line_file }
+
+      it 'kills second line' do
+        subject.line_number = 2
+  
+        expect(subject.caret_position).to eq(54)
+  
+        subject.kill_line!
+  
+        expect(subject.caret_position).to eq(54)
+        expect(subject.line_number).to eq(2)
+  
+        subject.format_dirty_content_for_writing!
+  
+        expect(subject.dirty_content).to eq(<<~MULTI
+          one Hello, World! and Hello, World! and Hello, World!
+        MULTI
+        )
+      end
+    end
+
+    context 'in a ten line file' do
+      let(:file) { ten_line_file }
+
+      xit 'kills two lines' do
+        subject.line_number = 2
+        subject.selection_count = 119
+  
+        expect(subject.caret_position).to eq(54)
+  
+        subject.kill_line!
+  
+        expect(subject.caret_position).to eq(54)
+        expect(subject.selection_count).to eq(0)
+        expect(subject.line_number).to eq(2)
+
+        subject.format_dirty_content_for_writing!
+  
+        expect(subject.dirty_content).to eq(<<~MULTI
+          one Hello, World! and Hello, World! and Hello, World!
+          four Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
+          five Hello, World! and Hello, World! and Hello, World!
+          six Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
+          seven Hello, World! and Hello, World! and Hello, World!
+          eight Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
+          nine Hello, World! and Hello, World! and Hello, World!
+          ten Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
+        MULTI
+        )
+      end
+    end  
+  end
+
   describe '#find_next' do
     context 'in an empty file' do
       let(:file) { empty_file }
