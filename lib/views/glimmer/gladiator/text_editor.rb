@@ -4,6 +4,10 @@ module Glimmer
       include Glimmer::UI::CustomWidget
 
       attr_reader :text_widget
+
+      after_body {
+        @text_widget = @text.swt_widget
+      }
       
       body {
         composite {

@@ -219,7 +219,14 @@ module Glimmer
               }
             }
           }
-          @text_editor = text_editor
+          tab_folder {
+            layout_data(:fill, :fill, true, true) 
+            tab_item {
+              text bind(Gladiator::Dir.local_dir, 'selected_child.name')
+              fill_layout :horizontal
+              @text_editor = text_editor
+            }
+          }
         }
       }
     }
