@@ -4,7 +4,6 @@
 - Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
-- Support multiple tabs
 - Make CMD+T auto-reveal open file in file explorer tree
 - Make gladiator command work globally and not just for application that has gem configured
 - Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in

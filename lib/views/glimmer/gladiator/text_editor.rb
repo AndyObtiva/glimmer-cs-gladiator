@@ -3,6 +3,8 @@ module Glimmer
     class TextEditor
       include Glimmer::UI::CustomWidget
 
+      options :file
+
       attr_reader :text_widget
 
       after_body {
@@ -18,8 +20,8 @@ module Glimmer
             font name: 'Consolas', height: 15
             background color(:widget_background)
             foreground rgb(75, 75, 75)
-            text bind(Gladiator::Dir.local_dir, 'selected_child.line_numbers_content')
-            top_index bind(Gladiator::Dir.local_dir, 'selected_child.top_index')
+            text bind(file, 'line_numbers_content')
+            top_index bind(file, 'top_index')
             on_focus_gained {
               @text&.swt_widget.setFocus
             }
@@ -34,42 +36,42 @@ module Glimmer
             layout_data :fill, :fill, true, true
             font name: 'Consolas', height: 15
             foreground rgb(75, 75, 75)
-            text bind(Gladiator::Dir.local_dir, 'selected_child.dirty_content')
+            text bind(file, 'dirty_content')
             focus true
-            caret_position bind(Gladiator::Dir.local_dir, 'selected_child.caret_position')
-            selection_count bind(Gladiator::Dir.local_dir, 'selected_child.selection_count')
-            top_index bind(Gladiator::Dir.local_dir, 'selected_child.top_index')
+            caret_position bind(file, 'caret_position')
+            selection_count bind(file, 'selection_count')
+            top_index bind(file, 'top_index')
             on_focus_lost {
-              Gladiator::Dir.local_dir.selected_child&.write_dirty_content
+              file&.write_dirty_content
             }
       	     on_key_pressed { |key_event|
               if Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == '/'
-                Gladiator::Dir.local_dir.selected_child.comment_line!
+                file.comment_line!
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'k'
-                Gladiator::Dir.local_dir.selected_child.kill_line!
+                file.kill_line!
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'd'
-                Gladiator::Dir.local_dir.selected_child.duplicate_line!
+                file.duplicate_line!
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == '['
-                Gladiator::Dir.local_dir.selected_child.outdent!
+                file.outdent!
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == ']'
-                Gladiator::Dir.local_dir.selected_child.indent!
+                file.indent!
               elsif key_event.keyCode == swt(:page_up)
-                Gladiator::Dir.local_dir.selected_child.page_up
+                file.page_up
                 key_event.doit = false
               elsif key_event.keyCode == swt(:page_down)
-                Gladiator::Dir.local_dir.selected_child.page_down
+                file.page_down
                 key_event.doit = false
               elsif key_event.keyCode == swt(:home)
-                Gladiator::Dir.local_dir.selected_child.home
+                file.home
                 key_event.doit = false
               elsif key_event.keyCode == swt(:end)
-                Gladiator::Dir.local_dir.selected_child.end
+                file.end
                 key_event.doit = false
               elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt(:arrow_up)
-                Gladiator::Dir.local_dir.selected_child.move_up!
+                file.move_up!
                 key_event.doit = false
               elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt(:arrow_down)
-                Gladiator::Dir.local_dir.selected_child.move_down!
+                file.move_down!
                 key_event.doit = false
               end
             }
@@ -77,8 +79,8 @@ module Glimmer
               key_code = verify_event.keyCode
               case key_code
               when swt(:tab)
-                if Gladiator::Dir.local_dir.selected_child.selection_count.to_i > 0
-                  Gladiator::Dir.local_dir.selected_child.indent!
+                if file.selection_count.to_i > 0
+                  file.indent!
                   verify_event.doit = false
                 else
                   verify_event.text = '  '

@@ -26,7 +26,6 @@ module Glimmer
       @config_file_path = ::File.join(local_dir, '.gladiator')
       @config = {}
       Gladiator::Dir.local_dir.all_children # pre-caches children
-      load_config
       @display = display {
         on_event_keydown { |key_event|
           if Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'f'
@@ -57,6 +56,32 @@ module Glimmer
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
+      observe(Gladiator::Dir.local_dir, 'selected_child') do
+        selected_file = Gladiator::Dir.local_dir.selected_child
+        found_tab_item = @tab_folder.swt_widget.getItems.detect {|ti| ti.getData('file_path') == selected_file.path}
+        if found_tab_item
+          @tab_folder.swt_widget.setSelection(found_tab_item)
+          @tab_item = found_tab_item.getData('tab_item')
+          @text_editor = found_tab_item.getData('text_editor')
+        else
+          @tab_folder.content {
+            @tab_item = tab_item { |the_tab_item|
+              text selected_file.name
+              fill_layout :horizontal
+              @text_editor = the_text_editor = text_editor(file: selected_file)
+              on_event_show {
+                Gladiator::Dir.local_dir.selected_child = selected_file
+                @tab_item = the_tab_item
+                @text_editor = the_text_editor
+              }
+            }
+            @tab_item.swt_tab_item.setData('file_path', selected_file.path)
+            @tab_item.swt_tab_item.setData('tab_item', @tab_item)
+            @tab_item.swt_tab_item.setData('text_editor', @text_editor)
+          }                  
+          @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
+        end
+      end
       observe(Gladiator::Dir.local_dir, 'selected_child.line_numbers_content') do
         if @last_line_numbers_content != Gladiator::Dir.local_dir.selected_child.line_numbers_content
           body_root.pack_same_size
@@ -68,7 +93,8 @@ module Glimmer
       end
       observe(Gladiator::Dir.local_dir, 'selected_child.top_index') do
         save_config
-      end     
+      end
+      load_config
     }
 
     ## Add widget content inside custom shell body
@@ -115,7 +141,7 @@ module Glimmer
               }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !!f}
               selection bind(Gladiator::Dir.local_dir, :filtered_path)
-              on_widget_selected {
+              on_mouse_up {
                 Gladiator::Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
               }
               on_key_pressed { |key_event|
@@ -219,13 +245,8 @@ module Glimmer
               }
             }
           }
-          tab_folder {
+          @tab_folder = tab_folder {
             layout_data(:fill, :fill, true, true) 
-            tab_item {
-              text bind(Gladiator::Dir.local_dir, 'selected_child.name')
-              fill_layout :horizontal
-              @text_editor = text_editor
-            }
           }
         }
       }

@@ -24,7 +24,7 @@ module Glimmer
         end
       end
   
-      attr_accessor :selected_child, :filter, :children, :filtered_path_options
+      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path
       attr_reader :path, :display_path
   
       def initialize(path)
@@ -101,9 +101,6 @@ module Glimmer
       def selected_child_path
         @selected_child&.path
       end
-  
-      alias filtered_path selected_child_path
-      alias filtered_path= selected_child_path=
   
       def to_s
         path
