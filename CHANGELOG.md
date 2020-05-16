@@ -7,6 +7,7 @@
 - Fix issue with kill line sometimes jumping to the next line afterwards. Seems to happen if following line is empty
 - Fix issue with line numbers sometimes getting clipped when openig a new file until resizing window
 - Support multiple tabs
+- Remember window size and location
 
 ## 0.1.2
 

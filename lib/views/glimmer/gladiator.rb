@@ -83,6 +83,9 @@ module Glimmer
           body_root.pack_same_size
         end
       end
+      observe(Gladiator::Dir.local_dir, 'selected_child') do
+        save_config
+      end
       observe(Gladiator::Dir.local_dir, 'selected_child.caret_position') do
         save_config
       end
@@ -106,6 +109,12 @@ module Glimmer
         }
         on_widget_disposed {
           Gladiator::Dir.local_dir.selected_child&.write_dirty_content
+        }
+        on_control_resized {
+          save_config
+        }
+        on_control_moved {
+          save_config
         }
         composite {
           grid_layout 1, false
@@ -255,16 +264,26 @@ module Glimmer
         Gladiator::Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         Gladiator::Dir.local_dir.selected_child&.caret_position  = Gladiator::Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position]) if @config[:caret_position]
         Gladiator::Dir.local_dir.selected_child&.top_index = @config[:top_index] if @config[:top_index]
+        body_root.on_event_show do
+          swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
+          swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
+          @loaded_config = true
+        end
       end
     end
   
     def save_config
+      return unless @loaded_config
       child = Gladiator::Dir.local_dir.selected_child
       return if child.nil?
       @config = {
         selected_child_path: child.path,
         caret_position: child.caret_position,
         top_index: child.top_index,
+        shell_width: swt_widget&.getBounds&.width,
+        shell_height: swt_widget&.getBounds&.height,
+        shell_x: swt_widget&.getBounds&.x,
+        shell_y: swt_widget&.getBounds&.y,
       }
       config_yaml = YAML.dump(@config)
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?

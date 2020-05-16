@@ -14,7 +14,8 @@ Gladiator currently supports the following text editing features:
 - Find & Replace
 - Show Line Numbers
 - Jump to Line
-- Remember last opened file, caret position, and top line
+- Multiple tab support
+- Remember last opened file, caret position, top line, window size, and window location
 - Autosave on focus out/quit/open new file
 - Watch open file for external changes to reflect in editor
 - Watch subdirectories for changes to reflect in file explorer/file lookup
