@@ -53,4 +53,6 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
+Rake::Task["build"].enhance [:spec]
+
 require 'glimmer/rake_task'
