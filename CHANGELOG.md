@@ -5,6 +5,7 @@
 - Fix issue with selection getting out of wack when moving a group of lines up or down
 - Fix issue with Find not working for more than one occurrence in a line
 - Fix issue with kill line sometimes jumping to the next line afterwards. Seems to happen if following line is empty
+- Fix issue with line numbers sometimes getting clipped when openig a new file until resizing window
 
 ## 0.1.2
 
