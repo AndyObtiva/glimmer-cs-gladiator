@@ -80,12 +80,7 @@ module Glimmer
             @tab_item.swt_tab_item.setData('text_editor', @text_editor)
           }                  
           @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
-        end
-      end
-      observe(Gladiator::Dir.local_dir, 'selected_child.line_numbers_content') do
-        if @last_line_numbers_content != Gladiator::Dir.local_dir.selected_child.line_numbers_content
           body_root.pack_same_size
-          @last_line_numbers_content = Gladiator::Dir.local_dir.selected_child.line_numbers_content
         end
       end
       observe(Gladiator::Dir.local_dir, 'selected_child.caret_position') do

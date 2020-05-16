@@ -14,7 +14,7 @@ module Glimmer
       body {
         composite {
           layout_data :fill, :fill, true, true
-          grid_layout 2, false  
+          grid_layout 2, false
           @line_numbers_text = text(:multi) {
             layout_data(:right, :fill, false, true)
             font name: 'Consolas', height: 15
