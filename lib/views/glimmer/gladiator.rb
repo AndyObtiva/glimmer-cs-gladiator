@@ -204,6 +204,30 @@ module Glimmer
               }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !f}
               items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :name)
+              menu {
+                @open_menu_item = menu_item {
+                  text 'Open'
+                  on_widget_selected {
+                    Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
+                  }
+                }
+#                 menu_item(:separator)
+#                 @new_file_menu_item = menu_item {
+#                   text 'New File'
+#                   on_widget_selected {
+#                     Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
+#                   }
+#                 }
+              }
+              on_event_menudetect { |event|
+                if ::Dir.exist?(extract_tree_item_path(@tree.swt_widget.getSelection.first))
+                  @open_menu_item.swt_widget.setEnabled(false)
+#                   @new_file_menu_item.swt_widget.setEnabled(true)
+                else
+                  @open_menu_item.swt_widget.setEnabled(true)
+#                   @new_file_menu_item.swt_widget.setEnabled(false)
+                end
+              }
               on_mouse_up {
                 Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
               }
