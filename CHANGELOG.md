@@ -5,6 +5,8 @@
 - Fix issue with file explorer tree losing selection on refresh
 - Make file explorer tree show file/directory names not paths
 - Make file explorer tree show current project directory name as the root instead of "."
+- Improve file lookup by ignoring dots
+- Add number command + 2-8 tab shortcuts
 
 ## 0.1.3
 

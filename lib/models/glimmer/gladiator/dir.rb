@@ -67,7 +67,7 @@ module Glimmer
         return if filter.nil?
         all_children_files.select do |child| 
           child.path.downcase.include?(filter.downcase) ||
-            child.path.downcase.gsub(/[_\/]/, '').include?(filter.downcase)
+            child.path.downcase.gsub(/[_\/\.]/, '').include?(filter.downcase)
         end.sort_by {|c| c.path.to_s.downcase}
       end
   
