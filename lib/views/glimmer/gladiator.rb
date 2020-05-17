@@ -88,7 +88,6 @@ module Glimmer
             @filter_text.swt_widget.selectAll
             @filter_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 't'
-            @tree.select(text: Gladiator::Dir.local_dir.selected_child.name)
             @tree.swt_widget.setFocus
           end
         }
@@ -98,9 +97,9 @@ module Glimmer
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
-      @tree.select(text: Gladiator::Dir.local_dir.selected_child.name) if Gladiator::Dir.local_dir.selected_child&.display_path
+      @tree.select(text: Gladiator::Dir.local_dir.selected_child&.name) if Gladiator::Dir.local_dir.selected_child&.name
       observe(Gladiator::Dir.local_dir, 'selected_child') do
-        @tree.select(text: Gladiator::Dir.local_dir.selected_child.name)
+        @tree.select(text: Gladiator::Dir.local_dir.selected_child&.name)
         selected_file = Gladiator::Dir.local_dir.selected_child
         found_tab_item = @tab_folder.swt_widget.getItems.detect {|ti| ti.getData('file_path') == selected_file.path}
         if found_tab_item
@@ -218,7 +217,6 @@ module Glimmer
                 root_item = @tree.swt_widget.getItems.first
                 if root_item && !root_item.getExpanded
                   root_item.setExpanded true
-                  @tree.select(text: Gladiator::Dir.local_dir.selected_child.name)
                 end
               }
             }

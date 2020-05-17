@@ -15,7 +15,7 @@ module Glimmer
             @thread = Thread.new(@filewatcher) do |fw| 
               fw.watch do |filename, event|
                 if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
-                  dir.refresh if filename != dir.selected_child_path #TODO make it check history
+                  dir.refresh if !selected_child_path_history.include?(filename) && filename != dir.selected_child_path
                 end
                 @last_update = Time.now.to_f
               end
@@ -36,9 +36,13 @@ module Glimmer
       def children
         @children ||= retrieve_children
       end
-  
+
       def retrieve_children
         ::Dir.glob(::File.join(@path, '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}.sort_by {|c| c.path.to_s.downcase }.sort_by {|c| c.class.name }
+      end
+  
+      def selected_child_path_history
+        @selected_child_path_history ||= []
       end
   
       def refresh
@@ -84,13 +88,16 @@ module Glimmer
       end
   
       def selected_child_path=(selected_path)
-        return if selected_path.nil? || ::Dir.exist?(selected_path) || (selected_child && ::File.expand_path(selected_child.path) == ::File.expand_path(selected_path))
+        return if selected_path.nil? || 
+                  ::Dir.exist?(selected_path) || 
+                  (selected_child && ::File.expand_path(selected_child.path) == ::File.expand_path(selected_path))
         if ::File.file?(selected_path)
           @selected_child&.write_dirty_content
           new_child = Gladiator::File.new(selected_path)
           begin
             unless new_child.dirty_content.nil?
               self.selected_child&.stop_filewatcher
+              selected_child_path_history << self.selected_child.path if self.selected_child
               self.selected_child = new_child
               self.selected_child.start_filewatcher
             end

@@ -2,7 +2,6 @@
 
 ## Up Next:
 
-- Fix issue with refreshing the tree on every tab switch after making changes (make it check if change is coming from any of all tabs)
 - Add a new file through File Explorer
 
 ## Bugs
