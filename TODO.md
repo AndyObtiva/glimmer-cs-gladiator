@@ -28,3 +28,4 @@
 This allows easy copying/pasting of big blocks of code without making mistakes in grabbing the end of the block that matches the beginning.
 - Remember caret position and top of file in every file opened, not just the last one
 - Hot reloading
+- Display caret position

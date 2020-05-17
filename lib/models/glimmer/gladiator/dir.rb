@@ -24,13 +24,22 @@ module Glimmer
         end
       end
   
-      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path
-      attr_reader :path, :display_path, :name
+      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :path, :display_path
+      attr_reader :name, :parent
   
       def initialize(path)
-        @path = @display_path = path
+        @display_path = path
+        @path = ::File.expand_path(@display_path)
         @name = ::File.basename(::File.expand_path(path))
         self.filtered_path_options = []
+      end
+
+      def name=(the_name)
+        self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
+        @name = the_name
+        new_path = ::File.expand_path(display_path)
+        FileUtils.mv(path, new_path)
+        self.path = display_path
       end
   
       def children
@@ -38,7 +47,7 @@ module Glimmer
       end
 
       def retrieve_children
-        ::Dir.glob(::File.join(@path, '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}.sort_by {|c| c.path.to_s.downcase }.sort_by {|c| c.class.name }
+        ::Dir.glob(::File.join(@display_path, '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}.sort_by {|c| c.path.to_s.downcase }.sort_by {|c| c.class.name }
       end
   
       def selected_child_path_history
@@ -80,7 +89,7 @@ module Glimmer
       end
   
       def retrieve_all_children
-        ::Dir.glob(::File.join(@path, '**', '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}
+        ::Dir.glob(::File.join(@display_path, '**', '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}
       end
   
       def all_children_files

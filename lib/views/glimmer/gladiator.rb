@@ -1,7 +1,15 @@
+begin
+  require 'puts_debuggerer' if ENV['DEBUG'].to_s.downcase == 'true'
+rescue LoadError
+end
+require 'fileutils'
+
 require 'models/glimmer/gladiator/dir'
 require 'models/glimmer/gladiator/file'
 
 require 'views/glimmer/gladiator/text_editor'
+
+java_import 'org.eclipse.swt.custom.TreeEditor'
 
 Clipboard.implementation = Clipboard::Java
 Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use
@@ -22,10 +30,6 @@ module Glimmer
     #
     before_body {
       Display.setAppName('Gladiator')
-      local_dir = ENV['LOCAL_DIR'] || '.'
-      @config_file_path = ::File.join(local_dir, '.gladiator')
-      @config = {}
-      Gladiator::Dir.local_dir.all_children # pre-caches children
       @display = display {
         on_event_keydown { |key_event|
           if Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 'f'
@@ -92,14 +96,21 @@ module Glimmer
           end
         }
       }
+
+      local_dir = ENV['LOCAL_DIR'] || '.'
+      @config_file_path = ::File.join(local_dir, '.gladiator')
+      @config = {}
+      Gladiator::Dir.local_dir.all_children # pre-caches children
     }
 
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
-      @tree.select(text: Gladiator::Dir.local_dir.selected_child&.name) if Gladiator::Dir.local_dir.selected_child&.name
+      observe(Gladiator::Dir.local_dir, 'children') do
+        select_tree_item
+      end
       observe(Gladiator::Dir.local_dir, 'selected_child') do
-        @tree.select(text: Gladiator::Dir.local_dir.selected_child&.name)
+        select_tree_item
         selected_file = Gladiator::Dir.local_dir.selected_child
         found_tab_item = @tab_folder.swt_widget.getItems.detect {|ti| ti.getData('file_path') == selected_file.path}
         if found_tab_item
@@ -158,7 +169,7 @@ module Glimmer
         }
         on_control_moved {
           save_config
-        }
+        }        
         composite {
           grid_layout 1, false
           layout_data(:fill, :fill, false, true) {
@@ -185,6 +196,7 @@ module Glimmer
             @list = list(:border, :h_scroll, :v_scroll) {
               layout_data(:fill, :fill, true, true) {
                 #exclude bind(Gladiator::Dir.local_dir, :filter) {|f| !f}
+                minimum_height 400
               }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !!f}
               selection bind(Gladiator::Dir.local_dir, :filtered_path)
@@ -211,21 +223,61 @@ module Glimmer
                     Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
                   }
                 }
-#                 menu_item(:separator)
-#                 @new_file_menu_item = menu_item {
-#                   text 'New File'
-#                   on_widget_selected {
-#                     Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
-#                   }
-#                 }
+                menu_item(:separator)
+                @refresh_menu_item = menu_item {
+                  text 'Refresh'
+                  on_widget_selected {
+                    Gladiator::Dir.local_dir.refresh
+                  }
+                }
+                @rename_menu_item = menu_item {
+                  text 'Rename'
+                  on_widget_selected {
+                    tree_item = @tree.swt_widget.getSelection.first                    
+                    @tree.content {
+                      @tree_text = text {
+                        focus true
+                        text tree_item.getText                        
+                        action = lambda { |event|
+                          new_text = @tree_text.swt_widget.getText()
+                          tree_item.setText(new_text)
+                          tree_item.getData.name = new_text
+                          @tree_text.swt_widget.dispose
+                        }
+                        on_focus_lost(&action)
+                        on_key_pressed { |key_event|
+                          if key_event.keyCode == swt(:cr)
+                            action.call(key_event)
+                          elsif key_event.keyCode == swt(:esc)
+                            @tree_text.swt_widget.dispose
+                          end
+                        }
+                      }
+                      @tree_text.swt_widget.selectAll
+                    }
+                    @tree_editor.setEditor(@tree_text.swt_widget, tree_item);
+                  }
+                }
+                @new_file_menu_item = menu_item {
+                  text 'New File'
+                  on_widget_selected {
+                    tree_item = @tree.swt_widget.getSelection.first
+                    directory_path = extract_tree_item_path(tree_item)
+                    FileUtils.touch(::File.join(directory_path, 'tmp'))
+                    Gladiator::Dir.local_dir.refresh
+                  }
+                }
               }
               on_event_menudetect { |event|
-                if ::Dir.exist?(extract_tree_item_path(@tree.swt_widget.getSelection.first))
-                  @open_menu_item.swt_widget.setEnabled(false)
-#                   @new_file_menu_item.swt_widget.setEnabled(true)
-                else
-                  @open_menu_item.swt_widget.setEnabled(true)
-#                   @new_file_menu_item.swt_widget.setEnabled(false)
+                path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
+                if path
+                  if ::Dir.exist?(path)
+                    @open_menu_item.swt_widget.setEnabled(false)
+                    @new_file_menu_item.swt_widget.setEnabled(true)
+                  else
+                    @open_menu_item.swt_widget.setEnabled(true)
+                    @new_file_menu_item.swt_widget.setEnabled(false)
+                  end
                 end
               }
               on_mouse_up {
@@ -245,6 +297,12 @@ module Glimmer
               }
             }
           }
+
+          @tree_editor = TreeEditor.new(@tree.swt_widget);
+          @tree_editor.horizontalAlignment = swt(:left);
+          @tree_editor.grabHorizontal = true;
+          @tree_editor.minimumHeight = 20;
+
         }
         @editor_container = composite {
           grid_layout 1, false
@@ -329,13 +387,13 @@ module Glimmer
         return if config_yaml.to_s.strip.empty?
         @config = YAML.load(config_yaml)
         Gladiator::Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
-        Gladiator::Dir.local_dir.selected_child&.caret_position  = Gladiator::Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position]) if @config[:caret_position]
-        Gladiator::Dir.local_dir.selected_child&.top_index = @config[:top_index] if @config[:top_index]
-        body_root.on_event_show do
+        Gladiator::Dir.local_dir.selected_child&.caret_position  = Gladiator::Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
+        Gladiator::Dir.local_dir.selected_child&.top_index = @config[:top_index].to_i if @config[:top_index]
+        body_root.on_event_show {
           swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
-          swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
+          swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]          
           @loaded_config = true
-        end
+        }
       end
     end
   
@@ -359,11 +417,18 @@ module Glimmer
     end
 
     def extract_tree_item_path(tree_item)
+      return if tree_item.nil?
       if tree_item.getParentItem
         ::File.join(extract_tree_item_path(tree_item.getParentItem), tree_item.getText)
       else
         '.'
       end
+    end
+    
+    def select_tree_item
+      return unless Gladiator::Dir.local_dir.selected_child&.name
+      tree_items_to_select = @tree.depth_first_search { |ti| ti.getData.path == Gladiator::Dir.local_dir.selected_child.path }
+      @tree.swt_widget.setSelection(tree_items_to_select)
     end
   end
 end

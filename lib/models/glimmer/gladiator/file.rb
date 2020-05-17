@@ -5,8 +5,8 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :dirty_content, :line_numbers_content, :caret_position, :selection_count, :line_number, :find_text, :replace_text, :top_index
-      attr_reader :path, :display_path, :name
+      attr_accessor :dirty_content, :line_numbers_content, :caret_position, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
+      attr_reader :name
   
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
@@ -35,6 +35,14 @@ module Glimmer
         rescue
           # no op in case of a binary file
         end
+      end
+  
+      def name=(the_name)
+        self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
+        @name = the_name
+        new_path = ::File.expand_path(display_path)
+        FileUtils.mv(path, new_path)
+        self.path = new_path
       end
   
       def start_filewatcher
