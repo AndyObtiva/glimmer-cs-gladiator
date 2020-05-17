@@ -67,6 +67,7 @@ module Glimmer
             @filter_text.swt_widget.selectAll
             @filter_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 't'
+            @tree.select(text: Gladiator::Dir.local_dir.selected_child.name)
             @tree.swt_widget.setFocus
           end
         }
@@ -76,7 +77,9 @@ module Glimmer
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
+      @tree.select(text: Gladiator::Dir.local_dir.selected_child.name) if Gladiator::Dir.local_dir.selected_child&.display_path
       observe(Gladiator::Dir.local_dir, 'selected_child') do
+        @tree.select(text: Gladiator::Dir.local_dir.selected_child.name)
         selected_file = Gladiator::Dir.local_dir.selected_child
         found_tab_item = @tab_folder.swt_widget.getItems.detect {|ti| ti.getData('file_path') == selected_file.path}
         if found_tab_item
@@ -144,7 +147,7 @@ module Glimmer
           @filter_text = text {
             layout_data :fill, :center, true, false
             text bind(Gladiator::Dir.local_dir, 'filter')
-      	    on_key_pressed { |key_event|
+            on_key_pressed { |key_event|
               if key_event.keyCode == swt(:tab) || 
                   key_event.keyCode == swt(:cr) || 
                   key_event.keyCode == swt(:lf) ||
@@ -180,9 +183,9 @@ module Glimmer
                 #exclude bind(Gladiator::Dir.local_dir, :filter) {|f| !!f}
               }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !f}
-              items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :display_path)
+              items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :name)
               on_widget_selected {
-                Gladiator::Dir.local_dir.selected_child_path = @tree.swt_widget.getSelection.first.getText
+                Gladiator::Dir.local_dir.selected_child_path = @tree.swt_widget.getSelection.first&.getText
               }
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr) || Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :lf)
@@ -194,6 +197,7 @@ module Glimmer
                 root_item = @tree.swt_widget.getItems.first
                 if root_item && !root_item.getExpanded
                   root_item.setExpanded true
+                  @tree.select(text: Gladiator::Dir.local_dir.selected_child.name)
                 end
               }
             }
@@ -224,7 +228,7 @@ module Glimmer
             }
             @line_number_text = text {
               layout_data(:fill, :fill, true, false) {
-                minimum_width 300
+                minimum_width 400
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
               on_key_pressed { |key_event|
@@ -238,7 +242,7 @@ module Glimmer
             }
             @find_text = text {
               layout_data(:fill, :fill, true, false) {
-                minimum_width 300
+                minimum_width 400
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.find_text')
               on_key_pressed { |key_event|

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.1.4
+
+- Fix issue with file explorer tree losing selection on refresh
+- Make file explorer tree show file/directory names not paths
+- Make file explorer tree show current project directory name as the root instead of "."
+
 ## 0.1.3
 
 - Fix issue with selection getting out of wack when moving a group of lines up or down
@@ -7,8 +13,8 @@
 - Fix issue with kill line sometimes jumping to the next line afterwards. Seems to happen if following line is empty
 - Fix issue with line numbers sometimes getting clipped when openig a new file until resizing window
 - Support multiple tabs
-- Remember window size and location
 - Support tab keyboard shortcuts for next tab, previous tab, first tab, last tab
+- Remember window size and location
 
 ## 0.1.2
 

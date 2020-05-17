@@ -25,10 +25,11 @@ module Glimmer
       end
   
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path
-      attr_reader :path, :display_path
+      attr_reader :path, :display_path, :name
   
       def initialize(path)
         @path = @display_path = path
+        @name = ::File.basename(::File.expand_path(path))
         self.filtered_path_options = []
       end
   
@@ -95,6 +96,8 @@ module Glimmer
           rescue
             # no op
           end
+        else
+          refresh
         end
       end
       

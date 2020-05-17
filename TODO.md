@@ -2,7 +2,6 @@
 
 ## Up Next:
 
-- Fix issue with file explorer tree losing selection on refresh
 - Fix file explorer opening of files on every selection change instead of just hitting ENTER or mouse click
 - Fix issue with refreshing the tree on every tab switch after making changes (make it check if change is coming from any of all tabs)
 - Add a new file through File Explorer
