@@ -205,12 +205,12 @@ module Glimmer
               }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !f}
               items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :name)
-              on_widget_selected {
-                Gladiator::Dir.local_dir.selected_child_path = @tree.swt_widget.getSelection.first&.getText
+              on_mouse_up {
+                Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
               }
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr) || Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :lf)
-                  Gladiator::Dir.local_dir.selected_child_path = @tree.swt_widget.getSelection&.first&.getText
+                  Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
                   @text_editor.text_widget.setFocus
                 end
               }
@@ -334,6 +334,14 @@ module Glimmer
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?
     rescue => e
       puts e.full_message
+    end
+
+    def extract_tree_item_path(tree_item)
+      if tree_item.getParentItem
+        ::File.join(extract_tree_item_path(tree_item.getParentItem), tree_item.getText)
+      else
+        '.'
+      end
     end
   end
 end

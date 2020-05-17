@@ -2,7 +2,6 @@
 
 ## Up Next:
 
-- Fix file explorer opening of files on every selection change instead of just hitting ENTER or mouse click
 - Fix issue with refreshing the tree on every tab switch after making changes (make it check if change is coming from any of all tabs)
 - Add a new file through File Explorer
 
@@ -11,6 +10,7 @@
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
 - Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
 - Fix tree slow refresh and lost refreshes on directory file changes
+- Fix issue with tree auto-selection not always working when multiple files/directories have the same name
 
 ## Features
 

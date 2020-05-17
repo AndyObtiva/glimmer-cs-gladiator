@@ -3,6 +3,7 @@
 ## 0.1.4
 
 - Fix issue with file explorer tree losing selection on refresh
+- Fix file explorer opening of files on every selection change instead of just hitting ENTER or mouse click
 - Make file explorer tree show file/directory names not paths
 - Make file explorer tree show current project directory name as the root instead of "."
 - Improve file lookup by ignoring dots
