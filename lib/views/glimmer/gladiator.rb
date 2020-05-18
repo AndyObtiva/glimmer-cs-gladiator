@@ -234,28 +234,7 @@ module Glimmer
                   text 'Rename'
                   on_widget_selected {
                     tree_item = @tree.swt_widget.getSelection.first                    
-                    @tree.content {
-                      @tree_text = text {
-                        focus true
-                        text tree_item.getText                        
-                        action = lambda { |event|
-                          new_text = @tree_text.swt_widget.getText()
-                          tree_item.setText(new_text)
-                          tree_item.getData.name = new_text
-                          @tree_text.swt_widget.dispose
-                        }
-                        on_focus_lost(&action)
-                        on_key_pressed { |key_event|
-                          if key_event.keyCode == swt(:cr)
-                            action.call(key_event)
-                          elsif key_event.keyCode == swt(:esc)
-                            @tree_text.swt_widget.dispose
-                          end
-                        }
-                      }
-                      @tree_text.swt_widget.selectAll
-                    }
-                    @tree_editor.setEditor(@tree_text.swt_widget, tree_item);
+                    rename_tree_item(tree_item)
                   }
                 }
                 @new_file_menu_item = menu_item {
@@ -263,8 +242,12 @@ module Glimmer
                   on_widget_selected {
                     tree_item = @tree.swt_widget.getSelection.first
                     directory_path = extract_tree_item_path(tree_item)
-                    FileUtils.touch(::File.join(directory_path, 'tmp'))
+                    new_file_path = ::File.expand_path(::File.join(directory_path, 'tmp'))
+                    FileUtils.touch(new_file_path)
                     Gladiator::Dir.local_dir.refresh
+                    new_tree_item_array = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}
+                    @tree.swt_widget.setSelection(new_tree_item_array)
+                    rename_tree_item(new_tree_item_array.first)
                   }
                 }
               }
@@ -429,6 +412,38 @@ module Glimmer
       return unless Gladiator::Dir.local_dir.selected_child&.name
       tree_items_to_select = @tree.depth_first_search { |ti| ti.getData.path == Gladiator::Dir.local_dir.selected_child.path }
       @tree.swt_widget.setSelection(tree_items_to_select)
+    end
+
+    def rename_tree_item(tree_item)
+      @tree.content {
+        @tree_text = text {
+          focus true
+          text tree_item.getText
+          @action_taken = false
+          action = lambda { |event|
+            unless @action_taken
+              @action_taken = true
+              new_text = @tree_text.swt_widget.getText
+              tree_item.setText(new_text)
+              file = tree_item.getData
+              file.name = new_text
+              tree_item = @tree.depth_first_search { |ti| ti.getData.path == file.path }
+              @tree.swt_widget.showItem(tree_item.first)
+              @tree_text.swt_widget.dispose
+            end
+          }
+          on_focus_lost(&action)
+          on_key_pressed { |key_event|
+            if key_event.keyCode == swt(:cr)
+              action.call(key_event)
+            elsif key_event.keyCode == swt(:esc)
+              @tree_text.swt_widget.dispose
+            end
+          }
+        }
+        @tree_text.swt_widget.selectAll
+      }
+      @tree_editor.setEditor(@tree_text.swt_widget, tree_item);
     end
   end
 end
