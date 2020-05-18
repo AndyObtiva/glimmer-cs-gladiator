@@ -86,7 +86,22 @@ module Glimmer
         puts "Error in writing raw dirty content for #{path}"
         puts e.full_message
       end
-  
+
+      def current_line_indentation
+        current_line.to_s.match(/^(\s+)/).to_a[1].to_s
+      end
+
+      def current_line
+        lines[line_number - 1]
+      end
+      
+      def insert_new_line!
+        the_lines = lines
+        the_lines[line_number...line_number] = [current_line_indentation]
+        self.dirty_content = the_lines.join("\n")
+        self.caret_position = caret_position_for_line_index(line_number) + current_line_indentation.size
+      end
+
       def comment_line!
         old_lines = lines
         return if old_lines.size < 1

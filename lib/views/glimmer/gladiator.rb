@@ -1,5 +1,5 @@
 begin
-  require 'puts_debuggerer' if ENV['DEBUG'].to_s.downcase == 'true'
+  require 'puts_debuggerer' if ENV['puts_debuggerer'].to_s.downcase == 'true'
 rescue LoadError
 end
 require 'fileutils'

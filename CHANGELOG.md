@@ -8,8 +8,11 @@
 - Fix issue with top index not being set from config
 - Make file explorer tree show file/directory names not paths
 - Make file explorer tree show current project directory name as the root instead of "."
+- Make file explorer shortcut auto-reveal open file in file explorer tree
 - Improve file lookup by ignoring dots
 - Add number command + 2-8 tab shortcuts
+- Support auto-indent on hitting ENTER to add a new line
+- Support insert new indented line when hitting CMD+ENTER in the middle of a line
 
 ## 0.1.3
 

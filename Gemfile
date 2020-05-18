@@ -12,5 +12,5 @@ group :development do
   gem "rspec", "~> 3.5.0"
   gem "jeweler", "2.3.9"
   gem "simplecov", ">= 0"
-  gem 'puts_debuggerer', '~> 0.8.1'
+  gem 'puts_debuggerer', '~> 0.8.1', require: false
 end

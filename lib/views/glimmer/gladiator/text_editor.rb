@@ -55,6 +55,8 @@ module Glimmer
                 file.outdent!
               elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == ']'
                 file.indent!
+              elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt('cr')
+                file.insert_new_line!
               elsif key_event.keyCode == swt(:page_up)
                 file.page_up
                 key_event.doit = false
@@ -78,6 +80,10 @@ module Glimmer
             on_verify_text { |verify_event|
               key_code = verify_event.keyCode
               case key_code
+              when swt(:cr)
+                if file.selection_count.to_i == 0
+                  verify_event.text += file.current_line_indentation
+                end
               when swt(:tab)
                 if file.selection_count.to_i > 0
                   file.indent!

@@ -53,6 +53,10 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-Rake::Task["build"].enhance [:spec]
+task :no_puts_debuggerer do
+  ENV['puts_debuggerer'] = 'false'
+end
+
+Rake::Task["build"].enhance [:no_puts_debuggerer, :spec]
 
 require 'glimmer/rake_task'
