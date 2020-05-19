@@ -26,6 +26,7 @@ module Glimmer
   
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :path, :display_path
       attr_reader :name, :parent
+      attr_writer :all_children, :children
   
       def initialize(path)
         @display_path = path
@@ -67,12 +68,8 @@ module Glimmer
         new_all_children = retrieve_all_children
         new_children = retrieve_children        
         refresh_operation = lambda do
-          @all_children = new_all_children
-          @children ||= []
-          @children.clear
-          new_children.each do |child|
-            @children << child
-          end
+          self.all_children = new_all_children
+          self.children = new_children
         end
         if async
           async_exec(&refresh_operation)

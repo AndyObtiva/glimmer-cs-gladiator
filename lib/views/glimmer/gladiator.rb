@@ -218,7 +218,7 @@ module Glimmer
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !f}
               items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :name)
               menu {
-                menu_item {
+                @open_menu_item = menu_item {
                   text 'Open'
                   on_widget_selected {
                     Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
