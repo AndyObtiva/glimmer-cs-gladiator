@@ -21,7 +21,7 @@ module Glimmer
             background color(:widget_background)
             foreground rgb(75, 75, 75)
             text bind(file, 'line_numbers_content')
-            top_index bind(file, 'top_index', on_write: lambda {|ti| file.top_index}) # read only
+            top_index bind(file, 'top_index', read_only: true)
             on_focus_gained {
               @text&.swt_widget.setFocus
             }
