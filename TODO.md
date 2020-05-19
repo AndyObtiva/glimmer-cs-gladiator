@@ -2,8 +2,8 @@
 
 ## Up Next:
 
-- Make hitting ESC button in file explorer go back to open file and reselect it
-- Add a new file through File Explorer
+- Make hitting ESC button in file explorer go back to open file to the same caret position as before and reselect it
+- Make hitting ESC button in line number field, file lookup field, find field, or replace field go back to open file to the same caret position as before
 
 ## Bugs
 

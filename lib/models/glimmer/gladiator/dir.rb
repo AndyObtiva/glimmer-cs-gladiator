@@ -15,7 +15,7 @@ module Glimmer
             @thread = Thread.new(@filewatcher) do |fw| 
               fw.watch do |filename, event|
                 if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
-                  dir.refresh if !dir.selected_child_path_history.include?(filename) && filename != dir.selected_child_path
+                  dir.refresh if !filename.include?('new_file') && !dir.selected_child_path_history.include?(filename) && filename != dir.selected_child_path
                 end
                 @last_update = Time.now.to_f
               end
@@ -54,16 +54,21 @@ module Glimmer
         @selected_child_path_history ||= []
       end
   
-      def refresh
+      def refresh(async: true)
         new_all_children = retrieve_all_children
-        new_children = retrieve_children
-        async_exec do
+        new_children = retrieve_children        
+        refresh_operation = lambda do
           @all_children = new_all_children
           @children ||= []
           @children.clear
           new_children.each do |child|
             @children << child
           end
+        end
+        if async
+          async_exec(&refresh_operation)
+        else
+          sync_exec(&refresh_operation)
         end
       end
   

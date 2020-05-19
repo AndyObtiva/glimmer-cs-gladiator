@@ -1,6 +1,7 @@
 begin
   require 'puts_debuggerer' if ENV['puts_debuggerer'].to_s.downcase == 'true'
 rescue LoadError
+  # no op
 end
 require 'fileutils'
 
@@ -107,10 +108,10 @@ module Glimmer
     #
     after_body {
       observe(Gladiator::Dir.local_dir, 'children') do
-        select_tree_item
+        select_tree_item unless @rename_in_progress
       end
       observe(Gladiator::Dir.local_dir, 'selected_child') do
-        select_tree_item
+        select_tree_item unless @rename_in_progress
         selected_file = Gladiator::Dir.local_dir.selected_child
         found_tab_item = @tab_folder.swt_widget.getItems.detect {|ti| ti.getData('file_path') == selected_file.path}
         if found_tab_item
@@ -242,12 +243,11 @@ module Glimmer
                   on_widget_selected {
                     tree_item = @tree.swt_widget.getSelection.first
                     directory_path = extract_tree_item_path(tree_item)
-                    new_file_path = ::File.expand_path(::File.join(directory_path, 'tmp'))
+                    new_file_path = ::File.expand_path(::File.join(directory_path, 'new_file'))
                     FileUtils.touch(new_file_path)
-                    Gladiator::Dir.local_dir.refresh
-                    new_tree_item_array = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}
-                    @tree.swt_widget.setSelection(new_tree_item_array)
-                    rename_tree_item(new_tree_item_array.first)
+                    Gladiator::Dir.local_dir.refresh(async: false)                    
+                    new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}.first
+                    rename_tree_item(new_tree_item, true)
                   }
                 }
               }
@@ -414,22 +414,26 @@ module Glimmer
       @tree.swt_widget.setSelection(tree_items_to_select)
     end
 
-    def rename_tree_item(tree_item)
+    def rename_tree_item(tree_item, open_afterwards = false)
       @tree.content {
         @tree_text = text {
           focus true
           text tree_item.getText
           @action_taken = false
           action = lambda { |event|
-            unless @action_taken
+            if !@action_taken && !@rename_in_progress
               @action_taken = true
+              @rename_in_progress = true
               new_text = @tree_text.swt_widget.getText
               tree_item.setText(new_text)
               file = tree_item.getData
               file.name = new_text
-              tree_item = @tree.depth_first_search { |ti| ti.getData.path == file.path }
+              file_path = file.path
+              tree_item = @tree.depth_first_search { |ti| ti.getData.path == file_path }
               @tree.swt_widget.showItem(tree_item.first)
-              @tree_text.swt_widget.dispose
+              @tree_text.swt_widget.dispose              
+              Dir.local_dir.selected_child_path = file_path if open_afterwards
+              @rename_in_progress = false
             end
           }
           on_focus_lost(&action)
@@ -438,6 +442,7 @@ module Glimmer
               action.call(key_event)
             elsif key_event.keyCode == swt(:esc)
               @tree_text.swt_widget.dispose
+              @rename_in_progress = false
             end
           }
         }
