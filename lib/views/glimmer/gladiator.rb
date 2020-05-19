@@ -234,7 +234,7 @@ module Glimmer
                 @rename_menu_item = menu_item {
                   text 'Rename'
                   on_widget_selected {
-                    tree_item = @tree.swt_widget.getSelection.first                    
+                    tree_item = @tree.swt_widget.getSelection.first
                     rename_tree_item(tree_item)
                   }
                 }
@@ -243,11 +243,17 @@ module Glimmer
                   on_widget_selected {
                     tree_item = @tree.swt_widget.getSelection.first
                     directory_path = extract_tree_item_path(tree_item)
+                    if ::File.exist?(directory_path)
+                      tree_item = tree_item.getParentItem
+                      directory_path = ::File.dirname(directory_path)
+                    end
                     new_file_path = ::File.expand_path(::File.join(directory_path, 'new_file'))
                     FileUtils.touch(new_file_path)
-                    Gladiator::Dir.local_dir.refresh(async: false)                    
-                    new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}.first
-                    rename_tree_item(new_tree_item, true)
+                    Gladiator::Dir.local_dir.refresh(async: false)
+                    sync_exec {
+                      new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}.first
+                      rename_tree_item(new_tree_item, true)
+                    }
                   }
                 }
               }
@@ -256,10 +262,8 @@ module Glimmer
                 if path
                   if ::Dir.exist?(path)
                     @open_menu_item.swt_widget.setEnabled(false)
-                    @new_file_menu_item.swt_widget.setEnabled(true)
                   else
                     @open_menu_item.swt_widget.setEnabled(true)
-                    @new_file_menu_item.swt_widget.setEnabled(false)
                   end
                 end
               }
@@ -421,20 +425,22 @@ module Glimmer
           text tree_item.getText
           @action_taken = false
           action = lambda { |event|
-            if !@action_taken && !@rename_in_progress
-              @action_taken = true
-              @rename_in_progress = true
-              new_text = @tree_text.swt_widget.getText
-              tree_item.setText(new_text)
-              file = tree_item.getData
-              file.name = new_text
-              file_path = file.path
-              tree_item = @tree.depth_first_search { |ti| ti.getData.path == file_path }
-              @tree.swt_widget.showItem(tree_item.first)
-              @tree_text.swt_widget.dispose              
-              Dir.local_dir.selected_child_path = file_path if open_afterwards
-              @rename_in_progress = false
-            end
+            sync_exec {
+              if !@action_taken && !@rename_in_progress
+                @action_taken = true
+                @rename_in_progress = true
+                new_text = @tree_text.swt_widget.getText
+                tree_item.setText(new_text)
+                file = tree_item.getData
+                file.name = new_text
+                file_path = file.path
+                tree_item = @tree.depth_first_search { |ti| ti.getData.path == file_path }
+                @tree.swt_widget.showItem(tree_item.first)
+                @tree_text.swt_widget.dispose              
+                Dir.local_dir.selected_child_path = file_path if open_afterwards
+                @rename_in_progress = false
+              end
+            }
           }
           on_focus_lost(&action)
           on_key_pressed { |key_event|
