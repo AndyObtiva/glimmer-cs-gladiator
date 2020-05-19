@@ -94,6 +94,9 @@ module Glimmer
             @filter_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr.downcase == 't'
             @tree.swt_widget.setFocus
+          elsif key_event.keyCode == swt(:esc)
+            Dir.local_dir.selected_child_path = @text_editor.file.path
+            @text_editor.text_widget.setFocus
           end
         }
       }
@@ -182,13 +185,10 @@ module Glimmer
             on_key_pressed { |key_event|
               if key_event.keyCode == swt(:tab) || 
                   key_event.keyCode == swt(:cr) || 
-                  key_event.keyCode == swt(:lf) ||
                   key_event.keyCode == swt(:arrow_up) ||
                   key_event.keyCode == swt(:arrow_down)
                 @list.swt_widget.select(0) if @list.swt_widget.getSelectionIndex() == -1
                 @list.swt_widget.setFocus
-              elsif key_event.keyCode == swt(:esc)
-                @text_editor.text_widget.setFocus
               end
             }    
           }
@@ -205,7 +205,7 @@ module Glimmer
                 Gladiator::Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
               }
               on_key_pressed { |key_event|
-                if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr) || Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :lf)
+                if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
                   Gladiator::Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
                   @text_editor.text_widget.setFocus
                 end
@@ -218,39 +218,39 @@ module Glimmer
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !f}
               items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :name)
               menu {
-                @open_menu_item = menu_item {
+                menu_item {
                   text 'Open'
                   on_widget_selected {
                     Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
                   }
                 }
                 menu_item(:separator)
-                @refresh_menu_item = menu_item {
+                menu_item {
                   text 'Delete'
                   on_widget_selected {
                     tree_item = @tree.swt_widget.getSelection.first
                     delete_tree_item(tree_item)
                   }
                 }
-                @refresh_menu_item = menu_item {
+                menu_item {
                   text 'Refresh'
                   on_widget_selected {
                     Gladiator::Dir.local_dir.refresh
                   }
                 }
-                @rename_menu_item = menu_item {
+                menu_item {
                   text 'Rename'
                   on_widget_selected {
                     rename_selected_tree_item
                   }
                 }
-                @new_file_menu_item = menu_item {
+                menu_item {
                   text 'New Directory'
                   on_widget_selected {
                     add_new_directory_to_selected_tree_item
                   }
                 }
-                @new_file_menu_item = menu_item {
+                menu_item {
                   text 'New File'
                   on_widget_selected {
                     add_new_file_to_selected_tree_item
@@ -259,19 +259,13 @@ module Glimmer
               }
               on_event_menudetect { |event|
                 path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
-                if path
-                  if ::Dir.exist?(path)
-                    @open_menu_item.swt_widget.setEnabled(false)
-                  else
-                    @open_menu_item.swt_widget.setEnabled(true)
-                  end
-                end
+                @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
               }
               on_mouse_up {
                 Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
               }
               on_key_pressed { |key_event|
-                if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr) || Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :lf)
+                if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
                   Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
                   @text_editor.text_widget.setFocus
                 end
@@ -336,8 +330,6 @@ module Glimmer
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
                   Gladiator::Dir.local_dir.selected_child.find_next
-                elsif key_event.keyCode == swt(:esc)
-                  @text_editor.text_widget.setFocus
                 end
               }
             }
@@ -355,8 +347,6 @@ module Glimmer
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
                   Gladiator::Dir.local_dir.selected_child.replace_next!
-                elsif key_event.keyCode == swt(:esc)
-                  @text_editor.text_widget.setFocus
                 end
               }
             }

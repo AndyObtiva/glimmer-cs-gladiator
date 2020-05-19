@@ -9,6 +9,8 @@
 - Make file explorer tree show file/directory names not paths
 - Make file explorer tree show current project directory name as the root instead of "."
 - Make file explorer shortcut auto-reveal open file in file explorer tree
+- Make hitting ESC button in line number field, file lookup field, find field, or replace field go back to open file to the same caret position as before
+- Make hitting ESC button in file explorer go back to open file to the same caret position as before and reselect it
 - Improve file lookup by ignoring dots
 - Add number command + 2-8 tab shortcuts
 - Add a new file through File Explorer

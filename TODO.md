@@ -2,9 +2,6 @@
 
 ## Up Next:
 
-- Make hitting ESC button in file explorer go back to open file to the same caret position as before and reselect it
-- Make hitting ESC button in line number field, file lookup field, find field, or replace field go back to open file to the same caret position as before
-
 ## Bugs
 
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)

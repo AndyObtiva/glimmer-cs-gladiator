@@ -63,9 +63,7 @@ module Glimmer
       end
 
       def refresh(async: true, force: false)
-        pd @refresh_paused, caller: true
         return if @refresh_paused && !force
-        pd "Refreshing with async: #{async}", caller: 20
         new_all_children = retrieve_all_children
         new_children = retrieve_children        
         refresh_operation = lambda do
