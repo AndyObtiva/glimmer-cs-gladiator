@@ -21,7 +21,7 @@ module Glimmer
               end
             end
           end
-        end
+        end        
       end
   
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :path, :display_path
@@ -54,7 +54,18 @@ module Glimmer
         @selected_child_path_history ||= []
       end
   
-      def refresh(async: true)
+      def pause_refresh
+        @refresh_paused = true
+      end
+      
+      def resume_refresh
+        @refresh_paused = false
+      end
+
+      def refresh(async: true, force: false)
+        pd @refresh_paused, caller: true
+        return if @refresh_paused && !force
+        pd "Refreshing with async: #{async}", caller: 20
         new_all_children = retrieve_all_children
         new_children = retrieve_children        
         refresh_operation = lambda do
@@ -125,6 +136,10 @@ module Glimmer
       
       def selected_child_path
         @selected_child&.path
+      end
+      
+      def delete!
+        FileUtils.rm_rf(path)
       end
   
       def to_s

@@ -5,8 +5,8 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :dirty_content, :line_numbers_content, :caret_position, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
-      attr_reader :name
+      attr_accessor :line_numbers_content, :caret_position, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
+      attr_reader :name, :dirty_content
   
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
@@ -44,6 +44,10 @@ module Glimmer
         FileUtils.mv(path, new_path)
         self.path = new_path
       end
+      
+      def dirty_content=(the_content)
+        @dirty_content = the_content if ::File.exist?(path)
+      end
   
       def start_filewatcher
         @filewatcher = Filewatcher.new(@path)
@@ -73,6 +77,7 @@ module Glimmer
       end
   
       def write_dirty_content
+        return unless ::File.exist?(path)
         format_dirty_content_for_writing!
         ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
@@ -81,6 +86,7 @@ module Glimmer
       end
   
       def write_raw_dirty_content
+        return unless ::File.exist?(path)
         ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
         puts "Error in writing raw dirty content for #{path}"
@@ -93,6 +99,10 @@ module Glimmer
 
       def current_line
         lines[line_number - 1]
+      end
+      
+      def delete!
+        FileUtils.rm(path)        
       end
       
       def insert_new_line!
