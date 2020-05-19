@@ -9,20 +9,22 @@ Gladiator is also a personal tool for shaping an editor exactly the way I like.
 I leave building truly professional text editors to software tooling experts who would hopefully use Glimmer one day.
 
 Gladiator currently supports the following text editing features:
-- File explorer navigation to open file
-- File lookup by name
+- File explorer navigation to open file, rename, delete, add new file, add new directory, or refresh tree
+- File lookup by name ignoring slashes, underscores, and dots to ease lookup
+- Watch open file for external changes to automatically refresh in editor
+- Watch project subdirectories for changes to automatically refresh in file explorer/file lookup
 - Find & Replace
 - Show Line Numbers
 - Jump to Line
 - Multiple tab support
 - Remember last opened file, caret position, top line, window size, and window location
 - Autosave on focus out/quit/open new file
-- Watch open file for external changes to reflect in editor
-- Watch subdirectories for changes to reflect in file explorer/file lookup
-- Duplicate Line(s)
-- Kill Line(s)
-- Move up one line
-- Move down one line
+- Duplicate Line(s)/selection
+- Kill Line(s)/selection
+- Move line/selection up
+- Move line/selection down
+- Comment/Uncomment line/selection
+- Indent/Unindent line/selection
 
 ## Pre-requisites
 
