@@ -12,6 +12,7 @@
 - Improve file lookup by ignoring dots
 - Add number command + 2-8 tab shortcuts
 - Add a new file through File Explorer
+- Add a new directory through File Explorer
 - Delete a file or directory through File Explorer
 - Support auto-indent on hitting ENTER to add a new line
 - Support insert new indented line when hitting CMD+ENTER in the middle of a line

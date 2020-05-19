@@ -245,6 +245,12 @@ module Glimmer
                   }
                 }
                 @new_file_menu_item = menu_item {
+                  text 'New Directory'
+                  on_widget_selected {
+                    add_new_directory_to_selected_tree_item
+                  }
+                }
+                @new_file_menu_item = menu_item {
                   text 'New File'
                   on_widget_selected {
                     add_new_file_to_selected_tree_item
@@ -430,6 +436,22 @@ module Glimmer
       Dir.local_dir.pause_refresh
       tree_item = @tree.swt_widget.getSelection.first
       rename_tree_item(tree_item)
+    end
+    
+    def add_new_directory_to_selected_tree_item
+      Dir.local_dir.pause_refresh
+      tree_item = @tree.swt_widget.getSelection.first
+      directory_path = extract_tree_item_path(tree_item)
+      if !::Dir.exist?(directory_path)
+        tree_item = tree_item.getParentItem
+        directory_path = ::File.dirname(directory_path)
+      end
+      new_directory_path = ::File.expand_path(::File.join(directory_path, 'new_directory'))
+      FileUtils.mkdir_p(new_directory_path)
+      Dir.local_dir.refresh(async: false, force: true)
+      new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_directory_path}.first
+      @tree.swt_widget.showItem(new_tree_item)
+      rename_tree_item(new_tree_item, true)
     end
     
     def add_new_file_to_selected_tree_item
