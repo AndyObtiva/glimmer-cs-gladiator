@@ -4,7 +4,6 @@
 
 - Make gladiator command work globally and not just for application that has gem configured
 - Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in
-- Fix issue with changes not persisting when done via find/replace on a newly browsed to tab
 
 ## Bugs
 

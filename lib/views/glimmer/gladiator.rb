@@ -194,6 +194,9 @@ module Glimmer
         }
         on_control_moved {
           save_config
+        }
+        on_shell_deactivated {
+          @text_editor&.file&.write_dirty_content
         }        
         composite {
           grid_layout 1, false
@@ -283,12 +286,13 @@ module Glimmer
                 @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
               }
               on_mouse_up {
-                Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
+                Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
+                @text_editor&.text_widget&.setFocus
               }
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
                   Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
-                  @text_editor.text_widget.setFocus
+                  @text_editor&.text_widget&.setFocus
                 end
               }
               on_paint_control {

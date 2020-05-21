@@ -6,13 +6,14 @@ module Glimmer
       include Glimmer
   
       attr_accessor :line_numbers_content, :caret_position, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
-      attr_reader :name, :dirty_content
+      attr_reader :name, :dirty_content      
   
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
         @display_path = path
         @name = ::File.basename(path)
         @path = ::File.expand_path(path)
+        @caret_position = 0
         read_dirty_content = ::File.read(path)
         begin
           # test read dirty content

@@ -7,6 +7,7 @@
 - Fix rename bug for when focusing out without changing name
 - Make CMD+T auto-select open file in file tree
 - Fix bug with opening file with ENTER key from file tree
+- Fix issue with changes not persisting when done via find/replace on a newly browsed to tab
 
 ## 0.1.4
 
