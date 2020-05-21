@@ -110,6 +110,7 @@ module Glimmer
             @filter_text.swt_widget.selectAll
             @filter_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == 't'
+            select_tree_item unless @rename_in_progress
             @tree.swt_widget.setFocus
           elsif key_event.keyCode == swt(:esc)
             if @text_editor
@@ -426,7 +427,7 @@ module Glimmer
       if tree_item.getParentItem
         ::File.join(extract_tree_item_path(tree_item.getParentItem), tree_item.getText)
       else
-        '.'
+        Dir.local_dir.path
       end
     end
     
@@ -494,6 +495,7 @@ module Glimmer
         after_write: -> (edited_tree_item) {
           file = edited_tree_item.getData
           file_path = file.path
+          # TODO rename file in tab title
           Dir.local_dir.selected_child_path = file_path if open_afterwards
           Dir.local_dir.resume_refresh            
         },

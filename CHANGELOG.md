@@ -4,6 +4,8 @@
 
 - Support prefix new indented line when hitting CMD+SHIFT+ENTER in the middle of a line
 - Support closing text editor tabs with keyboard shortcuts (closing current tab, closing all tabs other than current one, closing all tabs)
+- Fix rename bug for when focusing out without changing name
+- Fix bug with opening file with ENTER key from file tree
 
 ## 0.1.4
 
