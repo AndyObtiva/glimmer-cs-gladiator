@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.1.5
+
+- Support prefix new indented line when hitting CMD+SHIFT+ENTER in the middle of a line
+- Support closing text editor tabs with keyboard shortcuts (closing current tab, closing all tabs other than current one, closing all tabs)
+
 ## 0.1.4
 
 - Fix issue with file explorer tree losing selection on refresh

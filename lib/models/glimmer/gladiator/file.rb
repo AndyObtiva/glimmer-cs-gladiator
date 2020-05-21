@@ -105,6 +105,13 @@ module Glimmer
         FileUtils.rm(path)        
       end
       
+      def prefix_new_line!
+        the_lines = lines
+        the_lines[line_number-1...line_number-1] = [current_line_indentation]
+        self.dirty_content = the_lines.join("\n")
+        self.caret_position = caret_position_for_line_index(line_number-1) + current_line_indentation.size
+      end
+
       def insert_new_line!
         the_lines = lines
         the_lines[line_number...line_number] = [current_line_indentation]

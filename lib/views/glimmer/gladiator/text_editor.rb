@@ -55,7 +55,9 @@ module Glimmer
                 file.outdent!
               elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == ']'
                 file.indent!
-              elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt('cr')
+              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.keyCode == swt(:cr)
+                file.prefix_new_line!
+              elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt(:cr)
                 file.insert_new_line!
               elsif key_event.keyCode == swt(:page_up)
                 file.page_up

@@ -1,32 +1,34 @@
 # TODO
 
-## Up Next:
+## Up Next
+
+- Make gladiator command work globally and not just for application that has gem configured
+- Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in
+- Fix rename bug
+- Fix bug with opening file with ENTER key from file tree
+- Fix issue with changes not persisting when done via find/replace on a newly browsed to tab
 
 ## Bugs
 
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
 - Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
 - Fix tree slow refresh and lost refreshes on directory file changes
-- Fix issue with tree auto-selection not always working when multiple files/directories have the same name
 
 ## Enhancements
 
 - Make tabs not take memory when not selected (they unload/dispose their control)
-- Make gladiator command work globally and not just for application that has gem configured
-- Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in
 
 ## Features
 
-- Support closing text editor tabs with keyboard shortcuts (closing current tab, closing all tabs other than current one, closing all tabs)
 - Remember all open text editor tabs when closing and reopening after supporting closing
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Package gladidator as a DMG/APP
 - Support autocomplete
 - Support jumping between parts of a programming expression underscores or dots instead of an entire expression on ALT LEFT & RIGHT
-
 - Support collapsing blocks of code (e.g. class Name {...}) and expanding them again, collapsing line numbers next to them too. 
 This allows easy copying/pasting of big blocks of code without making mistakes in grabbing the end of the block that matches the beginning.
 - Remember caret position and top of file in every file opened, not just the last one
 - Hot reloading
 - Display caret position
+- Autohide file tree and file lookup list when not used
