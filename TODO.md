@@ -17,7 +17,6 @@
 
 ## Features
 
-- Remember all open text editor tabs when closing and reopening after supporting closing
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Package gladidator as a DMG/APP

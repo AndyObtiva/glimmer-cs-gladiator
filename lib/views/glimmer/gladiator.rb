@@ -388,6 +388,9 @@ module Glimmer
         config_yaml = ::File.read(@config_file_path)
         return if config_yaml.to_s.strip.empty?
         @config = YAML.load(config_yaml)
+        @config[:open_file_paths].to_a.each do |file_path|
+          Gladiator::Dir.local_dir.selected_child_path = file_path
+        end
         Gladiator::Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         Gladiator::Dir.local_dir.selected_child&.caret_position  = Gladiator::Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
         Gladiator::Dir.local_dir.selected_child&.top_index = @config[:top_index].to_i if @config[:top_index]
@@ -411,6 +414,7 @@ module Glimmer
         shell_height: swt_widget&.getBounds&.height,
         shell_x: swt_widget&.getBounds&.x,
         shell_y: swt_widget&.getBounds&.y,
+        open_file_paths: Dir.local_dir.selected_child_path_history,
       }
       config_yaml = YAML.dump(@config)
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?
