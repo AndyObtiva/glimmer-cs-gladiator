@@ -489,42 +489,18 @@ module Glimmer
     end
     
     def rename_tree_item(tree_item, open_afterwards = false)
-      @tree.content {
-        @tree_text = text {
-          focus true
-          text tree_item.getText
-          @action_taken = false
-          action = lambda { |event|
-            if !@action_taken && !@rename_in_progress
-              @action_taken = true
-              @rename_in_progress = true
-              new_text = @tree_text.swt_widget.getText
-              tree_item.setText(new_text)
-              file = tree_item.getData
-              file.name = new_text
-              file_path = file.path
-              tree_item = @tree.depth_first_search { |ti| ti.getData.path == file_path }
-              @tree.swt_widget.showItem(tree_item.first)
-              @tree_text.swt_widget.dispose              
-              Dir.local_dir.selected_child_path = file_path if open_afterwards
-              Dir.local_dir.resume_refresh
-              @rename_in_progress = false
-            end
-          }
-          on_focus_lost(&action)
-          on_key_pressed { |key_event|
-            if key_event.keyCode == swt(:cr)
-              action.call(key_event)
-            elsif key_event.keyCode == swt(:esc)
-              @tree_text.swt_widget.dispose
-              Dir.local_dir.resume_refresh
-              @rename_in_progress = false
-            end
-          }
+      @tree.edit_tree_item(
+        tree_item,
+        after_write: -> (edited_tree_item) {
+          file = edited_tree_item.getData
+          file_path = file.path
+          Dir.local_dir.selected_child_path = file_path if open_afterwards
+          Dir.local_dir.resume_refresh            
+        },
+        after_cancel: -> {
+          Dir.local_dir.resume_refresh            
         }
-        @tree_text.swt_widget.selectAll
-      }
-      @tree_editor.setEditor(@tree_text.swt_widget, tree_item);
+      )
     end
   end
 end
