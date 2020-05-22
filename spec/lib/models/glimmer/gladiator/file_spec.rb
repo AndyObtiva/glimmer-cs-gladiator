@@ -107,7 +107,7 @@ describe Glimmer::Gladiator::File do
       it 'does not find anything' do
         subject.find_next
    
-        expect(subject.caret_position).to be_nil
+        expect(subject.caret_position).to eq(0)
       end
     end
 
@@ -177,7 +177,7 @@ describe Glimmer::Gladiator::File do
       it 'does not find anything' do
         subject.find_previous
    
-        expect(subject.caret_position).to be_nil
+        expect(subject.caret_position).to eq(0)
       end
     end
 
