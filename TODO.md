@@ -2,8 +2,6 @@
 
 ## Up Next
 
-- Make gladiator command work globally and not just for application that has gem configured
-
 ## Bugs
 
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
@@ -28,3 +26,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Hot reloading
 - Display caret position
 - Autohide file tree and file lookup list when not used
+- Support changing local directory (e.g. File -> Change Directory)
