@@ -6,6 +6,7 @@
 - Support closing text editor tabs with keyboard shortcuts (closing current tab, closing all tabs other than current one, closing all tabs)
 - Support prefix new indented line when hitting CMD+SHIFT+ENTER in the middle of a line
 - Make CMD+T auto-select open file in file tree
+- Make gladiator command accept directory argument instead of LOCAL_DIR and automatically open directory passed in
 - Fix rename bug for when focusing out without changing name
 - Fix bug with opening file with ENTER key from file tree
 - Fix issue with changes not persisting when done via find/replace on a newly browsed to tab

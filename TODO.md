@@ -3,7 +3,6 @@
 ## Up Next
 
 - Make gladiator command work globally and not just for application that has gem configured
-- Make gladiator accept argument instead of LOCAL_DIR and automatically open file and directory if file was passed in
 
 ## Bugs
 
@@ -14,6 +13,7 @@
 ## Enhancements
 
 - Make tabs not take memory when not selected (they unload/dispose their control)
+- Make gladiator command accept file argument and automatically open file and parent directory
 
 ## Features
 

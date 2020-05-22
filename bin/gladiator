@@ -3,4 +3,11 @@
 require 'glimmer/launcher'
 
 gladiator_runner = File.expand_path('../gladiator_runner.rb', __FILE__)
-Glimmer::Launcher.new([gladiator_runner, '-J-Xrs'] + ARGV).launch
+launcher = Glimmer::Launcher.new([gladiator_runner, '-J-Xrs'] + ARGV)
+launcher.application_paths.to_a.each do |file|
+  if file != gladiator_runner
+    launcher.application_paths.delete(file)
+    ENV['LOCAL_DIR'] ||= file
+  end
+end
+launcher.launch

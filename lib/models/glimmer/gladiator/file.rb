@@ -14,6 +14,7 @@ module Glimmer
         @name = ::File.basename(path)
         @path = ::File.expand_path(path)
         @caret_position = 0
+        @line_number = 1
         read_dirty_content = ::File.read(path)
         begin
           # test read dirty content
