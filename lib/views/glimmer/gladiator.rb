@@ -69,7 +69,7 @@ module Glimmer
                 @filter_text.swt_widget.setFocus
               else
                 @text_editor.text_widget.setFocus
-              end              
+              end
             end
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
             @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() + 1, @tab_folder.swt_widget.getItemCount - 1].min) if @tab_folder.swt_widget.getItemCount > 0
@@ -86,12 +86,12 @@ module Glimmer
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '3'
             @tab_folder.swt_widget.setSelection(2) if @tab_folder.swt_widget.getItemCount >= 3
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '4'
             @tab_folder.swt_widget.setSelection(3) if @tab_folder.swt_widget.getItemCount >= 4
             @text_editor.text_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '5'
             @tab_folder.swt_widget.setSelection(4) if @tab_folder.swt_widget.getItemCount >= 5
             @text_editor.text_widget.setFocus
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '4'
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '6'
             @tab_folder.swt_widget.setSelection(5) if @tab_folder.swt_widget.getItemCount >= 6
             @text_editor.text_widget.setFocus
@@ -402,6 +402,8 @@ module Glimmer
           swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]          
           @loaded_config = true
         }
+      else
+        @loaded_config = true
       end
     end
   
