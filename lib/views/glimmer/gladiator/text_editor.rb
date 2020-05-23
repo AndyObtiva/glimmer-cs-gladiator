@@ -47,18 +47,25 @@ module Glimmer
       	     on_key_pressed { |key_event|
               if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '/'
                 file.comment_line!
+        	key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'k'
                 file.kill_line!
+                key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'd'
                 file.duplicate_line!
+                key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '['
                 file.outdent!
+                key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == ']'
                 file.indent!
+                key_event.doit = false
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && key_event.keyCode == swt(:cr)
                 file.prefix_new_line!
+                key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
                 file.insert_new_line!
+                key_event.doit = false
               elsif key_event.keyCode == swt(:page_up)
                 file.page_up
                 key_event.doit = false
@@ -100,13 +107,13 @@ module Glimmer
       }
       
       
-    def extract_char(event)
-      event.keyCode.chr
-    rescue => e
-      nil
+      def extract_char(event)
+        event.keyCode.chr
+      rescue => e
+        nil
+      end
+                                                                                                                                                                                                                                                                                                      
     end
-                                                                                                                                                                                                                                                                                                  
-                                                                                          end
-                                          end
-                        end
-                  
+  end
+end
+                                  
