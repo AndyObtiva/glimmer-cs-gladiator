@@ -4,6 +4,7 @@ rescue LoadError
   # no op
 end
 require 'fileutils'
+require 'os'
 
 require 'models/glimmer/gladiator/dir'
 require 'models/glimmer/gladiator/file'
@@ -19,6 +20,8 @@ module Glimmer
   # Gladiator (Glimmer Editor)
   class Gladiator
     include Glimmer::UI::CustomShell
+    
+    COMMAND_KEY = OS.mac? ? :command : :ctrl
 
     ## Add options like the following to configure CustomShell by outside consumers
     #
@@ -33,17 +36,17 @@ module Glimmer
       Display.setAppName('Gladiator')
       @display = display {
         on_event_keydown { |key_event|
-          if key_event.stateMask == swt(:command) && key_event.character.chr == 'f'
+          if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
             if @text_editor.text_widget.getSelectionText && @text_editor.text_widget.getSelectionText.size > 0
               @find_text.swt_widget.setText @text_editor.text_widget.getSelectionText
             end
             @find_text.swt_widget.selectAll
             @find_text.swt_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr == 'c'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
             Clipboard.copy(Gladiator::Dir.local_dir.selected_child.path)
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr == 'g'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
             Gladiator::Dir.local_dir.selected_child.find_previous
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr == 'w'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
             @tab_folder.swt_widget.getItems.each do |tab_item|
               Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
               tab_item.getData('proxy').dispose
@@ -51,12 +54,12 @@ module Glimmer
             @tab_item = @text_editor = Dir.local_dir.selected_child = nil 
             @filter_text.swt_widget.selectAll     
             @filter_text.swt_widget.setFocus            
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character == 8721
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && key_event.character == 8721
             other_tab_items.each do |tab_item|
               Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
               tab_item.getData('proxy').dispose
             end
-          elsif key_event.stateMask == swt(:command) && key_event.character.chr == 'w'
+          elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'w'
             if selected_tab_item
               Dir.local_dir.selected_child_path_history.delete(Dir.local_dir.selected_child.path)
               selected_tab_item.getData('proxy').dispose
@@ -68,48 +71,48 @@ module Glimmer
                 @text_editor.text_widget.setFocus
               end              
             end
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr == ']'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
             @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() + 1, @tab_folder.swt_widget.getItemCount - 1].min) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.character.chr == '['
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == '['
             @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() - 1, 0].max) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '1'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
             @tab_folder.swt_widget.setSelection(0) if @tab_folder.swt_widget.getItemCount >= 1
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '2'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '2'
             @tab_folder.swt_widget.setSelection(1) if @tab_folder.swt_widget.getItemCount >= 2
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '3'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '3'
             @tab_folder.swt_widget.setSelection(2) if @tab_folder.swt_widget.getItemCount >= 3
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '4'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '4'
             @tab_folder.swt_widget.setSelection(3) if @tab_folder.swt_widget.getItemCount >= 4
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '5'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '5'
             @tab_folder.swt_widget.setSelection(4) if @tab_folder.swt_widget.getItemCount >= 5
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '6'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '6'
             @tab_folder.swt_widget.setSelection(5) if @tab_folder.swt_widget.getItemCount >= 6
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '7'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '7'
             @tab_folder.swt_widget.setSelection(6) if @tab_folder.swt_widget.getItemCount >= 7
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '8'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '8'
             @tab_folder.swt_widget.setSelection(7) if @tab_folder.swt_widget.getItemCount >= 8
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == '9'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '9'
             @tab_folder.swt_widget.setSelection(@tab_folder.swt_widget.getItemCount - 1) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor.text_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == 'g'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'g'
             Gladiator::Dir.local_dir.selected_child.find_next
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == 'l'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'l'
             @line_number_text.swt_widget.selectAll
             @line_number_text.swt_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == 'r'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'r'
             @filter_text.swt_widget.selectAll
             @filter_text.swt_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command) && key_event.character.chr == 't'
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 't'
             select_tree_item unless @rename_in_progress
             @tree.swt_widget.setFocus
           elsif key_event.keyCode == swt(:esc)
@@ -512,5 +515,11 @@ module Glimmer
         }
       )
     end
+
+    def extract_char(event)
+      event.keyCode.chr
+    rescue => e
+      nil
+    end
   end
-end
+end          

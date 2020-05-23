@@ -17,7 +17,7 @@ module Glimmer
           grid_layout 2, false
           @line_numbers_text = text(:multi) {
             layout_data(:right, :fill, false, true)
-            font name: 'Consolas', height: 15
+            font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
             foreground rgb(75, 75, 75)
             text bind(file, 'line_numbers_content')
@@ -34,7 +34,7 @@ module Glimmer
           }
           @text = text(:multi, :border, :h_scroll, :v_scroll) {
             layout_data :fill, :fill, true, true
-            font name: 'Consolas', height: 15
+            font name: 'Consolas', height: OS.mac? ? 15 : 12
             foreground rgb(75, 75, 75)
             text bind(file, 'dirty_content')
             focus true
@@ -45,19 +45,19 @@ module Glimmer
               file&.write_dirty_content
             }
       	     on_key_pressed { |key_event|
-              if key_event.stateMask == swt(:command) && key_event.character.chr.downcase == '/'
+              if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '/'
                 file.comment_line!
-              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == 'k'
+              elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'k'
                 file.kill_line!
-              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == 'd'
+              elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'd'
                 file.duplicate_line!
-              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == '['
+              elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '['
                 file.outdent!
-              elsif key_event.stateMask == swt(:command) && key_event.character.chr.downcase == ']'
+              elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == ']'
                 file.indent!
-              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :command, :shift) && key_event.keyCode == swt(:cr)
+              elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && key_event.keyCode == swt(:cr)
                 file.prefix_new_line!
-              elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt(:cr)
+              elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
                 file.insert_new_line!
               elsif key_event.keyCode == swt(:page_up)
                 file.page_up
@@ -71,10 +71,10 @@ module Glimmer
               elsif key_event.keyCode == swt(:end)
                 file.end
                 key_event.doit = false
-              elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt(:arrow_up)
+              elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:arrow_up)
                 file.move_up!
                 key_event.doit = false
-              elsif key_event.stateMask == swt(:command) && key_event.keyCode == swt(:arrow_down)
+              elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:arrow_down)
                 file.move_down!
                 key_event.doit = false
               end
@@ -98,6 +98,15 @@ module Glimmer
           }
         }
       }
+      
+      
+    def extract_char(event)
+      event.keyCode.chr
+    rescue => e
+      nil
     end
-  end
-end
+                                                                                                                                                                                                                                                                                                  
+                                                                                          end
+                                          end
+                        end
+                  
