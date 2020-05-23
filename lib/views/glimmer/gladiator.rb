@@ -346,6 +346,9 @@ module Glimmer
                   @text_editor.text_widget.setFocus
                 end
               }
+              on_verify_text { |event|
+                event.doit = !event.text.match(/^\d*$/).to_a.empty? 
+              }
             }
             label {
               text 'Find:'
@@ -524,4 +527,4 @@ module Glimmer
       nil
     end
   end
-end          
+end                        
