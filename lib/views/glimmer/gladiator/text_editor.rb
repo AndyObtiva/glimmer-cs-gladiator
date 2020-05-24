@@ -38,7 +38,7 @@ module Glimmer
             foreground rgb(75, 75, 75)
             text bind(file, 'dirty_content')
             focus true
-            caret_position bind(file, 'caret_position')
+            selection bind(file, 'selection')
             selection_count bind(file, 'selection_count')
             top_index bind(file, 'top_index')
             on_focus_lost {
@@ -116,4 +116,4 @@ module Glimmer
     end
   end
 end
-                                  
+                                              

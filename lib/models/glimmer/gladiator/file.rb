@@ -5,16 +5,17 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :line_numbers_content, :caret_position, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
-      attr_reader :name, :dirty_content      
+      attr_accessor :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
+      attr_reader :name, :dirty_content
   
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
         @display_path = path
         @name = ::File.basename(path)
         @path = ::File.expand_path(path)
-        @caret_position = 0
-        @line_number = 1
+        @top_index = 0
+        @selection_count = 0
+	@selection = Point.new(0, 0 + @selection_count)
         read_dirty_content = ::File.read(path)
         begin
           # test read dirty content
@@ -23,8 +24,9 @@ module Glimmer
             lines_text_size = lines.size.to_s.size
             self.line_numbers_content = lines.size.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
           end
+          @line_number = 1
           self.dirty_content = read_dirty_content
-          observe(self, :caret_position) do
+          observe(self, :selection) do
             self.line_number = line_index_for_caret_position(caret_position) + 1
           end
           observe(self, :line_number) do
@@ -38,7 +40,18 @@ module Glimmer
           # no op in case of a binary file
         end
       end
-  
+
+      def caret_position=(value)
+        self.selection = Point.new(value, value + selection_count.to_i)
+        async_exec do
+          self.top_index = line_index_for_caret_position(value)
+        end
+      end
+      
+      def caret_position
+        selection.x
+      end
+      
       def name=(the_name)
         self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
         @name = the_name
@@ -192,7 +205,7 @@ module Glimmer
         delta = 0
         line_indices_for_selection(caret_position, selection_count).each do |the_line_index|
           the_line = old_lines[the_line_index]
-          if the_line.start_with?('  ')
+          if the_line.to_s.start_with?('  ')
             new_lines[the_line_index] = the_line.sub(/  /, '')
             delta = -2
           elsif the_line.start_with?(' ')
