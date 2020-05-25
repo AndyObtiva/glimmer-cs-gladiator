@@ -15,7 +15,7 @@ module Glimmer
         @path = ::File.expand_path(path)
         @top_index = 0
         @selection_count = 0
-	@selection = Point.new(0, 0 + @selection_count)
+        @selection = Point.new(0, 0 + @selection_count)
         read_dirty_content = ::File.read(path)
         begin
           # test read dirty content
@@ -43,8 +43,10 @@ module Glimmer
 
       def caret_position=(value)
         self.selection = Point.new(value, value + selection_count.to_i)
-        async_exec do
-          self.top_index = line_index_for_caret_position(value)
+        if OS.linux?
+          async_exec do
+            self.top_index = line_index_for_caret_position(value)
+          end
         end
       end
       

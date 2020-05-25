@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.6
+
+- Support Linux explicitly
+
 ## 0.1.5
     
 - Remember all open text editor tabs when closing and reopening
