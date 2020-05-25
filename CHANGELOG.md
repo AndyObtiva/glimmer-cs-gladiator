@@ -2,7 +2,8 @@
 
 ## 0.1.6
 
-- Support Linux explicitly
+- Support Linux explicitly (sort of)
+- Make file tree maintain expansion state on refreshes caused by internal & external changes
 
 ## 0.1.5
     

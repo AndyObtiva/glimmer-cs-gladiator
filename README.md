@@ -27,6 +27,12 @@ Gladiator currently supports the following text editing features:
 - Indent/Unindent line/selection (CMD+] & CMD+[)
 - Insert/Prefix New Line (CMD+ENTER & CMD+SHIFT+ENTER)
 
+## Platforms
+
+- Mac: Gladiator works best on the Mac.
+- Linux: Gladiator works with handicaps on Linux (performing text editing operations causes scroll jitter)
+- Windows: Not tested on Windows yet, but should theoretically work there too.
+
 ## Pre-requisites
 
 - JRuby 9.2.11.1 (supporting Ruby 2.5.x syntax) (find at https://www.jruby.org/download)

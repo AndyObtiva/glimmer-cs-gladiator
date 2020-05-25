@@ -445,6 +445,14 @@ module Glimmer
       def to_s
         path
       end
+      
+      def eql?(other)
+        self.path.eql?(other&.path)
+      end
+      
+      def hash
+        self.path.hash
+      end
     end  
   end
 end
