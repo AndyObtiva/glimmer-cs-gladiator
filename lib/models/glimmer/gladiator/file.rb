@@ -330,10 +330,12 @@ module Glimmer
       end
   
       def page_up
+        self.selection_count = 0
         self.line_number = [(self.line_number - 15), 1].max
       end
   
       def page_down
+        self.selection_count = 0
         self.line_number = [(self.line_number + 15), lines.size].min
       end
   
