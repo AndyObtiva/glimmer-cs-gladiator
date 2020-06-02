@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.7
+
+- Relaxed Glimmer version requirement
+
 ## 0.1.6
 
 - Support Linux explicitly (sort of)
