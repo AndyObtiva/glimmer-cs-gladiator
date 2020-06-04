@@ -37,7 +37,7 @@ module Glimmer
       @display = display {
         on_event_keydown { |key_event|
           if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
-            if @text_editor.text_widget.getSelectionText && @text_editor.text_widget.getSelectionText.size > 0
+            if @text_editor&.text_widget&.getSelectionText && @text_editor&.text_widget&.getSelectionText&.size.to_i > 0
               @find_text.swt_widget.setText @text_editor.text_widget.getSelectionText
             end
             @find_text.swt_widget.selectAll
@@ -343,7 +343,7 @@ module Glimmer
               text bind(Gladiator::Dir.local_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
-                  @text_editor.text_widget.setFocus
+                  @text_editor&.text_widget&.setFocus
                 end
               }
               on_verify_text { |event|
@@ -360,7 +360,7 @@ module Glimmer
               text bind(Gladiator::Dir.local_dir, 'selected_child.find_text')
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
-                  Gladiator::Dir.local_dir.selected_child.find_next
+                  Gladiator::Dir.local_dir.selected_child&.find_next
                 end
               }
             }
@@ -373,11 +373,11 @@ module Glimmer
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.replace_text')
               on_focus_gained {              
-                Gladiator::Dir.local_dir.selected_child.ensure_find_next
+                Gladiator::Dir.local_dir.selected_child&.ensure_find_next
               }
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
-                  Gladiator::Dir.local_dir.selected_child.replace_next!
+                  Gladiator::Dir.local_dir.selected_child&.replace_next!
                 end
               }
             }
