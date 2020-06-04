@@ -54,7 +54,7 @@ module Glimmer
             @tab_item = @text_editor = Dir.local_dir.selected_child = nil 
             @filter_text.swt_widget.selectAll     
             @filter_text.swt_widget.setFocus            
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && key_event.character == 8721
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :alt) && extract_char(key_event) == 'w'
             other_tab_items.each do |tab_item|
               Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
               tab_item.getData('proxy').dispose
