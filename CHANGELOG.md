@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.1.8
+
+- Fix Line/Find/Replace actions when no file is open (to avoid crash)
+
 ## 0.1.7
 
 - Relaxed Glimmer version requirement
