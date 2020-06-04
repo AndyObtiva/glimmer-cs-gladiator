@@ -13,6 +13,7 @@
 - Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
 - Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
+- Fix issue with Find/Replace crashing if no file was opened yet
 
 ## Enhancements
 
@@ -35,3 +36,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Autohide file tree and file lookup list when not used
 - Support changing local directory (e.g. File -> Change Directory)
 - Add menus
+- Split screen
+- Support Copy/Paste in File Tree
+- Support Cut/Paste in File Tree
