@@ -5,7 +5,7 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path
+      attr_accessor :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path, :case_sensitive
       attr_reader :name, :dirty_content
   
       def initialize(path)
@@ -264,7 +264,7 @@ module Glimmer
       end
   
       def find_next
-        return if find_text.to_s.empty?
+        return if find_text.to_s.empty?        
         all_lines = lines
         the_line_index = line_index_for_caret_position(caret_position)
         line_position = line_position_for_caret_position(caret_position)
@@ -275,8 +275,8 @@ module Glimmer
             the_index = (the_index + rotation)%all_lines.size
             start_position = 0
             start_position = line_position + find_text.to_s.size if i == 0 && the_index == the_line_index && found_text?(caret_position)
-            text_to_find_in = the_line.downcase[start_position..-1]
-            occurrence_index = text_to_find_in&.index(find_text.to_s.downcase)
+            text_to_find_in = the_line[start_position..-1]
+            occurrence_index = case_sensitive ? text_to_find_in&.index(find_text.to_s) : text_to_find_in&.downcase&.index(find_text.to_s.downcase)
             if occurrence_index
               self.caret_position = caret_position_for_line_index(the_index) + start_position + occurrence_index
               self.selection_count = find_text.to_s.size

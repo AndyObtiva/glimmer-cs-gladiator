@@ -2,7 +2,6 @@
 
 ## Up Next
 
-- Support case-sensitive find
 - Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 
 ## Bugs

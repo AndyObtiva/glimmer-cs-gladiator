@@ -5,7 +5,9 @@
 - Fix Line/Find/Replace actions when no file is open (to avoid crash)
 - Fix issue with file lookup list expanding all the way down, covering the file tree
 - Fix issue with hitting home/end with selection keeping selection instead of removing it 
-
+- Fix issue with crashing if no file was open, no file is found in lookup list, and you attempt to hit enter in keyboard
+- Support case-sensitive Find (and Replace by extension)
+  
 ## 0.1.7
 
 - Relaxed Glimmer version requirement

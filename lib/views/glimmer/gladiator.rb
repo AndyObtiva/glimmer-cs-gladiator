@@ -233,7 +233,7 @@ module Glimmer
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
                   Gladiator::Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
-                  @text_editor.text_widget.setFocus
+                  @text_editor&.text_widget&.setFocus
                 end
               }
             }
@@ -313,10 +313,13 @@ module Glimmer
           grid_layout 1, false
           layout_data :fill, :fill, true, true
           composite {
-            grid_layout 2, false
+            grid_layout 3, false
+            
+            # row 1
+            
             @file_path_label = styled_text(:none) {
               layout_data(:fill, :fill, true, false) {
-                horizontal_span 2
+                horizontal_span 3
               }
               background color(:widget_background)
               editable false
@@ -329,6 +332,9 @@ module Glimmer
                 @file_path_label.swt_widget.setSelection(0, 0)
               }
             }
+            
+            # row 2
+            
             label {
               text 'Line:'
             }
@@ -346,6 +352,10 @@ module Glimmer
                 event.doit = !event.text.match(/^\d*$/).to_a.empty? 
               }
             }
+            label
+            
+            # row 3
+
             label {
               text 'Find:'
             }
@@ -360,6 +370,18 @@ module Glimmer
                 end
               }
             }
+            composite {
+              row_layout
+              button(:check) {
+                selection bind(Dir.local_dir, 'selected_child.case_sensitive')
+              }
+              label {
+                text 'Case-sensitive'
+              }
+            }
+            
+            # row 4
+            
             label {
               text 'Replace:'
             }
@@ -377,6 +399,7 @@ module Glimmer
                 end
               }
             }
+            label
           }
           @tab_folder = tab_folder {
             layout_data(:fill, :fill, true, true) 
