@@ -7,6 +7,7 @@
 - Fix issue with hitting home/end with selection keeping selection instead of removing it 
 - Fix issue with crashing if no file was open, no file is found in lookup list, and you attempt to hit enter in keyboard
 - Support case-sensitive Find (and Replace by extension)
+- Imporved editor-tab-switching shortcut to loop at the end or beginning
   
 ## 0.1.7
 

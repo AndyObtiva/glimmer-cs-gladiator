@@ -72,10 +72,10 @@ module Glimmer
               end
             end
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
-            @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() + 1, @tab_folder.swt_widget.getItemCount - 1].min) if @tab_folder.swt_widget.getItemCount > 0
+            @tab_folder.swt_widget.setSelection((@tab_folder.swt_widget.getSelectionIndex() + 1) % @tab_folder.swt_widget.getItemCount) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor.text_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == '['
-            @tab_folder.swt_widget.setSelection([@tab_folder.swt_widget.getSelectionIndex() - 1, 0].max) if @tab_folder.swt_widget.getItemCount > 0
+            @tab_folder.swt_widget.setSelection((@tab_folder.swt_widget.getSelectionIndex() - 1) % @tab_folder.swt_widget.getItemCount) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor.text_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
             @tab_folder.swt_widget.setSelection(0) if @tab_folder.swt_widget.getItemCount >= 1
