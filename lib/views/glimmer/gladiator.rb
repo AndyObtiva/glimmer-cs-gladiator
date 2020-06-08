@@ -365,6 +365,10 @@ module Glimmer
               }
               text bind(Gladiator::Dir.local_dir, 'selected_child.find_text')
               on_key_pressed { |key_event|
+                if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
+                  Dir.local_dir.selected_child.case_sensitive = !Dir.local_dir.selected_child.case_sensitive
+                  Gladiator::Dir.local_dir.selected_child&.find_next
+                end
                 if key_event.keyCode == swt(:cr)
                   Gladiator::Dir.local_dir.selected_child&.find_next
                 end
@@ -374,6 +378,11 @@ module Glimmer
               row_layout
               button(:check) {
                 selection bind(Dir.local_dir, 'selected_child.case_sensitive')
+                on_key_pressed { |key_event|
+                  if key_event.keyCode == swt(:cr)
+                    Gladiator::Dir.local_dir.selected_child&.find_next
+                  end
+                }                
               }
               label {
                 text 'Case-sensitive'
