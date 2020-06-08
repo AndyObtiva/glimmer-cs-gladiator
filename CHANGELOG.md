@@ -3,6 +3,8 @@
 ## 0.1.8
 
 - Fix Line/Find/Replace actions when no file is open (to avoid crash)
+- Fix issue with file lookup list expanding all the way down, covering the file tree
+- Fix issue with hitting home/end with selection keeping selection instead of removing it 
 
 ## 0.1.7
 

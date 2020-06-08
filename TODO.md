@@ -2,10 +2,8 @@
 
 ## Up Next
 
-- Move files/directories in file tree using Drag & Drop
-- Support duplicate file functionality
-- Fix issue with file lookup list expanding all the way down, covering the file tree
-- Fix issue with hitting home/end with selection keeping selection instead of removing it 
+- Support case-sensitive find
+- Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 
 ## Bugs
 
@@ -23,7 +21,6 @@
 
 ## Features
 
-- Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Package gladidator as a DMG/APP
 - Support autocomplete
@@ -39,3 +36,7 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Split screen
 - Support Copy/Paste in File Tree
 - Support Cut/Paste in File Tree
+- Support project-wide full-text-search
+- Move files/directories in file tree using Drag & Drop
+- Support duplicate file functionality
+- Drag & Drop Editor Tabs

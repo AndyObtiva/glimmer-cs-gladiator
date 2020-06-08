@@ -220,12 +220,11 @@ module Glimmer
             }    
           }
           composite {
+            fill_layout(:vertical) {
+              spacing 5
+            }
             layout_data(:fill, :fill, true, true)
             @list = list(:border, :h_scroll, :v_scroll) {
-              layout_data(:fill, :fill, true, true) {
-                #exclude bind(Gladiator::Dir.local_dir, :filter) {|f| !f}
-                minimum_height 400
-              }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !!f}
               selection bind(Gladiator::Dir.local_dir, :filtered_path)
               on_mouse_up {
@@ -239,9 +238,6 @@ module Glimmer
               }
             }
             @tree = tree(:virtual, :border, :h_scroll, :v_scroll) {
-              layout_data(:fill, :fill, true, true) {
-                #exclude bind(Gladiator::Dir.local_dir, :filter) {|f| !!f}
-              }
               #visible bind(Gladiator::Dir, 'local_dir.filter') {|f| !f}
               items bind(Gladiator::Dir, :local_dir), tree_properties(children: :children, text: :name)
               menu {

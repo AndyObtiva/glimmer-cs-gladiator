@@ -340,10 +340,12 @@ module Glimmer
       end
   
       def home
+        self.selection_count = 0
         self.line_number = 1
       end
   
       def end
+        self.selection_count = 0
         self.line_number = lines.size
       end
   
