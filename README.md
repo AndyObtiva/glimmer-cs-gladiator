@@ -1,4 +1,3 @@
-# Gladiator (Glimmer Editor) 0.1.8 - Glimmer Custom Shell
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
 ![Gladiator](images/glimmer-gladiator.png)

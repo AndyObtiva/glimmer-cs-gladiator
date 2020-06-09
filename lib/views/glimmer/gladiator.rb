@@ -8,6 +8,7 @@ require 'os'
 
 require 'models/glimmer/gladiator/dir'
 require 'models/glimmer/gladiator/file'
+require 'models/glimmer/gladiator/command'
 
 require 'views/glimmer/gladiator/text_editor'
 
@@ -404,7 +405,9 @@ module Glimmer
               }
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
-                  Gladiator::Dir.local_dir.selected_child&.replace_next!
+                  if Gladiator::Dir.local_dir.selected_child
+                    Command.do(Gladiator::Dir.local_dir.selected_child, :replace_next!)
+                  end
                 end
               }
             }
@@ -484,7 +487,7 @@ module Glimmer
     def delete_tree_item(tree_item)
       file = tree_item.getData
       parent_path = ::File.dirname(file.path)
-      file.delete!
+      file.delete! # TODO consider supporting command undo/redo
       Dir.local_dir.refresh(async: false)
       parent_tree_item = @tree.depth_first_search {|ti| ti.getData.path == parent_path}.first
       @tree.swt_widget.showItem(parent_tree_item)

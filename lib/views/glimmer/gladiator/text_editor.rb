@@ -36,7 +36,7 @@ module Glimmer
             layout_data :fill, :fill, true, true
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             foreground rgb(75, 75, 75)
-            text bind(file, 'dirty_content')
+            text bind(file, :content)
             focus true
             selection bind(file, 'selection')
             selection_count bind(file, 'selection_count')
@@ -45,26 +45,30 @@ module Glimmer
               file&.write_dirty_content
             }
       	     on_key_pressed { |key_event|
-              if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '/'
-                file.comment_line!
-        	key_event.doit = false
+              if (Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'z') || (key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'y')                
+                key_event.doit = !Command.redo(file)
+              elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'z'
+                key_event.doit = !Command.undo(file)
+              elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '/'
+                Command.do(file, :comment_line!)
+                key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'k'
-                file.kill_line!
+                Command.do(file, :kill_line!)
                 key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'd'
-                file.duplicate_line!
+                Command.do(file, :duplicate_line!)
                 key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '['
-                file.outdent!
+                Command.do(file, :outdent!)
                 key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == ']'
-                file.indent!
+                Command.do(file, :indent!)
                 key_event.doit = false
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && key_event.keyCode == swt(:cr)
-                file.prefix_new_line!
+                Command.do(file, :prefix_new_line!)
                 key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
-                file.insert_new_line!
+                Command.do(file, :insert_new_line!)
                 key_event.doit = false
               elsif key_event.keyCode == swt(:page_up)
                 file.page_up
@@ -79,10 +83,10 @@ module Glimmer
                 file.end
                 key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:arrow_up)
-                file.move_up!
+                Command.do(file, :move_up!)
                 key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:arrow_down)
-                file.move_down!
+                Command.do(file, :move_down!)
                 key_event.doit = false
               end
             }
@@ -95,7 +99,7 @@ module Glimmer
                 end
               when swt(:tab)
                 if file.selection_count.to_i > 0
-                  file.indent!
+                  Command.do(file, :indent!)
                   verify_event.doit = false
                 else
                   verify_event.text = '  '

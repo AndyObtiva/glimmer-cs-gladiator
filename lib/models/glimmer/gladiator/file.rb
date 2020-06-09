@@ -5,11 +5,12 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path, :case_sensitive
-      attr_reader :name, :dirty_content
+      attr_accessor :dirty_content, :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path, :case_sensitive
+      attr_reader :name
   
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
+        @command_history = []
         @display_path = path
         @name = ::File.basename(path)
         @path = ::File.expand_path(path)
@@ -40,6 +41,16 @@ module Glimmer
           # no op in case of a binary file
         end
       end
+      
+      # to use for widget data-binding
+      def content=(value)
+        Command.do(self) # record a native (OS-widget) operation
+        self.dirty_content = value
+      end
+
+      def content
+        dirty_content
+      end
 
       def caret_position=(value)
         self.selection = Point.new(value, value + selection_count.to_i)
@@ -64,6 +75,7 @@ module Glimmer
       
       def dirty_content=(the_content)
         @dirty_content = the_content if ::File.exist?(path)
+        notify_observers(:content)
       end
   
       def start_filewatcher
