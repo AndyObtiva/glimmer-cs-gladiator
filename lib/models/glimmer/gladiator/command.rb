@@ -13,7 +13,7 @@ module Glimmer
         
         def do(file, method = nil, command: nil)
           command ||= Command.new(file, method)
-          command_history_for(file)&.last&.next_command = command unless command_history_for(file)&.last&.next_command
+          command_history_for(file)&.last&.next_command = command
           command.do
           command_history_for(file) << command
         end
