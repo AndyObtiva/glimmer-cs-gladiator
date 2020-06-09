@@ -19,8 +19,8 @@ module Glimmer
         end
         
         def undo(file)
-         return if command_history_for(file).size <= 1        
-         command_history_for(file).pop.undo
+          return if command_history_for(file).size <= 1        
+          command_history_for(file).pop.undo
         end
         
         def redo(file)
@@ -56,13 +56,13 @@ module Glimmer
       end
       
       def backup
-        @previous_file_dirty_content = @file.dirty_content
+        @previous_file_dirty_content = @file.dirty_content.clone
         @previous_file_caret_position = @file.caret_position
         @previous_file_selection_count = @file.selection_count
       end
       
       def restore
-        @file.dirty_content = @previous_file_dirty_content
+        @file.dirty_content = @previous_file_dirty_content.clone
         @file.caret_position = @previous_file_caret_position
         @file.selection_count = @previous_file_selection_count
       end

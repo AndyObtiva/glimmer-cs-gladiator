@@ -2,7 +2,6 @@
 
 ## Up Next
 
-- Implement Undo/Redo (it partially works right now from text widget built-in undo/redo)
 
 ## Bugs
 
@@ -39,3 +38,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Move files/directories in file tree using Drag & Drop
 - Support duplicate file functionality
 - Drag & Drop Editor Tabs
+- Store Undo/Redo history in config permenantly
