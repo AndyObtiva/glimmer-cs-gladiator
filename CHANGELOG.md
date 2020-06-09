@@ -2,9 +2,9 @@
 
 ## 0.1.8
 
-- Support case-sensitive Find (and Replace by extension)
-- Imporved editor-tab-switching shortcut to loop at the end or beginning
-- Implement Undo/Redo
+- Undo/Redo
+- Case-sensitive Find (and Replace by extension)
+- Make CMD+SHIFT+] at the last tab go to the first tab (and vice versa with CMD+SHIFT+[) 
 - Fix Line/Find/Replace actions when no file is open (to avoid crash)
 - Fix issue with file lookup list expanding all the way down, covering the file tree
 - Fix issue with hitting home/end with selection keeping selection instead of removing it 

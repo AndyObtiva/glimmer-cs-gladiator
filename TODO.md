@@ -2,6 +2,7 @@
 
 ## Up Next
 
+TBD
 
 ## Bugs
 
@@ -15,7 +16,6 @@
 
 - Make tabs not take memory when not selected (they unload/dispose their control)
 - Make gladiator command accept file argument and automatically open file and parent directory
-- Make CMD+SHIFT+] at the last tab go to the first tab (and vice versa with CMD+SHIFT+[) 
 
 ## Features
 
