@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.2.0
+
+- Upgraded to glimmer 0.9.1 / glimmer-dsl-swt 0.1.0
+- Fixed unopen-file related bugs
+
 ## 0.1.8
 
 - Undo/Redo

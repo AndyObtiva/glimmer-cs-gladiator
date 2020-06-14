@@ -485,6 +485,7 @@ module Glimmer
     end
 
     def delete_tree_item(tree_item)
+      return if tree_item.nil?
       file = tree_item.getData
       parent_path = ::File.dirname(file.path)
       file.delete! # TODO consider supporting command undo/redo
@@ -508,6 +509,7 @@ module Glimmer
       Dir.local_dir.pause_refresh
       tree_item = @tree.swt_widget.getSelection.first
       directory_path = extract_tree_item_path(tree_item)
+      return if directory_path.nil?
       if !::Dir.exist?(directory_path)
         tree_item = tree_item.getParentItem
         directory_path = ::File.dirname(directory_path)

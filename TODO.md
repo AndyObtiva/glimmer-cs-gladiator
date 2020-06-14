@@ -10,7 +10,8 @@ TBD
 - Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
 - Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
-- Fix issue with Find/Replace crashing if no file was opened yet
+- Fix issue with Replace continuing to replace if Enter was pressed after all occurrences were replaced
+- Fix issue with crashing when closing a file and then trying to delete another file from the tree (might happen if you try to rename closed file) says getData returned nil
 
 ## Enhancements
 
@@ -38,4 +39,5 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Move files/directories in file tree using Drag & Drop
 - Support duplicate file functionality
 - Drag & Drop Editor Tabs
-- Store Undo/Redo history in config permenantly
+- Store Undo/Redo history in config permenantly per file path (not file object)
+- Find/Replace All

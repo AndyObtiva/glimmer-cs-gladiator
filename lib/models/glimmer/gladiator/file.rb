@@ -161,6 +161,7 @@ module Glimmer
         line_indices_for_selection(caret_position, selection_count).reverse.each do | the_line_index |
           delta = 0
           the_line = old_lines[the_line_index]
+          return if the_line.nil?
           if the_line.strip.start_with?('# ')
             new_lines[the_line_index] = the_line.sub(/# /, '')
             delta -= 2

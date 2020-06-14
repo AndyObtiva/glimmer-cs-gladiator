@@ -1,4 +1,4 @@
-# Gladiator (Glimmer Editor) 0.1.8 - Glimmer Custom Shell
+# Gladiator (Glimmer Editor) 0.2.0 - Glimmer Custom Shell
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
 ![Gladiator](images/glimmer-gladiator.png)
@@ -35,7 +35,7 @@ Gladiator currently supports the following text editing features:
 
 ## Pre-requisites
 
-- [Glimmer](https://github.com/AndyObtiva/glimmer) (Ruby Desktop Development GUI Library): '>= 0.8.0', '< 2.0.0' (dependency included in Ruby gem).
+- [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer) (Ruby Desktop Development GUI Library): '>= 0.1.0', '< 2.0.0' (dependency included in Ruby gem).
 - [JRuby](https://www.jruby.org/download): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer)
 - [JDK](https://www.oracle.com/java/technologies/javase-downloads.html): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer)
 
@@ -61,7 +61,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '0.1.8'
+gem 'glimmer-cs-gladiator', '0.2.0'
 ```
 
 Run:
