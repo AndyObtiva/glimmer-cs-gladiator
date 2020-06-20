@@ -8,7 +8,7 @@ It is not intended to be a full-fledged editor by any means, yet mostly a fun ed
 Gladiator is also a personal tool for shaping an editor exactly the way I like. 
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day.
 
-Gladiator currently supports the following text editing features (keyboard shortcuts included; CMD on Mac = CTRL on Win/Lin):
+Gladiator currently supports the following text editing features (keyboard shortcuts included; CMD=CTRL on Windows/Linux):
 - File explorer navigation to open file, rename, delete, add new file, add new directory, or refresh tree (CMD+T)
 - File lookup by name ignoring slashes, underscores, and dots to ease lookup (CMD+R)
 - Watch open file for external changes to automatically refresh in editor
