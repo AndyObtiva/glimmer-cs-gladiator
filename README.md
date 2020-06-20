@@ -3,10 +3,10 @@
 
 ![Gladiator](images/glimmer-gladiator.png)
 
-Gladiator (short for Glimmer Editor) is a Glimmer sample project under on-going development.
+Gladiator (short for Glimmer Editor) is a [Glimmer](https://github.com/AndyObtiva/glimmer) sample project under on-going development.
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using Glimmer to build a text editor.
 Gladiator is also a personal tool for shaping an editor exactly the way I like. 
-I leave building truly professional text editors to software tooling experts who would hopefully use Glimmer one day.
+I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day.
 
 Gladiator currently supports the following text editing features:
 - File explorer navigation to open file, rename, delete, add new file, add new directory, or refresh tree (CMD+T)
