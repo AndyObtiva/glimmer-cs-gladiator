@@ -19,12 +19,16 @@ module Glimmer
     
     COMMAND_KEY = OS.mac? ? :command : :ctrl
 
+    class << self
+      attr_accessor :drag_and_drop
+    end    
+
     ## Add options like the following to configure CustomShell by outside consumers
     #
     # options :title, :background_color
     # option :width, 320
     # option :height, 240
-
+    
     ## Uncomment before_body block to pre-initialize variables to use in body
     #
     #
@@ -133,48 +137,36 @@ module Glimmer
         select_tree_item unless @rename_in_progress
       end
       observe(Gladiator::Dir.local_dir, 'selected_child') do
-        if Dir.local_dir.selected_child&.path && @dragged_file_path == Dir.local_dir.selected_child&.path
-			pd 'if'
-          found_tab_item = @tab_item
-          if found_tab_item
-            @text_editor = found_tab_item.getData('text_editor')
-            Gladiator::Dir.local_dir.selected_child = found_tab_item.getData('file')
-            select_tree_item
-          end
-        else
-			pd 'else'
-          @dragged_file_path = nil
-          select_tree_item unless @rename_in_progress
-          selected_file = Gladiator::Dir.local_dir.selected_child
-          found_tab_item = selected_tab_item
-          if found_tab_item
-            @tab_folder.swt_widget.setSelection(found_tab_item)
-            @tab_item = found_tab_item.getData('tab_item')
-            @text_editor = found_tab_item.getData('text_editor')
-          elsif selected_file
-            @tab_folder.content {
-              @tab_item = tab_item { |the_tab_item|
-                text selected_file.name
-                fill_layout :horizontal
-                the_text_editor = nil
-                @sash_form = sash_form {                
-                  @text_editor = the_text_editor = text_editor(file: selected_file)
-                }
-                on_event_show {
-                  Gladiator::Dir.local_dir.selected_child = selected_file
-                  @tab_item = the_tab_item
-                  @text_editor = the_text_editor if the_text_editor
-                }
+        select_tree_item unless @rename_in_progress
+        selected_file = Gladiator::Dir.local_dir.selected_child
+        found_tab_item = selected_tab_item
+        if found_tab_item
+          @tab_folder.swt_widget.setSelection(found_tab_item)
+          @tab_item = found_tab_item.getData('tab_item')
+          @text_editor = found_tab_item.getData('text_editor')
+        elsif selected_file
+          @tab_folder.content {
+            @tab_item = tab_item { |the_tab_item|
+              text selected_file.name
+              fill_layout :horizontal
+              the_text_editor = nil
+              @sash_form = sash_form {                
+                @text_editor = the_text_editor = text_editor(file: selected_file)
               }
-              @tab_item.swt_tab_item.setData('file_path', selected_file.path)
-              @tab_item.swt_tab_item.setData('file', selected_file)
-              @tab_item.swt_tab_item.setData('tab_item', @tab_item)
-              @tab_item.swt_tab_item.setData('text_editor', @text_editor)
-              @tab_item.swt_tab_item.setData('proxy', @tab_item)
-            }                  
-            @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
-            body_root.pack_same_size
-          end
+              on_event_show {
+                Gladiator::Dir.local_dir.selected_child = selected_file
+                @tab_item = the_tab_item
+                @text_editor = the_text_editor if the_text_editor
+              }
+            }
+            @tab_item.swt_tab_item.setData('file_path', selected_file.path)
+            @tab_item.swt_tab_item.setData('file', selected_file)
+            @tab_item.swt_tab_item.setData('tab_item', @tab_item)
+            @tab_item.swt_tab_item.setData('text_editor', @text_editor)
+            @tab_item.swt_tab_item.setData('proxy', @tab_item)
+          }                  
+          @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
+          body_root.pack_same_size
         end
       end
       observe(Gladiator::Dir.local_dir, 'selected_child') do
@@ -258,7 +250,7 @@ module Glimmer
                   pd 'on_drag_set_data', header: '[on_drag_set_data]'
                   tree = event.widget.getControl
                   tree_item = tree.getSelection.first
-                  pd @dragged_file_path = event.data = tree_item.getData.path
+                  event.data = tree_item.getData.path
                 }
               }
               menu {
@@ -306,7 +298,10 @@ module Glimmer
                 @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
               }
               on_mouse_up {
-                if @dragged_file_path
+                if Gladiator.drag_and_drop
+                  Gladiator.drag_and_drop = false
+                else
+                  pd 'kick it', header: '[on_mouse_up]'
                   Gladiator::Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
                   @text_editor&.text_widget&.setFocus
                 end

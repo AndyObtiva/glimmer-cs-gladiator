@@ -46,9 +46,8 @@ module Glimmer
              transfer [TextTransfer.getInstance].to_java(Transfer)
              on_drag_enter { |event|
                pd event, header: '[on_drag_enter]'
-               pd event.detail
                pd event.operations
-               event.detail = DND::DROP_COPY
+               pd event.detail = DND::DROP_COPY
              }
              on_drag_over { |event|
               pd event, header: '[on_drag_over]'
@@ -68,7 +67,8 @@ module Glimmer
                #          }
                pd event, header: '[on_drop]'
                pd event.data
-               Dir.local_dir.selected_child_path = event.data
+               Gladiator.drag_and_drop = true
+#                Dir.local_dir.selected_child_path = event.data
              }
             }                  
             
