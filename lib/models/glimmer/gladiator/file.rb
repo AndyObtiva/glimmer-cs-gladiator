@@ -1,3 +1,4 @@
+# FILE
 require 'models/glimmer/gladiator/dir'
 
 module Glimmer

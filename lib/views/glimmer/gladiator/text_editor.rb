@@ -45,22 +45,20 @@ module Glimmer
             drop_target(DND::DROP_COPY) {
              transfer [TextTransfer.getInstance].to_java(Transfer)
              on_drag_enter { |event|
-               pd event, header: '[on_drag_enter]'
-               pd event.operations
-               pd event.detail = DND::DROP_COPY
+               event.detail = DND::DROP_COPY
              }
-             on_drag_over { |event|
-              pd event, header: '[on_drag_over]'
-             }
-             on_drag_leave { |event|
-              pd event, header: '[on_drag_leave]'
-             }
-             on_drag_operation_changed { |event|
-              pd event, header: '[on_drag_operation_changed]'
-             }
-             on_drop_accept { |event|
-              pd event, header: '[on_drop_accept]'
-             }
+#             on_drag_over { |event|
+#               pd event, header: '[on_drag_over]'
+#              }
+#              on_drag_leave { |event|
+#               pd event, header: '[on_drag_leave]'
+#              }
+#              on_drag_operation_changed { |event|
+#               pd event, header: '[on_drag_operation_changed]'
+#              }
+#              on_drop_accept { |event|
+#               pd event, header: '[on_drop_accept]'
+#              }
              on_drop { |event|
                #          @sash_form = sash_form {
                #            the_text_editor = @text_editor = text_editor(file: selected_file)
@@ -68,7 +66,8 @@ module Glimmer
                pd event, header: '[on_drop]'
                pd event.data
                Gladiator.drag_and_drop = true
-#                Dir.local_dir.selected_child_path = event.data
+               Dir.local_dir.selected_child_path = event.data
+               Gladiator.drag = false
              }
             }                  
             
