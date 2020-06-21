@@ -5,10 +5,11 @@ module Glimmer
 
       options :file
 
-      attr_reader :text_widget
+      attr_reader :text_proxy, :text_widget
 
       after_body {
         @text_widget = @text.swt_widget
+        @text_proxy = @text
       }
       
       body {
@@ -41,6 +42,36 @@ module Glimmer
             selection bind(file, 'selection')
             selection_count bind(file, 'selection_count')
             top_index bind(file, 'top_index')
+            drop_target(DND::DROP_COPY) {
+             transfer [TextTransfer.getInstance].to_java(Transfer)
+             on_drag_enter { |event|
+               pd event, header: '[on_drag_enter]'
+               pd event.detail
+               pd event.operations
+               event.detail = DND::DROP_COPY
+             }
+             on_drag_over { |event|
+              pd event, header: '[on_drag_over]'
+             }
+             on_drag_leave { |event|
+              pd event, header: '[on_drag_leave]'
+             }
+             on_drag_operation_changed { |event|
+              pd event, header: '[on_drag_operation_changed]'
+             }
+             on_drop_accept { |event|
+              pd event, header: '[on_drop_accept]'
+             }
+             on_drop { |event|
+               #          @sash_form = sash_form {
+               #            the_text_editor = @text_editor = text_editor(file: selected_file)
+               #          }
+               pd event, header: '[on_drop]'
+               pd event.data
+               Dir.local_dir.selected_child_path = event.data
+             }
+            }                  
+            
             on_focus_lost {
               file&.write_dirty_content
             }
