@@ -81,32 +81,26 @@ module Glimmer
             @tab_folder.swt_widget.setSelection((@tab_folder.swt_widget.getSelectionIndex() - 1) % @tab_folder.swt_widget.getItemCount) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor&.text_widget&.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == ']'
-            pd @tab_folder
-            pd @tab_folder1
-            pd @tab_folder2
             if @tab_folder2
               if @tab_folder == @tab_folder1              
-                pd @tab_folder = @tab_folder2
+                @tab_folder = @tab_folder2
               else
-                pd @tab_folder = @tab_folder1
+                @tab_folder = @tab_folder1
               end
-              @tab_item = @tab_folder.swt_widget.getData('selected_text_editor')
+              @tab_item = @tab_folder.swt_widget.getData('selected_tab_item')
               Dir.local_dir.selected_child = @tab_item&.swt_tab_item&.getData('file')
-#               @tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
+              @tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
             end
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '['
-            pd @tab_folder
-            pd @tab_folder1
-            pd @tab_folder2
             if @tab_folder2
               if @tab_folder == @tab_folder2
-                pd @tab_folder = @tab_folder1
+                @tab_folder = @tab_folder1
               else
-                pd @tab_folder = @tab_folder2
+                @tab_folder = @tab_folder2
               end
-              @tab_item = @tab_folder.swt_widget.getData('selected_text_editor')
+              @tab_item = @tab_folder.swt_widget.getData('selected_tab_item')
               Dir.local_dir.selected_child = @tab_item&.swt_tab_item&.getData('file')
-#               @tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
+              @tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
             end
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
             @tab_folder.swt_widget.setSelection(0) if @tab_folder.swt_widget.getItemCount >= 1
@@ -167,55 +161,57 @@ module Glimmer
       observe(Dir.local_dir, 'children') do
         select_tree_item unless @rename_in_progress
       end
-      observe(Dir.local_dir, 'selected_child') do
-        if Gladiator.drag && !@tab_folder2
-          @tab_folder1 = @tab_folder
-          @tab_folder_sash_form.content {
-            @tab_folder = @tab_folder2 = tab_folder
-            @tab_folder.swt_widget.setData('proxy', @tab_folder)
-          }
-        end
-        select_tree_item unless @rename_in_progress
-        selected_file = Dir.local_dir.selected_child
-        found_tab_item = selected_tab_item
-        if found_tab_item
-          @tab_folder.swt_widget.setSelection(found_tab_item)
-          @tab_item = found_tab_item.getData('proxy')
-          @text_editor = found_tab_item.getData('text_editor')
-          @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
-        elsif selected_file
-          @tab_folder.content {
-            @tab_item = tab_item { |the_tab_item|
-              text selected_file.name
-              fill_layout :horizontal
-              the_text_editor = nil
-              @text_editor = the_text_editor = text_editor(file: selected_file)
-              @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
-              @text_editor.text_proxy.content {
-                on_focus_gained {
-                  tab_folder = the_text_editor.swt_widget.getParent.getParent
-                  @tab_folder = tab_folder.getData('proxy')
+      observe(Dir.local_dir, 'selected_child') do |selected_file|
+        if selected_file
+          if Gladiator.drag && !@tab_folder2
+            @tab_folder1 = @tab_folder
+            @tab_folder_sash_form.content {
+              @tab_folder = @tab_folder2 = tab_folder
+              @tab_folder.swt_widget.setData('proxy', @tab_folder)
+            }
+          end
+          select_tree_item unless @rename_in_progress
+          found_tab_item = selected_tab_item
+          if found_tab_item
+            @tab_folder.swt_widget.setSelection(found_tab_item)
+            @tab_item = found_tab_item.getData('proxy')
+            @text_editor = found_tab_item.getData('text_editor')
+            @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
+          elsif selected_file
+            @tab_folder.content {
+              @tab_item = tab_item { |the_tab_item|
+                text selected_file.name
+                fill_layout :horizontal
+                the_text_editor = nil
+                @text_editor = the_text_editor = text_editor(file: selected_file)
+                @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
+                @text_editor.text_proxy.content {
+                  on_focus_gained {
+                    tab_folder = the_text_editor.swt_widget.getParent.getParent
+                    @tab_folder = tab_folder.getData('proxy')
+                    @tab_item = the_tab_item
+                    @text_editor = the_text_editor
+                    @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
+                    @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
+                    Dir.local_dir.selected_child = @tab_item.swt_tab_item.getData('file')
+                  }
+                }
+                on_event_show {
+                  Dir.local_dir.selected_child = selected_file
                   @tab_item = the_tab_item
-                  @text_editor = the_text_editor
+                  @text_editor = the_text_editor if the_text_editor
                   @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
-                  @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
-                  Dir.local_dir.selected_child = @tab_item.swt_tab_item.getData('file')
                 }
               }
-              on_event_show {
-                Dir.local_dir.selected_child = selected_file
-                @tab_item = the_tab_item
-                @text_editor = the_text_editor if the_text_editor
-                @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
-              }
-            }
-            @tab_item.swt_tab_item.setData('file_path', selected_file.path)
-            @tab_item.swt_tab_item.setData('file', selected_file)
-            @tab_item.swt_tab_item.setData('text_editor', @text_editor)
-            @tab_item.swt_tab_item.setData('proxy', @tab_item)
-          }                  
-          @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
-          body_root.pack_same_size
+              @tab_item.swt_tab_item.setData('file_path', selected_file.path)
+              @tab_item.swt_tab_item.setData('file', selected_file)
+              @tab_item.swt_tab_item.setData('text_editor', @text_editor)
+              @tab_item.swt_tab_item.setData('proxy', @tab_item)
+            }                  
+            @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
+            body_root.pack_same_size
+            @text_editor.text_widget.setFocus
+          end
         end
       end
       observe(Dir.local_dir, 'selected_child') do
@@ -289,6 +285,14 @@ module Glimmer
                   @text_editor&.text_widget&.setFocus
                 end
               }
+              drag_source(DND::DROP_COPY) {
+                transfer [TextTransfer.getInstance].to_java(Transfer)
+                on_drag_set_data { |event|
+                  Gladiator.drag = true
+                  list = event.widget.getControl
+                  event.data = list.getSelection.first
+                }
+              }              
             }
             @tree = tree(:virtual, :border, :h_scroll, :v_scroll) {
               #visible bind(Dir, 'local_dir.filter') {|f| !f}
@@ -350,7 +354,6 @@ module Glimmer
                 if Gladiator.drag_and_drop
                   Gladiator.drag_and_drop = false
                 else
-                  pd 'kick it', header: '[on_mouse_up]'
                   Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
                   @text_editor&.text_widget&.setFocus
                 end
@@ -487,13 +490,13 @@ module Glimmer
                 transfer [TextTransfer.getInstance].to_java(Transfer)
                 event_data = nil
                 on_drag_start {|event|
+                  Gladiator.drag = true
                   tab_folder = event.widget.getControl
                   tab_item = tab_folder.getItem(Point.new(event.x, event.y))
                   event_data = tab_item.getData('file_path')
                 }
                 on_drag_set_data { |event|
                   event.data = event_data
-                  Gladiator.drag = true
                 }
               }
             }
