@@ -41,3 +41,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Drag & Drop Editor Tabs
 - Store Undo/Redo history in config permenantly per file path (not file object)
 - Find/Replace All
+- Highlight line we are on in the line number text widget on the left side

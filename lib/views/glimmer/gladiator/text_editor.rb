@@ -43,29 +43,13 @@ module Glimmer
             selection_count bind(file, 'selection_count')
             top_index bind(file, 'top_index')
             drop_target(DND::DROP_COPY) {
-             transfer [TextTransfer.getInstance].to_java(Transfer)
-             on_drag_enter { |event|
-               event.detail = DND::DROP_COPY
-             }
-#             on_drag_over { |event|
-#               pd event, header: '[on_drag_over]'
-#              }
-#              on_drag_leave { |event|
-#               pd event, header: '[on_drag_leave]'
-#              }
-#              on_drag_operation_changed { |event|
-#               pd event, header: '[on_drag_operation_changed]'
-#              }
-#              on_drop_accept { |event|
-#               pd event, header: '[on_drop_accept]'
-#              }
-             on_drop { |event|
-               #          @sash_form = sash_form {
-               #            the_text_editor = @text_editor = text_editor(file: selected_file)
-               #          }
-               pd event, header: '[on_drop]'
-               pd event.data
+              transfer [TextTransfer.getInstance].to_java(Transfer)
+              on_drag_enter { |event|
+                event.detail = DND::DROP_COPY
+              }
+              on_drop { |event|
                Gladiator.drag_and_drop = true
+               Dir.local_dir.selected_child = nil
                Dir.local_dir.selected_child_path = event.data
                Gladiator.drag = false
              }
