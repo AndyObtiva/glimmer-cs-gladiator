@@ -50,7 +50,7 @@ module Glimmer
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
             @tab_folder.swt_widget.getItems.each do |tab_item|
               Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
-              tab_item.getData('proxy').dispose
+              tab_item.getData('proxy')&.dispose
             end
             close_tab_folder
             @tab_item = @text_editor = Dir.local_dir.selected_child = nil 
@@ -59,12 +59,12 @@ module Glimmer
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :alt) && extract_char(key_event) == 'w'
             other_tab_items.each do |tab_item|
               Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
-              tab_item.getData('proxy').dispose
+              tab_item.getData('proxy')&.dispose
             end
           elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'w'
             if selected_tab_item
               Dir.local_dir.selected_child_path_history.delete(Dir.local_dir.selected_child.path)
-              selected_tab_item.getData('proxy').dispose
+              selected_tab_item.getData('proxy')&.dispose
               close_tab_folder
               if selected_tab_item.nil?
                 @tab_item = @text_editor = Dir.local_dir.selected_child = nil 
@@ -182,7 +182,6 @@ module Glimmer
               @tab_item = tab_item { |the_tab_item|
                 text selected_file.name
                 fill_layout :horizontal
-                the_text_editor = nil
                 @text_editor = the_text_editor = text_editor(file: selected_file)
                 @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
                 @text_editor.text_proxy.content {
@@ -197,10 +196,15 @@ module Glimmer
                   }
                 }
                 on_event_show {
-                  Dir.local_dir.selected_child = selected_file
                   @tab_item = the_tab_item
-                  @text_editor = the_text_editor if the_text_editor
+                  @text_editor = the_text_editor
+                  @tab_folder = @tab_item.swt_widget.getParent.getData('proxy')
                   @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
+                  @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
+                  Dir.local_dir.selected_child = selected_file
+                  async_exec {
+                    @text_editor.text_widget.setFocus
+                  }
                 }
               }
               @tab_item.swt_tab_item.setData('file_path', selected_file.path)
@@ -210,8 +214,8 @@ module Glimmer
             }                  
             @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
             body_root.pack_same_size
-            @text_editor.text_widget.setFocus
           end
+          @text_editor.text_widget.setFocus
         end
       end
       observe(Dir.local_dir, 'selected_child') do

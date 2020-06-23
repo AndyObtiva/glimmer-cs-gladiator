@@ -42,3 +42,7 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Store Undo/Redo history in config permenantly per file path (not file object)
 - Find/Replace All
 - Highlight line we are on in the line number text widget on the left side
+- Multi-selection in tree and multi-deletion
+- Close open file if deleted
+- Make tree data binding editing (adding new node) resort into the right place
+
