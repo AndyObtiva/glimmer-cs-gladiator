@@ -203,7 +203,7 @@ module Glimmer
                   @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
                   Dir.local_dir.selected_child = selected_file
                   async_exec {
-                    @text_editor.text_widget.setFocus
+                    @text_editor&.text_widget&.setFocus
                   }
                 }
               }
@@ -215,7 +215,7 @@ module Glimmer
             @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
             body_root.pack_same_size
           end
-          @text_editor.text_widget.setFocus
+          @text_editor&.text_widget&.setFocus
         end
       end
       observe(Dir.local_dir, 'selected_child') do
