@@ -43,13 +43,29 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Setup Instructions
 
-Install Gladiator gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have RVM):
+Install Gladiator gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
 
 ```
 jgem install glimmer-cs-gladiator
 ```
 
-Afterwards, you may run `gladiator` to bring up the text editor in the project directory you would like to edit:
+Or add to a JRuby project Bundler `Gemfile` under the `:developement` group:
+
+```
+group :development do
+  gem 'glimmer-cs-gladiator'
+end
+```
+
+Run (`jruby -S bundle` or `bundle` directly if you have [RVM](https://rvm.io/)):
+
+```
+jruby -S bundle
+```
+
+## Usage
+
+You may run the `gladiator` command to bring up the text editor in the project directory you would like to edit:
 
 ```
 gladiator
@@ -75,7 +91,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '0.2.0'
+gem 'glimmer-cs-gladiator', '~> 0.2.0'
 ```
 
 Run:
@@ -84,7 +100,7 @@ Run:
 jruby -S bundle
 ```
 
-And, then instantiate the Gladiator custom shell in your Glimmer application via the `gladiator` keyword.
+And, then instantiate the Gladiator [custom shell](https://github.com/AndyObtiva/glimmer#custom-shells) in your [Glimmer](https://github.com/AndyObtiva/glimmer) application via the `gladiator` keyword assuming you already have `include Glimmer` in your class, module, or main object.
 
 ## Env Var Options
 
