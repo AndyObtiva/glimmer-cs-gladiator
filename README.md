@@ -49,13 +49,25 @@ Install Gladiator gem by running (`jgem`, `jruby -S gem`, or `gem` directly if y
 jgem install glimmer-cs-gladiator
 ```
 
-Afterwards, you may run `gladiator` to bring up the text editor:
+Afterwards, you may run `gladiator` to bring up the text editor in the project directory you would like to edit:
 
 ```
 gladiator
 ```
 
-Note: If you cloned this project and bundle installed, you may invoke via `bin/gladiator` instead. 
+If you are in a different directory from the project you would like to edit, then pass its path as an argument:
+
+```
+gladiator relative-or-absolute-path/to/project
+```
+
+Note: If you cloned this project and bundle installed, you may invoke via `bin/gladiator` instead.
+
+If your project is not a JRuby project, then you cannot install [glimmer-cs-gladiator](https://rubygems.org/gems/glimmer-cs-gladiator), so you must install in a separate JRuby environment and invoke by passing the project path as per command above. Alternatively, you may clone this project, and invoke gladiator via `bin/gladiator` (that's how I use Gladiator for most of my projects):
+
+```
+bin/gladiator relative-or-absolute-path/to/project
+```
 
 ### Glimmer Custom Shell Reuse
 
