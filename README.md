@@ -1,4 +1,5 @@
-# Gladiator (Glimmer Editor) 0.2.0 - Glimmer Custom Shell
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator (Glimmer Editor) 0.2.0
+## Glimmer Custom Shell
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
 ![Gladiator](images/glimmer-gladiator.png)
