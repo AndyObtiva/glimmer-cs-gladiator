@@ -123,6 +123,7 @@ It currently remembers:
 - Last opened file
 - Caret position
 - Top line position
+- Opened tabs
 
 ## Gotcha
 
