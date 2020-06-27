@@ -3,9 +3,9 @@
 
 ![Gladiator](images/glimmer-gladiator.png)
 
-Gladiator (short for Glimmer Editor) is a sample project under on-going development that demonstrates how to build a text editor with the [Glimmer](https://github.com/AndyObtiva/glimmer) Ruby Desktop Development GUI Library.
-It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using Glimmer to build a text editor.
-Gladiator is also a personal tool for shaping an editor exactly the way I like. 
+Gladiator (short for Glimmer Editor) is a [Glimmer](https://github.com/AndyObtiva/glimmer) sample project under on-going development that demonstrates how to build a text editor in [Glimmer](https://github.com/AndyObtiva/glimmer) (Ruby Desktop Development GUI Library).
+It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
+Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer. 
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day.
 
 Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux):
