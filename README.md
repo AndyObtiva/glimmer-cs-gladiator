@@ -7,7 +7,7 @@
 Gladiator (short for Glimmer Editor) is a [Glimmer](https://github.com/AndyObtiva/glimmer) sample project under on-going development that demonstrates how to build a text editor in [Glimmer](https://github.com/AndyObtiva/glimmer) (Ruby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer. 
-I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my open-source projects since May 2020.
+I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May 2020.
 
 ## Features
 
