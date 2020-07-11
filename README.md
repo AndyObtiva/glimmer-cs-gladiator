@@ -12,7 +12,7 @@ I leave building truly professional text editors to software tooling experts who
 ## Features
 
 Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux):
-- File explorer navigation to open file, rename, delete, add new file, add new directory, or refresh tree (CMD+T)
+- File explorer navigation with context menu to open file, rename, delete, add new file, add new directory, or refresh tree (CMD+T)
 - File lookup by name ignoring slashes, underscores, and dots to ease lookup (CMD+R)
 - Watch open file for external changes to automatically refresh in editor
 - Watch project subdirectories for changes to automatically refresh in file explorer/file lookup
