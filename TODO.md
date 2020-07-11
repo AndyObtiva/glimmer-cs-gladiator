@@ -6,8 +6,9 @@ TBD
 
 ## Bugs
 
+- Fix case-sensitive Find Back (currently ignoring case sensitivity option)
+- Stop tree from scrolling upon renaming a file
 - Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
-- Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
 - Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
 - Fix issue with Replace continuing to replace if Enter was pressed after all occurrences were replaced
@@ -49,6 +50,22 @@ org.jruby.exceptions.NoMethodError: (NoMethodError) undefined method `text_widge
               open at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/ui/custom_shell.rb:16
             <main> at Users/User/code/glimmer_minus_cs_minus_gladiator/bin//Users/User/code/glimmer-cs-gladiator/bin/gladiator_runner.rb:5
 
+- Fix issue which happens when closing all tabs while in Find text box (or something like that):
+Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be handled! Check the validity of the code.
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:38
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
+              interpret at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:154
+  add_static_expression at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:107
+              Gladiator at /Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:264
+
 
 
 ## Enhancements
@@ -60,7 +77,7 @@ org.jruby.exceptions.NoMethodError: (NoMethodError) undefined method `text_widge
 
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Package gladidator as a DMG/APP
-- Support autocomplete
+- Support autocomplete (primarily Glimmer DSL syntax)
 - Support jumping between parts of a programming expression underscores or dots instead of an entire expression on ALT LEFT & RIGHT
 - Support collapsing blocks of code (e.g. class Name {...}) and expanding them again, collapsing line numbers next to them too. 
 This allows easy copying/pasting of big blocks of code without making mistakes in grabbing the end of the block that matches the beginning.
@@ -83,4 +100,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Multi-selection in tree and multi-deletion
 - Close open file if deleted
 - Make tree data binding editing (adding new node) resort into the right place
-
+- Strip lines of empty space when performing copy/cut/paste/duplicate/comment/uncomment actions
+- Support CMD+SHIFT+TAB for Tab Close Undo
+- Column selection

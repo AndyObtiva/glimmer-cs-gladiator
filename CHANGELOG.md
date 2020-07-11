@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.2.1
+
+- Drag and Drop Text Editor Split Screen Support (drag from tree or file lookup list)
+- Fix issue with not rendering list and tree sometimes upon opening a small file like VERSION
+
 ## 0.2.0
 
 - Upgraded to glimmer 0.9.1 / glimmer-dsl-swt 0.1.0

@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator (Glimmer Editor) 0.2.0
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator (Glimmer Editor) 0.2.1
 ## [Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -29,6 +29,7 @@ Gladiator currently supports the following text editing features (including keyb
 - Comment/Uncomment line/selection (CMD+/)
 - Indent/Unindent line/selection (CMD+] & CMD+[)
 - Insert/Prefix New Line (CMD+ENTER & CMD+SHIFT+ENTER)
+- Drag and Drop Text Editor Split Screen (drag a file from File Tree or File Lookup List, and it splits the screen)
 
 ## Platforms
 
@@ -92,7 +93,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.2.0'
+gem 'glimmer-cs-gladiator', '~> 0.2.1'
 ```
 
 Run:

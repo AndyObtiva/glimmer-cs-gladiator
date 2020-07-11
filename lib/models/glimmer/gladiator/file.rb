@@ -223,7 +223,7 @@ module Glimmer
           if the_line.to_s.start_with?('  ')
             new_lines[the_line_index] = the_line.sub(/  /, '')
             delta = -2
-          elsif the_line.start_with?(' ')
+          elsif the_line&.start_with?(' ')
             new_lines[the_line_index] = the_line.sub(/ /, '')
             delta = -1
           end

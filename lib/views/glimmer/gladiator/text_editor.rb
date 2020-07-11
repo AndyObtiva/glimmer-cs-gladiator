@@ -44,15 +44,15 @@ module Glimmer
             top_index bind(file, 'top_index')
             drop_target(DND::DROP_COPY) {
               transfer [TextTransfer.getInstance].to_java(Transfer)
-              on_drag_enter { |event|
-                event.detail = DND::DROP_COPY
-              }
-              on_drop { |event|
-                Gladiator.drag_and_drop = true
-                Dir.local_dir.selected_child = nil
-                Dir.local_dir.selected_child_path = event.data
-                Gladiator.drag = false
-              }
+      on_drag_enter { |event|
+        event.detail = DND::DROP_COPY
+      }
+      on_drop { |event|
+        Gladiator.drag_and_drop = true
+        Dir.local_dir.selected_child = nil
+        Dir.local_dir.selected_child_path = event.data
+        Gladiator.drag = false
+      }
             }                  
             
             on_focus_lost {

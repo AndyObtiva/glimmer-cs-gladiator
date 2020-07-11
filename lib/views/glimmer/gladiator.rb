@@ -7,8 +7,6 @@ require 'models/glimmer/gladiator/command'
 
 require 'views/glimmer/gladiator/text_editor'
 
-java_import 'org.eclipse.swt.custom.TreeEditor'
-
 Clipboard.implementation = Clipboard::Java
 Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use
 
@@ -236,7 +234,7 @@ module Glimmer
     body {
       shell {
         text "Gladiator - #{::File.expand_path(Dir.local_dir.path)}"
-        minimum_size 720, 450
+        minimum_size 520, 250
         size 1440, 900 
         grid_layout 2, false
         on_event_close {
@@ -487,7 +485,10 @@ module Glimmer
             label
           }
           @tab_folder_sash_form = sash_form {
-            layout_data(:fill, :fill, true, true) 
+            layout_data(:fill, :fill, true, true) {
+              width_hint 640
+              height_hint 480
+            }
             sash_width 10
             @tab_folder = tab_folder {
               drag_source(DND::DROP_COPY) {
@@ -606,6 +607,8 @@ module Glimmer
 #       if file.is_a?(::File)
         # close tab
 #       end
+    rescue => e
+      puts e.full_message      
     end
     
     def rename_selected_tree_item
