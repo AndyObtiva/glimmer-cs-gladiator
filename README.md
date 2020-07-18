@@ -152,7 +152,7 @@ The signal TERM is in use by the JVM and will not work correctly on this platfor
 
 ## Copyright
 
-Copyright (c) 2020 Andy Maleh. See LICENSE.txt for
+Copyright (c) 2020 Andy Maleh. See [LICENSE.txt](LICENSE.txt) for
 further details.
 
 --
