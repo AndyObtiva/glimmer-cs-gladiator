@@ -155,4 +155,8 @@ The signal TERM is in use by the JVM and will not work correctly on this platfor
 Copyright (c) 2020 Andy Maleh. See LICENSE.txt for
 further details.
 
+--
+
+Built with [Glimmer](https://github.com/AndyObtiva/glimmer) (Ruby Desktop Development GUI Library).
+
 Gladiator icon made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
