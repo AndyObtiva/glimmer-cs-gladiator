@@ -66,7 +66,7 @@ module Glimmer
       def refresh(async: true, force: false)
         return if @refresh_paused && !force
         new_all_children = retrieve_all_children
-        new_children = retrieve_children        
+        new_children = retrieve_children
         refresh_operation = lambda do
           self.all_children = new_all_children
           self.children = new_children

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.2
+
+- Upgraded to glimmer-dsl-swt 0.4.0
+
 ## 0.2.1
 
 - Drag and Drop Text Editor Split Screen Support (drag from tree or file lookup list)

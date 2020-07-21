@@ -34,7 +34,7 @@ module Glimmer
     before_body {
       Display.setAppName('Gladiator')
       @display = display {
-        on_event_keydown { |key_event|
+        on_swt_keydown { |key_event|
           if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
             if @text_editor&.text_widget&.getSelectionText && @text_editor&.text_widget&.getSelectionText&.size.to_i > 0
               @find_text.swt_widget.setText @text_editor.text_widget.getSelectionText
@@ -193,7 +193,7 @@ module Glimmer
                     Dir.local_dir.selected_child = @tab_item.swt_tab_item.getData('file')
                   }
                 }
-                on_event_show {
+                on_swt_show {
                   @tab_item = the_tab_item
                   @text_editor = the_text_editor
                   @tab_folder = @tab_item.swt_widget.getParent.getData('proxy')
@@ -237,7 +237,7 @@ module Glimmer
         minimum_size 520, 250
         size 1440, 900 
         grid_layout 2, false
-        on_event_close {
+        on_swt_close {
           Dir.local_dir.selected_child&.write_dirty_content
         }
         on_widget_disposed {
@@ -348,7 +348,7 @@ module Glimmer
                   }
                 }
               }
-              on_event_menudetect { |event|
+              on_swt_menudetect { |event|
                 path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
                 @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
               }
@@ -522,7 +522,7 @@ module Glimmer
         Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         Dir.local_dir.selected_child&.caret_position  = Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
         Dir.local_dir.selected_child&.top_index = @config[:top_index].to_i if @config[:top_index]
-        body_root.on_event_show {
+        body_root.on_swt_show {
           swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
           swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]          
           @loaded_config = true

@@ -66,6 +66,7 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
   add_static_expression at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:107
               Gladiator at /Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:264
 
+- Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 
 
 ## Enhancements
