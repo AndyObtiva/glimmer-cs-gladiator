@@ -127,9 +127,11 @@ module Glimmer
       end
   
       def selected_child_path=(selected_path)
+        full_selected_path = selected_path.include?(Dir.local_dir.path) ? selected_path : ::File.join(Dir.local_dir.path, selected_path)
         return if selected_path.nil? || 
-                  ::Dir.exist?(selected_path) || 
-                  (selected_child && ::File.expand_path(selected_child.path) == ::File.expand_path(selected_path))
+                  ::Dir.exist?(full_selected_path) || 
+                  (selected_child && selected_child.path == full_selected_path)
+        selected_path = full_selected_path
         if ::File.file?(selected_path)
           @selected_child&.write_dirty_content
           new_child = Gladiator::File.new(selected_path)
