@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.3
+
+- Improved performance of file lookup list and display of directories (removing current local directory from file prefix)
+
 ## 0.2.2
 
 - Upgraded to glimmer-dsl-swt 0.4.0

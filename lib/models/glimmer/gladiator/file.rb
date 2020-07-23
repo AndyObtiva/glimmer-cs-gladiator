@@ -14,6 +14,7 @@ module Glimmer
         @display_path = path
         @name = ::File.basename(path)
         @path = ::File.expand_path(path)
+        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')
         @top_index = 0
         @selection_count = 0
         @selection = Point.new(0, 0 + @selection_count)

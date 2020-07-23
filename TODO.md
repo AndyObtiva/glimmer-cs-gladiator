@@ -2,7 +2,7 @@
 
 ## Up Next
 
-TBD
+- Remember split windows on restart
 
 ## Bugs
 

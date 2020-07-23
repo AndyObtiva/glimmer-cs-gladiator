@@ -20,7 +20,7 @@ module Glimmer
     class << self
       attr_accessor :drag_and_drop
       attr_accessor :drag
-    end    
+    end
 
     ## Add options like the following to configure CustomShell by outside consumers
     #

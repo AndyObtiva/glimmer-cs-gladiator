@@ -9,29 +9,32 @@ module Glimmer
   
       class << self
         def local_dir
-          @local_dir ||= new(ENV['LOCAL_DIR'] || '.').tap do |dir|
-            dir.refresh
-            @filewatcher = Filewatcher.new(dir.path)
+          unless @local_dir
+            @local_dir = new(ENV['LOCAL_DIR'] || '.', true)
+            @local_dir.refresh
+            @filewatcher = Filewatcher.new(@local_dir.path)
             @thread = Thread.new(@filewatcher) do |fw| 
               fw.watch do |filename, event|
                 if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
-                  dir.refresh if !filename.include?('new_file') && !dir.selected_child_path_history.include?(filename) && filename != dir.selected_child_path
+                  @local_dir.refresh if !filename.include?('new_file') && !@local_dir.selected_child_path_history.include?(filename) && filename != @local_dir.selected_child_path
                 end
                 @last_update = Time.now.to_f
               end
             end
           end
+          @local_dir
         end        
       end
   
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :path, :display_path
       attr_reader :name, :parent
-      attr_writer :all_children, :children
+      attr_writer :all_children
   
-      def initialize(path)
+      def initialize(path, is_local_dir = false)
         @display_path = path
         @path = ::File.expand_path(@display_path)
         @name = ::File.basename(::File.expand_path(path))
+        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '') unless is_local_dir
         self.filtered_path_options = []
       end
 
@@ -48,7 +51,15 @@ module Glimmer
       end
 
       def retrieve_children
-        ::Dir.glob(::File.join(@display_path, '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}.sort_by {|c| c.path.to_s.downcase }.sort_by {|c| c.class.name }
+        @children = ::Dir.glob(::File.join(@path, '*')).map do |p| 
+          ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)
+        end.sort_by do |c| 
+          c.path.to_s.downcase 
+        end.sort_by do |c| 
+          c.class.name
+        end.each do |child|
+          child.retrieve_children if child.is_a?(Dir)
+        end
       end
   
       def selected_child_path_history
@@ -65,11 +76,11 @@ module Glimmer
 
       def refresh(async: true, force: false)
         return if @refresh_paused && !force
-        new_all_children = retrieve_all_children
-        new_children = retrieve_children
+        retrieve_children
+        collect_all_children
         refresh_operation = lambda do
-          self.all_children = new_all_children
-          self.children = new_children
+          notify_observers(:children)
+          notify_observers(:all_children)
         end
         if async
           async_exec(&refresh_operation)
@@ -100,11 +111,15 @@ module Glimmer
       end
   
       def all_children
-        @all_children ||= retrieve_all_children
+        @all_children ||= collect_all_children
       end
   
-      def retrieve_all_children
-        ::Dir.glob(::File.join(@display_path, '**', '*')).map {|p| ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)}
+      def collect_all_children
+        @all_children = children.reduce([]) do |output, child|
+          addition = [child]
+          addition += child.collect_all_children if child.is_a?(Dir)
+          output + addition
+        end
       end
   
       def all_children_files
