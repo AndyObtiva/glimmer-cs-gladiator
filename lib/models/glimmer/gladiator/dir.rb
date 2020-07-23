@@ -84,14 +84,18 @@ module Glimmer
         else
           @filter = value
         end
-        self.filtered_path_options = filtered.to_a.map(&:display_path)
+        @last_filtered = filtered.to_a
+        self.filtered_path_options = @last_filtered.map(&:display_path)
+        @last_filter = @filter
       end
   
       def filtered
         return if filter.nil?
-        all_children_files.select do |child| 
-          child.path.downcase.include?(filter.downcase) ||
-            child.path.downcase.gsub(/[_\/\.]/, '').include?(filter.downcase)
+        children_files = !@last_filter.to_s.empty? && filter.downcase.start_with?(@last_filter.downcase) ? @last_filtered : all_children_files
+        children_files.select do |child| 
+          child_path = child.path.to_s.sub(Dir.local_dir.path, '')
+          child_path.downcase.include?(filter.downcase) ||
+            child_path.downcase.gsub(/[_\/.-]/, '').include?(filter.downcase.gsub(/[_\/.-]/, ''))
         end.sort_by {|c| c.path.to_s.downcase}
       end
   
