@@ -33,9 +33,9 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Platforms
 
-- Mac: Gladiator works best on the Mac.
-- Windows: Gladiator works well on Windows.
-- Linux: Gladiator works with handicaps on Linux (performing text editing operations causes scroll jitter)
+- Mac: Gladiator works best on the Mac. That's how I normally use it.
+- Windows: Gladiator works OK on Windows, but has a few annoying issues.
+- Linux: Gladiator works with very bad handicaps on Linux (performing text editing operations causes scroll jitter)
 
 ## Pre-requisites
 
