@@ -73,6 +73,12 @@ You may run the `gladiator` command to bring up the text editor in the project d
 gladiator
 ```
 
+On Windows, you may need to run with extra memory via this command instead:
+
+```
+gladiator -J-Xmx3000M
+```
+
 If you are in a different directory from the project you would like to edit, then pass its path as an argument:
 
 ```
