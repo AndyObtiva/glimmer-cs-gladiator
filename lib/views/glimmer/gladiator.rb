@@ -516,9 +516,16 @@ module Glimmer
         config_yaml = ::File.read(@config_file_path)
         return if config_yaml.to_s.strip.empty?
         @config = YAML.load(config_yaml)
-        @config[:open_file_paths].to_a.each do |file_path|
+        open_file_paths1 = @config[:open_file_paths1] || @config[:open_file_paths]
+        open_file_paths2 = @config[:open_file_paths2]
+        open_file_paths1.to_a.each do |file_path|
           Dir.local_dir.selected_child_path = file_path
         end
+        Gladiator.drag = true
+        open_file_paths2.to_a.each do |file_path|
+          Dir.local_dir.selected_child_path = file_path
+        end
+        Gladiator.drag = false
         Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         Dir.local_dir.selected_child&.caret_position  = Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
         Dir.local_dir.selected_child&.top_index = @config[:top_index].to_i if @config[:top_index]
@@ -536,6 +543,10 @@ module Glimmer
       return unless @loaded_config
       child = Dir.local_dir.selected_child
       return if child.nil?
+      tab_folder1 = @tab_folder1 || @tab_folder
+      tab_folder2 = @tab_folder2
+      open_file_paths1 = tab_folder1&.swt_widget&.items&.to_a.map {|i| i.get_data('file_path')}
+      open_file_paths2 = tab_folder2&.swt_widget&.items&.to_a.map {|i| i.get_data('file_path')}
       @config = {
         selected_child_path: child.path,
         caret_position: child.caret_position,
@@ -544,7 +555,8 @@ module Glimmer
         shell_height: swt_widget&.getBounds&.height,
         shell_x: swt_widget&.getBounds&.x,
         shell_y: swt_widget&.getBounds&.y,
-        open_file_paths: Dir.local_dir.selected_child_path_history,
+        open_file_paths1: open_file_paths1,
+        open_file_paths2: open_file_paths2,
       }
       config_yaml = YAML.dump(@config)
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?

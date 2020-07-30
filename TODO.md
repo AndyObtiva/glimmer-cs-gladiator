@@ -2,8 +2,6 @@
 
 ## Up Next
 
-- Remember split windows on restart
-
 ## Bugs
 
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)

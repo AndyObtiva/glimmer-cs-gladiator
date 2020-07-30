@@ -2,6 +2,7 @@
 
 ## 0.2.4
 
+- Remember split windows on restart
 - Fix issue with not being able to rename file by hitting ENTER
 
 ## 0.2.3
