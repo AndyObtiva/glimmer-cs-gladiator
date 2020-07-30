@@ -103,4 +103,5 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Make tree data binding editing (adding new node) resort into the right place
 - Strip lines of empty space when performing copy/cut/paste/duplicate/comment/uncomment actions
 - Support CMD+SHIFT+TAB for Tab Close Undo
-- Column selection
+- Text Column selection
+- Add multi-project support
