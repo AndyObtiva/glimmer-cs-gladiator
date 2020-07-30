@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.2.4
+
+- Fix issue with not being able to rename file by hitting ENTER
+
 ## 0.2.3
 
 - Improved performance of file lookup list and display of directories (removing current local directory from file prefix)

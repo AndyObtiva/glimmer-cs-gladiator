@@ -26,18 +26,26 @@ module Glimmer
         end        
       end
   
-      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :path, :display_path
-      attr_reader :name, :parent
+      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path
+      attr_reader :name, :parent, :path, :is_local_dir
       attr_writer :all_children
   
       def initialize(path, is_local_dir = false)
-        @display_path = path
-        @path = ::File.expand_path(@display_path)
+        @is_local_dir = is_local_dir
+        self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
-        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '') unless is_local_dir
         self.filtered_path_options = []
       end
 
+      def path=(the_path)
+        @path = the_path
+        generate_display_path
+      end
+      
+      def generate_display_path
+        is_local_dir ? path : @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')
+      end
+      
       def name=(the_name)
         self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
         @name = the_name

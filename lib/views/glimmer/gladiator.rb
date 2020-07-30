@@ -644,6 +644,7 @@ module Glimmer
       end
       new_file_path = ::File.expand_path(::File.join(directory_path, 'new_file'))
       FileUtils.touch(new_file_path)
+      # TODO look into refreshing only the parent directory to avoid slowdown
       Dir.local_dir.refresh(async: false, force: true)
       new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}.first
       @tree.swt_widget.showItem(new_tree_item)

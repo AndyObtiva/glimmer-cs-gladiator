@@ -5,16 +5,14 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :dirty_content, :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :path, :display_path, :case_sensitive
-      attr_reader :name
+      attr_accessor :dirty_content, :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :display_path, :case_sensitive
+      attr_reader :name, :path
   
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
         @command_history = []
-        @display_path = path
         @name = ::File.basename(path)
-        @path = ::File.expand_path(path)
-        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')
+        self.path = ::File.expand_path(path)
         @top_index = 0
         @selection_count = 0
         @selection = Point.new(0, 0 + @selection_count)
@@ -43,6 +41,15 @@ module Glimmer
         end
       end
       
+      def path=(the_path)
+        @path = the_path
+        generate_display_path
+      end
+      
+      def generate_display_path
+        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')      
+      end
+      
       # to use for widget data-binding
       def content=(value)
         Command.do(self) # record a native (OS-widget) operation
@@ -67,11 +74,12 @@ module Glimmer
       end
       
       def name=(the_name)
-        self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
+        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name)
         @name = the_name
-        new_path = ::File.expand_path(display_path)
-        FileUtils.mv(path, new_path)
-        self.path = new_path
+        if ::File.exists?(path)
+          FileUtils.mv(path, new_path)
+          self.path = new_path
+        end
       end
       
       def dirty_content=(the_content)
