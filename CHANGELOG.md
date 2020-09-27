@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.3.0
+
+- Support Ignore Paths ('packges' and 'tmp' by default) to avoid slowing down editor with irrelevant files
+- Upgrade support to glimmer-dsl-swt 4.17.2.0 up to 5.0.0.0
+
 ## 0.2.4
 
 - Remember split windows on restart

@@ -79,6 +79,9 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
 - Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 - Make file renames also rename the open file tab
 
+## Refactorings
+
+- Refactor code around ignore_paths
 
 ## Enhancements
 
