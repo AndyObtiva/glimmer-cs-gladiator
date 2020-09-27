@@ -150,7 +150,8 @@ module Glimmer
       local_dir = ENV['LOCAL_DIR'] || '.'
       @config_file_path = ::File.join(local_dir, '.gladiator')
       @config = {}
-      Dir.local_dir.all_children # pre-caches children
+      load_config_ignore_paths
+#       Dir.local_dir.all_children # pre-caches children            
     }
 
     ## Uncomment after_body block to setup observers for widgets in body
@@ -236,7 +237,12 @@ module Glimmer
         text "Gladiator - #{::File.expand_path(Dir.local_dir.path)}"
         minimum_size 520, 250
         size 1440, 900 
-        grid_layout 2, false
+        grid_layout(2, false)
+        on_swt_show {
+          swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
+          swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]          
+          @loaded_config = true
+        }
         on_swt_close {
           Dir.local_dir.selected_child&.write_dirty_content
         }
@@ -432,7 +438,7 @@ module Glimmer
               text 'Find:'
             }
             @find_text = text {
-              layout_data(:fill, :fill, true, false) {
+              layout_data(:fill, :center, true, false) {
                 minimum_width 400
               }
               text bind(Dir.local_dir, 'selected_child.find_text')
@@ -511,11 +517,26 @@ module Glimmer
       }
     }
     
+    def load_config_ignore_paths
+      # TODO eliminate duplication with load_config
+      if ::File.exists?(@config_file_path)
+        config_yaml = ::File.read(@config_file_path)
+        return if config_yaml.to_s.strip.empty?
+        @config = YAML.load(config_yaml)
+        Dir.local_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
+        Dir.local_dir.ignore_paths ||= ['packages', 'tmp']
+      else
+        @loaded_config = true
+      end
+    end
+    
     def load_config
       if ::File.exists?(@config_file_path)
         config_yaml = ::File.read(@config_file_path)
         return if config_yaml.to_s.strip.empty?
         @config = YAML.load(config_yaml)
+        Dir.local_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
+        Dir.local_dir.ignore_paths ||= ['packages', 'tmp']
         open_file_paths1 = @config[:open_file_paths1] || @config[:open_file_paths]
         open_file_paths2 = @config[:open_file_paths2]
         open_file_paths1.to_a.each do |file_path|
@@ -529,11 +550,6 @@ module Glimmer
         Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         Dir.local_dir.selected_child&.caret_position  = Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
         Dir.local_dir.selected_child&.top_index = @config[:top_index].to_i if @config[:top_index]
-        body_root.on_swt_show {
-          swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
-          swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]          
-          @loaded_config = true
-        }
       else
         @loaded_config = true
       end
@@ -557,6 +573,7 @@ module Glimmer
         shell_y: swt_widget&.getBounds&.y,
         open_file_paths1: open_file_paths1,
         open_file_paths2: open_file_paths2,
+        ignore_paths: Dir.local_dir.ignore_paths
       }
       config_yaml = YAML.dump(@config)
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?

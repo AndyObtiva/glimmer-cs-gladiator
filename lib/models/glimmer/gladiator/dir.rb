@@ -11,7 +11,7 @@ module Glimmer
         def local_dir
           unless @local_dir
             @local_dir = new(ENV['LOCAL_DIR'] || '.', true)
-            @local_dir.refresh
+#             @local_dir.refresh
             @filewatcher = Filewatcher.new(@local_dir.path)
             @thread = Thread.new(@filewatcher) do |fw| 
               fw.watch do |filename, event|
@@ -26,7 +26,7 @@ module Glimmer
         end        
       end
   
-      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path
+      attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
       attr_reader :name, :parent, :path, :is_local_dir
       attr_writer :all_children
   
@@ -34,6 +34,7 @@ module Glimmer
         @is_local_dir = is_local_dir
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
+        @ignore_paths = ['packages', 'tmp']
         self.filtered_path_options = []
       end
 
@@ -59,7 +60,12 @@ module Glimmer
       end
 
       def retrieve_children
-        @children = ::Dir.glob(::File.join(@path, '*')).map do |p| 
+        @children = ::Dir.glob(::File.join(@path, '*')).reject do |p|
+          # TODO make sure to configure ignore_paths in a preferences dialog 
+          Dir.local_dir.ignore_paths.reduce(false) do |result, ignore_path|
+            result || p.include?(ignore_path)
+          end
+        end.map do |p| 
           ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)
         end.sort_by do |c| 
           c.path.to_s.downcase 

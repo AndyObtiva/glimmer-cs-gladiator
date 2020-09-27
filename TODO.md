@@ -2,6 +2,18 @@
 
 ## Up Next
 
+- Support simultaneous multiple workspaces/projects
+- Support opening a single file
+- Add gladiator-setup to make gladiator executable available everywhere
+- Fix issue with creating empty dir followed by empty file inside it does not work
+- Support emojis in text editor
+- Pack when you close a text editor split pane
+- Fix issue with creating directories not allowing save/rename
+- Remember Undo/Redo per text editor tab
+- Strip line strings on save
+- Do not strip the final line out if possible
+- Support Preferences dialog for setting up ignored paths
+
 ## Bugs
 
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
@@ -65,6 +77,7 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
               Gladiator at /Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:264
 
 - Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
+- Make file renames also rename the open file tab
 
 
 ## Enhancements
