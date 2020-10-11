@@ -348,7 +348,8 @@ module Glimmer
         new_dirty_content = dirty_content
         new_dirty_content[caret_position, find_text.size] = replace_text.to_s
         self.dirty_content = new_dirty_content
-        find_next
+        find_next       
+        find_next if replace_text.to_s.include?(find_text) && !replace_text.to_s.start_with?(find_text)
       end
   
       def page_up

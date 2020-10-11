@@ -34,7 +34,7 @@ module Glimmer
         @is_local_dir = is_local_dir
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
-        @ignore_paths = ['packages', 'tmp']
+        @ignore_paths = ['packages', 'tmp', 'vendor']
         self.filtered_path_options = []
       end
 

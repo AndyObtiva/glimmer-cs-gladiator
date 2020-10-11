@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.3.0 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.3.1 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -99,7 +99,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.3.0'
+gem 'glimmer-cs-gladiator', '~> 0.3.1'
 ```
 
 Run:
@@ -131,7 +131,9 @@ It currently remembers:
 - Last opened file
 - Caret position
 - Top line position
+- Window size
 - Opened tabs
+- Split tabs
 - Ignore Paths
 
 ## Gotcha

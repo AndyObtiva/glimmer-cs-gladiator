@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.3.1
+
+- Fixed issue with Find/Replace revisiting the same word after Replace, making it jump to the next one.
+- Add 'vendor' to ignore paths
+
 ## 0.3.0
 
 - Support Ignore Paths ('packges' and 'tmp' by default) to avoid slowing down editor with irrelevant files
