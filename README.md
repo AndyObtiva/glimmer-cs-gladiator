@@ -1,10 +1,12 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.3.1 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.4.0 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
 ![Gladiator](images/glimmer-gladiator.png)
 
-Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample project under on-going development that demonstrates how to build a text editor in [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
+(Now, slightly less ugly with Ruby syntax highlighting colors)
+
+Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer. 
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
@@ -12,6 +14,7 @@ I leave building truly professional text editors to software tooling experts who
 ## Features
 
 Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux):
+- Ruby Syntax Highlighting with colors
 - File explorer navigation with context menu to open file, rename, delete, add new file, add new directory, or refresh tree (CMD+T)
 - File lookup by name ignoring slashes, underscores, and dots to ease lookup (CMD+R)
 - Watch open file for external changes to automatically refresh in editor
@@ -30,6 +33,8 @@ Gladiator currently supports the following text editing features (including keyb
 - Indent/Unindent line/selection (CMD+] & CMD+[)
 - Insert/Prefix New Line (CMD+ENTER & CMD+SHIFT+ENTER)
 - Drag and Drop Text Editor Split Screen (drag a file from File Tree or File Lookup List, and it splits the screen)
+- Run current Ruby file via Run Menu (CMD+SHIFT+R)
+- Change Split Orientation to Horizontal/Vertical via View Menu (CMD+SHIFT+O)
 
 ## Platforms
 
@@ -99,7 +104,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.3.1'
+gem 'glimmer-cs-gladiator', '~> 0.4.0'
 ```
 
 Run:

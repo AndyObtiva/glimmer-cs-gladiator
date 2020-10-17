@@ -1,7 +1,9 @@
 module Glimmer
   class Gladiator
-    class Command
+    class Command    
       class << self
+        include Glimmer
+        
         def command_history
           @command_history ||= {}
         end
@@ -11,7 +13,7 @@ module Glimmer
           command_history[file] ||= [Command.new(file)] 
         end
         
-        def do(file, method = nil, command: nil)
+        def do(file, method = nil, command: nil)        
           command ||= Command.new(file, method)
           command_history_for(file)&.last&.next_command = command
           command.do
@@ -20,11 +22,13 @@ module Glimmer
         
         def undo(file)
           return if command_history_for(file).size <= 1        
-          command_history_for(file).pop.undo
+          command = command_history_for(file).pop
+          command&.undo
         end
         
         def redo(file)
-          command_history_for(file).last&.redo
+          command = command_history_for(file).last
+          command&.redo
         end
       end
     

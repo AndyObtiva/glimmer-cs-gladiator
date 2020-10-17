@@ -1,5 +1,25 @@
 # Change Log
 
+## 0.4.0
+
+- Syntax highlighting
+- Run menu with current file menu item
+- View menu with Split Horizontal/Vertical
+- Change split orientation with CMD+SHIFT+O shortcut
+- Run current file shortcut CMD+SHIFT+R
+- Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
+- Fix select-all with code_text
+- Fix tab with code_text
+- Fix caret position after tab with code_text
+- Fix issue with ENTER key not putting caret parallel to previous line start
+- Fix issue with jumping to bottom when doing CMD+] or [ for indent
+- Fix multi-line operations/post-selection with code_text (e.g. comment/uncomment, indent right or left)
+- Fix issue with jumping one line up or down when doing CMD+] or [ for indent
+- Fix CMD+ENTER and CMD+SHIFT+ENTER with code_text
+- Fix Move Line Up or Move Line Down with code_text
+- Fix jumping across pages of code on Find Next with code_text (it stays in the same page)
+- Fix issue with jumping back to beginning of file upon very quick indent/outdent
+
 ## 0.3.1
 
 - Fixed issue with Find/Replace revisiting the same word after Replace, making it jump to the next one.

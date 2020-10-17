@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem 'glimmer-dsl-swt', '>= 4.17.2.0', '< 5.0.0.0'
+gem 'glimmer-dsl-swt', '>= 4.17.4.2', '< 5.0.0.0'
 gem 'filewatcher', '~> 1.1.1'
 gem 'clipboard', '~> 1.3.4'
 

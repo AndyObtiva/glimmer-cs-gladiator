@@ -2,6 +2,13 @@
 
 ## Up Next
 
+- Split via CMD+SHIFT+O shortcut
+- Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
+
+- Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
+- Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
+- Add Coolbar/Toolbar with edit menu operations
+
 - Support simultaneous multiple workspaces/projects
 - Support opening a single file
 - Add gladiator-setup to make gladiator executable available everywhere
@@ -13,16 +20,21 @@
 - Strip line strings on save
 - Do not strip the final line out if possible
 - Support Preferences dialog for setting up ignored paths
+- Save/Load Config for the Split Orientation
+- Use a Sash between the text editor area and tree/list area
+- Make the File/Line/Find/Replace area collapsable
+- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line 
 
 ## Bugs
 
+- Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
 - Stop tree from scrolling upon renaming a file
-- Fix issue with line numbers not scrolling perfectly along with open file (off by a few pixels)
 - Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
 - Fix issue with Replace continuing to replace if Enter was pressed after all occurrences were replaced
 - Fix issue with crashing when closing a file and then trying to delete another file from the tree (might happen if you try to rename closed file) says getData returned nil
+- Eliminate flicker upon indent/outdent of multiple lines
 - Fix this issue (happens after closing all tabs and then attempting a file lookup find operation):
 The signal TERM is in use by the JVM and will not work correctly on this platform
 Unhandled Java exception: org.eclipse.swt.SWTException: Failed to execute runnable (org.jruby.exceptions.NoMethodError: (NoMethodError) undefined method `text_widget' for nil:NilClass)
@@ -88,6 +100,11 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
 - Make tabs not take memory when not selected (they unload/dispose their control)
 - Make gladiator command accept file argument and automatically open file and parent directory
 
+## Samples
+
+- Hello, Text Editor!
+- Hello, Gladiator!
+
 ## Features
 
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
@@ -101,7 +118,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Display caret position
 - Autohide file tree and file lookup list when not used
 - Support changing local directory (e.g. File -> Change Directory)
-- Add menus
 - Split screen
 - Support Copy/Paste in File Tree
 - Support Cut/Paste in File Tree
@@ -117,5 +133,5 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Make tree data binding editing (adding new node) resort into the right place
 - Strip lines of empty space when performing copy/cut/paste/duplicate/comment/uncomment actions
 - Support CMD+SHIFT+TAB for Tab Close Undo
-- Text Column selection
+- Text Column selection (StyledText setBlockSelection)
 - Add multi-project support

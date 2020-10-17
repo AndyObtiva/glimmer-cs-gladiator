@@ -5,15 +5,15 @@ module Glimmer
     class File
       include Glimmer
   
-      attr_accessor :dirty_content, :line_numbers_content, :selection, :selection_count, :line_number, :find_text, :replace_text, :top_index, :display_path, :case_sensitive
+      attr_accessor :dirty_content, :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
       attr_reader :name, :path
-  
+
       def initialize(path)
         raise "Not a file path: #{path}" unless ::File.file?(path)
         @command_history = []
         @name = ::File.basename(path)
         self.path = ::File.expand_path(path)
-        @top_index = 0
+        @top_pixel = 0
         @selection_count = 0
         @selection = Point.new(0, 0 + @selection_count)
         read_dirty_content = ::File.read(path)
@@ -52,8 +52,11 @@ module Glimmer
       
       # to use for widget data-binding
       def content=(value)
-        Command.do(self) # record a native (OS-widget) operation
-        self.dirty_content = value
+        value = value.gsub("\t", '  ')
+        if dirty_content != value
+          Command.do(self) # record a native (OS-widget) operation
+          self.dirty_content = value
+        end
       end
 
       def content
@@ -61,18 +64,23 @@ module Glimmer
       end
 
       def caret_position=(value)
+        old_top_pixel = top_pixel
         self.selection = Point.new(value, value + selection_count.to_i)
-        if OS.linux?
-          async_exec do
-            self.top_index = line_index_for_caret_position(value)
-          end
-        end
+        self.top_pixel = old_top_pixel
       end
       
       def caret_position
         selection.x
       end
+
+      def selection_count
+        selection.y - selection.x
+      end
       
+      def selection_count=(value)
+        self.selection = Point.new(caret_position, caret_position + value.to_i)
+      end      
+                  
       def name=(the_name)
         new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name)
         @name = the_name
@@ -135,10 +143,10 @@ module Glimmer
         current_line.to_s.match(/^(\s+)/).to_a[1].to_s
       end
 
-      def current_line
+      def current_line      
         lines[line_number - 1]
       end
-      
+
       def delete!
         FileUtils.rm(path)        
       end
@@ -210,8 +218,9 @@ module Glimmer
         old_caret_position = self.caret_position
         self.dirty_content = new_lines.join("\n")   
         if old_selection_count.to_i > 0
-          self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
-          self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
+          caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
+          selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
+          self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
         else
           self.caret_position = old_caret_position + delta
         end
@@ -239,8 +248,9 @@ module Glimmer
         end
         self.dirty_content = new_lines.join("\n")   
         if old_selection_count.to_i > 0
-          self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
-          self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
+          caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
+          selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
+          self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
         else
           new_caret_position = old_caret_position + delta
           new_caret_position = [new_caret_position, old_caret_position_line_caret_position].max
@@ -290,7 +300,7 @@ module Glimmer
         all_lines = lines
         the_line_index = line_index_for_caret_position(caret_position)
         line_position = line_position_for_caret_position(caret_position)
-        found = 
+        found = found_text?(caret_position)
         2.times do |i|
           rotation = the_line_index
           all_lines.rotate(rotation).each_with_index do |the_line, the_index|
@@ -302,6 +312,7 @@ module Glimmer
             if occurrence_index
               self.caret_position = caret_position_for_line_index(the_index) + start_position + occurrence_index
               self.selection_count = find_text.to_s.size
+              self.selection = Point.new(self.caret_position, self.caret_position + self.selection_count)
               return
             end
           end

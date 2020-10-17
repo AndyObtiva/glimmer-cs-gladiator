@@ -15,6 +15,7 @@ module Glimmer
   class Gladiator
     include Glimmer::UI::CustomShell
     
+    APP_ROOT = ::File.expand_path('../../../..', __FILE__)  
     COMMAND_KEY = OS.mac? ? :command : :ctrl
 
     class << self
@@ -27,6 +28,8 @@ module Glimmer
     # options :title, :background_color
     # option :width, 320
     # option :height, 240
+    
+    attr_accessor :split_orientation
     
     ## Uncomment before_body block to pre-initialize variables to use in body
     #
@@ -72,6 +75,8 @@ module Glimmer
                 @text_editor&.text_widget&.setFocus
               end
             end
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'o'
+            self.split_orientation = split_orientation == swt(:horizontal) ? swt(:vertical) : swt(:horizontal)
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
             @tab_folder.swt_widget.setSelection((@tab_folder.swt_widget.getSelectionIndex() + 1) % @tab_folder.swt_widget.getItemCount) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor&.text_widget&.setFocus
@@ -132,10 +137,10 @@ module Glimmer
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'l'
             @line_number_text.swt_widget.selectAll
             @line_number_text.swt_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'r'
+          elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'r'
             @filter_text.swt_widget.selectAll
             @filter_text.swt_widget.setFocus
-          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 't'
+          elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 't'
             select_tree_item unless @rename_in_progress
             @tree.swt_widget.setFocus
           elsif key_event.keyCode == swt(:esc)
@@ -147,6 +152,7 @@ module Glimmer
         }
       }
 
+      @split_orientation = swt(:horizontal)
       local_dir = ENV['LOCAL_DIR'] || '.'
       @config_file_path = ::File.join(local_dir, '.gladiator')
       @config = {}
@@ -223,7 +229,7 @@ module Glimmer
       observe(Dir.local_dir, 'selected_child.caret_position') do
         save_config
       end
-      observe(Dir.local_dir, 'selected_child.top_index') do
+      observe(Dir.local_dir, 'selected_child.top_pixel') do
         save_config
       end
       load_config
@@ -258,6 +264,46 @@ module Glimmer
         on_shell_deactivated {
           @text_editor&.file&.write_dirty_content
         }        
+
+        menu_bar {
+          menu {
+            text '&View'
+            menu {
+              text '&Split'
+              menu_item(:radio) {
+                text '&Horizontal'
+                selection bind(self, :split_orientation, on_read: ->(o) { o == swt(:horizontal)}, on_write: ->(b) { b ? swt(:horizontal) : swt(:vertical)})
+              }
+              menu_item(:radio) {
+                text '&Vertical'
+                selection bind(self, :split_orientation, on_read: ->(o) { o == swt(:vertical)}, on_write: ->(b) { b ? swt(:vertical) : swt(:horizontal)})
+              }
+            }
+          }
+          menu {
+            text '&Run'
+#             menu_item {
+#               text 'Launch Glimmer &App'
+#               on_widget_selected {
+#                 parent_path = Dir.local_dir.path
+##                 current_directory_name = ::File.basename(parent_path)
+##                 assumed_shell_script = ::File.join(parent_path, 'bin', current_directory_name)      
+##                 assumed_shell_script = ::Dir.glob(::File.join(parent_path, 'bin', '*')).detect {|f| ::File.file?(f) && !::File.read(f).include?('#!/usr/bin/env')} if !::File.exist?(assumed_shell_script)
+##                 load assumed_shell_script
+#                 FileUtils.cd(parent_path) do
+#                   system 'glimmer run'
+#                 end
+#               }
+#             }
+            menu_item {
+              text '&Current File'
+              on_widget_selected {
+                load Dir.local_dir.selected_child.path
+              }
+            }
+          }
+        }
+
         composite {
           grid_layout 1, false
           layout_data(:fill, :fill, false, true) {
@@ -395,9 +441,13 @@ module Glimmer
             
             # row 1
             
+            label {
+              text 'File:'
+            }
+
             @file_path_label = styled_text(:none) {
               layout_data(:fill, :fill, true, false) {
-                horizontal_span 3
+                horizontal_span 2
               }
               background color(:widget_background)
               editable false
@@ -496,6 +546,7 @@ module Glimmer
               height_hint 480
             }
             sash_width 10
+            orientation bind(self, :split_orientation)
             @tab_folder = tab_folder {
               drag_source(DND::DROP_COPY) {
                 transfer [TextTransfer.getInstance].to_java(Transfer)
@@ -549,7 +600,7 @@ module Glimmer
         Gladiator.drag = false
         Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         Dir.local_dir.selected_child&.caret_position  = Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
-        Dir.local_dir.selected_child&.top_index = @config[:top_index].to_i if @config[:top_index]
+        Dir.local_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
       else
         @loaded_config = true
       end
@@ -561,12 +612,12 @@ module Glimmer
       return if child.nil?
       tab_folder1 = @tab_folder1 || @tab_folder
       tab_folder2 = @tab_folder2
-      open_file_paths1 = tab_folder1&.swt_widget&.items&.to_a.map {|i| i.get_data('file_path')}
-      open_file_paths2 = tab_folder2&.swt_widget&.items&.to_a.map {|i| i.get_data('file_path')}
+      open_file_paths1 = tab_folder1&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
+      open_file_paths2 = tab_folder2&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
       @config = {
         selected_child_path: child.path,
         caret_position: child.caret_position,
-        top_index: child.top_index,
+        top_pixel: child.top_pixel,
         shell_width: swt_widget&.getBounds&.width,
         shell_height: swt_widget&.getBounds&.height,
         shell_x: swt_widget&.getBounds&.x,
