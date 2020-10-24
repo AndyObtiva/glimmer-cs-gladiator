@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.4.1
+
+= Do not enable Ruby syntax highlighting in non-Ruby files
+
 ## 0.4.0
 
 - Syntax highlighting

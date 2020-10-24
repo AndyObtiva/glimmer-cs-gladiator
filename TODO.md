@@ -2,8 +2,11 @@
 
 ## Up Next
 
+- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line 
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
+- Support a scratch pad to run any ruby code
+- Fix scroll jitter on move line up/down
 
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
 - Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
@@ -23,12 +26,13 @@
 - Save/Load Config for the Split Orientation
 - Use a Sash between the text editor area and tree/list area
 - Make the File/Line/Find/Replace area collapsable
-- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line 
 
 ## Bugs
 
 - Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
+- Fix issue with line numbers sometimes not lining up perfectly with text editor (problem is back)
+- Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)
 - Stop tree from scrolling upon renaming a file
 - Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
@@ -94,16 +98,13 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
 ## Refactorings
 
 - Refactor code around ignore_paths
+- Automate running tests on git push
 
 ## Enhancements
 
 - Make tabs not take memory when not selected (they unload/dispose their control)
 - Make gladiator command accept file argument and automatically open file and parent directory
-
-## Samples
-
-- Hello, Text Editor!
-- Hello, Gladiator!
+- Support Automatic Version/Revision History with an auto-clear after size
 
 ## Features
 

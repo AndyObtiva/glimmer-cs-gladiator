@@ -6,6 +6,11 @@ module Glimmer
       options :file
 
       attr_reader :text_proxy, :text_widget
+      
+      before_body {
+        @is_code_file = file.path.end_with?('.rb')
+        @text_widget = @is_code_file ? 'code_text' : 'styled_text'
+      }
 
       after_body {
         @text_widget = @text.swt_widget
@@ -16,7 +21,7 @@ module Glimmer
         composite {
           layout_data :fill, :fill, true, true
           grid_layout 2, false
-          @line_numbers_text = code_text(:border, :multi) {
+          @line_numbers_text = send(@text_widget, :multi, :border) {
             layout_data(:right, :fill, false, true)
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
@@ -34,14 +39,14 @@ module Glimmer
             }
           }
           
-          @text = code_text {
+          @text = send(@text_widget) {
             layout_data :fill, :fill, true, true
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             foreground rgb(75, 75, 75)
             text bind(file, :content)
             focus true
             selection bind(file, :selection)
-            top_pixel bind(file, :top_pixel)
+            top_pixel bind(file, 'top_pixel')
             drop_target(DND::DROP_COPY) {
               transfer [TextTransfer.getInstance].to_java(Transfer)
               on_drag_enter { |event|
@@ -132,8 +137,7 @@ module Glimmer
           }
         }
       }
-      
-      
+            
       def extract_char(event)
         event.keyCode.chr
       rescue => e
