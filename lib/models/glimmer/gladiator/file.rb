@@ -1,10 +1,8 @@
-require 'models/glimmer/gladiator/dir'
-
 module Glimmer
   class Gladiator
     class File
       include Glimmer
-  
+
       attr_accessor :dirty_content, :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
       attr_reader :name, :path
 
@@ -40,29 +38,29 @@ module Glimmer
           # no op in case of a binary file
         end
       end
-      
+
       def path=(the_path)
         @path = the_path
         generate_display_path
       end
-      
+
       def generate_display_path
-        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')      
+        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')
       end
-      
+
       def backup_properties
-        [:find_text, :replace_text, :case_sensitive, :top_pixel, :selection].reduce({}) do |hash, property|
+        [:find_text, :replace_text, :case_sensitive, :top_pixel, :caret_position, :selection_count].reduce({}) do |hash, property|
           hash.merge(property => send(property))
-        end                
+        end
       end
-      
+
       def restore_properties(properties_hash)
-        return if properties_hash[:selection].x == 0 && properties_hash[:selection].y == 0 && properties_hash[:find_text].nil? && properties_hash[:replace_text].nil? && properties_hash[:top_pixel] == 0 && properties_hash[:case_sensitive].nil?
+        return if properties_hash[:caret_position] == 0 && properties_hash[:selection_count] == 0 && properties_hash[:find_text].nil? && properties_hash[:replace_text].nil? && properties_hash[:top_pixel] == 0 && properties_hash[:case_sensitive].nil?
         properties_hash.each do |property, value|
           send("#{property}=", value)
         end
       end
-      
+
       # to use for widget data-binding
       def content=(value)
         value = value.gsub("\t", '  ')
@@ -81,7 +79,7 @@ module Glimmer
         self.selection = Point.new(value, value + selection_count.to_i)
         self.top_pixel = old_top_pixel
       end
-      
+
       def caret_position
         selection.x
       end
@@ -89,28 +87,28 @@ module Glimmer
       def selection_count
         selection.y - selection.x
       end
-      
+
       def selection_count=(value)
         self.selection = Point.new(caret_position, caret_position + value.to_i)
-      end      
-                  
+      end
+
       def name=(the_name)
         new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name)
-        @name = the_name        
+        @name = the_name
         if ::File.exists?(path)
           FileUtils.mv(path, new_path)
           self.path = new_path
         end
       end
-      
+
       def dirty_content=(the_content)
         @dirty_content = the_content if ::File.exist?(path)
         notify_observers(:content)
       end
-  
+
       def start_filewatcher
         @filewatcher = Filewatcher.new(@path)
-        @thread = Thread.new(@filewatcher) do |fw| 
+        @thread = Thread.new(@filewatcher) do |fw|
           fw.watch do |filename, event|
             begin
               read_dirty_content = ::File.read(path)
@@ -125,16 +123,16 @@ module Glimmer
           end
         end
       end
-      
+
       def stop_filewatcher
         @filewatcher&.stop
       end
 
       def format_dirty_content_for_writing!
-        new_dirty_content = "#{dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"      
+        new_dirty_content = "#{dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
         self.dirty_content = new_dirty_content if new_dirty_content != self.dirty_content
       end
-  
+
       def write_dirty_content
         return unless ::File.exist?(path)
         format_dirty_content_for_writing!
@@ -143,7 +141,7 @@ module Glimmer
         puts "Error in writing dirty content for #{path}"
         puts e.full_message
       end
-  
+
       def write_raw_dirty_content
         return unless ::File.exist?(path)
         ::File.write(path, dirty_content) if ::File.exists?(path)
@@ -156,30 +154,28 @@ module Glimmer
         current_line.to_s.match(/^(\s+)/).to_a[1].to_s
       end
 
-      def current_line      
+      def current_line
         lines[line_number - 1]
       end
 
       def delete!
-        FileUtils.rm(path)        
+        FileUtils.rm(path)
       end
-      
+
       def prefix_new_line!
         the_lines = lines
         the_lines[line_number-1...line_number-1] = [current_line_indentation]
         self.dirty_content = the_lines.join("\n")
-        caret_position_value = caret_position_for_line_index(line_number-1) + current_line_indentation.size
-        selection_count_value = 0
-        self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
+        self.caret_position = caret_position_for_line_index(line_number-1) + current_line_indentation.size
+        self.selection_count = 0
       end
 
       def insert_new_line!
         the_lines = lines
         the_lines[line_number...line_number] = [current_line_indentation]
         self.dirty_content = the_lines.join("\n")
-        caret_position_value = caret_position_for_line_index(line_number) + current_line_indentation.size
-        selection_count_value = 0
-        self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
+        self.caret_position = caret_position_for_line_index(line_number) + current_line_indentation.size
+        self.selection_count = 0
       end
 
       def comment_line!
@@ -217,7 +213,7 @@ module Glimmer
           self.caret_position = new_caret_position
         end
       end
-  
+
       def indent!
         new_lines = lines
         old_lines = lines
@@ -233,7 +229,7 @@ module Glimmer
           new_lines[the_line_index] = "  #{the_line}"
         end
         old_caret_position = self.caret_position
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")   
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")
         if old_selection_count.to_i > 0
           caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
           selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
@@ -242,7 +238,7 @@ module Glimmer
           self.caret_position = old_caret_position + delta
         end
       end
-  
+
       def outdent!
         new_lines = lines
         old_lines = lines
@@ -263,7 +259,7 @@ module Glimmer
             delta = -1
           end
         end
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")   
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")
         if old_selection_count.to_i > 0
           caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
           selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
@@ -274,7 +270,7 @@ module Glimmer
           self.caret_position = new_caret_position
         end
       end
-  
+
       def kill_line!
         new_lines = lines
         return if new_lines.size < 1
@@ -287,7 +283,7 @@ module Glimmer
         self.caret_position = caret_position_for_line_index(old_line_index) + [line_position, lines[old_line_index].to_s.size].min
         self.selection_count = 0
       end
-  
+
       def duplicate_line!
         new_lines = lines
         old_lines = lines
@@ -311,9 +307,9 @@ module Glimmer
           self.caret_position = old_caret_position + delta
         end
       end
-  
+
       def find_next
-        return if find_text.to_s.empty?        
+        return if find_text.to_s.empty?
         all_lines = lines
         the_line_index = line_index_for_caret_position(caret_position)
         line_position = line_position_for_caret_position(caret_position)
@@ -335,7 +331,7 @@ module Glimmer
           end
         end
       end
-  
+
       def find_previous
         return if find_text.to_s.empty?
         all_lines = lines
@@ -360,7 +356,7 @@ module Glimmer
           end
         end
       end
-  
+
       def ensure_find_next
         return if find_text.to_s.empty? || dirty_content.to_s.strip.size < 1
         find_next unless found_text?(self.caret_position)
@@ -369,45 +365,45 @@ module Glimmer
       def found_text?(caret_position)
         dirty_content[caret_position.to_i, find_text.to_s.size].to_s.downcase == find_text.to_s.downcase
       end
-  
+
       def replace_next!
         return if find_text.to_s.empty? || dirty_content.to_s.strip.size < 1
         ensure_find_next
         new_dirty_content = dirty_content
         new_dirty_content[caret_position, find_text.size] = replace_text.to_s
         self.dirty_content = new_dirty_content
-        find_next       
+        find_next
         find_next if replace_text.to_s.include?(find_text) && !replace_text.to_s.start_with?(find_text)
       end
-  
+
       def page_up
         self.selection_count = 0
         self.line_number = [(self.line_number - 15), 1].max
       end
-  
+
       def page_down
         self.selection_count = 0
         self.line_number = [(self.line_number + 15), lines.size].min
       end
-  
+
       def home
         self.selection_count = 0
         self.line_number = 1
       end
-  
+
       def end
         self.selection_count = 0
         self.line_number = lines.size
       end
-      
+
       def start_of_line
         self.caret_position = caret_position_for_line_index(self.line_number - 1)
       end
-  
+
       def end_of_line
         self.caret_position = caret_position_for_line_index(self.line_number) - 1
       end
-  
+
       def move_up!
         old_lines = lines
         return if old_lines.size < 2
@@ -426,7 +422,7 @@ module Glimmer
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end
-  
+
       def move_down!
         old_lines = lines
         return if old_lines.size < 2
@@ -445,25 +441,25 @@ module Glimmer
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end
-  
+
       def lines
         dirty_content.split("\n")
       end
-  
+
       def line_for_caret_position(caret_position)
         lines[line_index_for_caret_position(caret_position.to_i)]
       end
-  
+
       def line_index_for_caret_position(caret_position)
         dirty_content[0...caret_position.to_i].count("\n")
       end
-  
+
       def caret_position_for_line_index(line_index)
         cp = lines[0...line_index].join("\n").size
         cp += 1 if line_index > 0
         cp
       end
-  
+
       def caret_position_for_caret_position_start_of_line(caret_position)
         caret_position_for_line_index(line_index_for_caret_position(caret_position))
       end
@@ -474,23 +470,23 @@ module Glimmer
         caret_position = caret_position.to_i
         caret_position - caret_position_for_caret_position_start_of_line(caret_position)
       end
-  
+
       def line_caret_positions_for_selection(caret_position, selection_count)
         line_indices = line_indices_for_selection(caret_position, selection_count)
         line_caret_positions = line_indices.map { |line_index| caret_position_for_line_index(line_index) }.to_a
       end
-  
+
       def end_caret_position_line_index(caret_position, selection_count)
         end_caret_position = caret_position + selection_count.to_i
         end_caret_position -= 1 if dirty_content[end_caret_position - 1] == "\n"
         end_line_index = line_index_for_caret_position(end_caret_position)
       end
-  
+
       def lines_for_selection(caret_position, selection_count)
         line_indices = line_indices_for_selection(caret_position, selection_count)
         lines[line_indices.first..line_indices.last]
       end
-  
+
       def line_indices_for_selection(caret_position, selection_count)
         start_line_index = line_index_for_caret_position(caret_position)
         if selection_count.to_i > 0
@@ -500,22 +496,22 @@ module Glimmer
         end
         (start_line_index..end_line_index).to_a
       end
-  
+
       def children
         []
       end
-  
+
       def to_s
         path
       end
-      
+
       def eql?(other)
         self.path.eql?(other&.path)
       end
-      
+
       def hash
         self.path.hash
       end
-    end  
+    end
   end
 end

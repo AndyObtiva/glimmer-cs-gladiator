@@ -2,12 +2,18 @@
 
 ## Up Next
 
-- Add all possible keyboard shortcut actions into the menu and denote their shorcuts
+- Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
+- File Menu to allow Opening a Project
+- Package gladidator as a DMG/MSI
+- Add gladiator-setup to make gladiator executable available everywhere
+
+- Make file renames also rename the open file tab
+- Close open file if deleted
+- Edit Menu with all possible keyboard shortcut actions into the menu and denote their shorcuts
 - Try optimizing by avoiding line style coloring if file content hasn't changed
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
 - Support a scratch pad to run any ruby code
-- Fix scroll jitter on move line up/down
 - Support CMD+CTRL+UP and DOWN for moving between split editor panes (since we can split vertically too now)
 
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
@@ -17,7 +23,6 @@
 - Support instrumenting Gladiator with DRuby to start on a new project quickly if open already
 - Support simultaneous multiple workspaces/projects
 - Support opening a single file
-- Add gladiator-setup to make gladiator executable available everywhere
 - Fix issue with creating empty dir followed by empty file inside it does not work
 - Support emojis in text editor
 - Pack when you close a text editor split pane
@@ -35,7 +40,6 @@
 
 ## Bugs
 
-- Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
 - Fix issue with line numbers sometimes not lining up perfectly with text editor (problem is back)
 - Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)
@@ -97,7 +101,6 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
   add_static_expression at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:107
               Gladiator at /Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:264
 
-- Make file renames also rename the open file tab
 
 ## Refactorings
 
@@ -112,11 +115,11 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
 
 ## Features
 
+- Make into a tray icon always-on app
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
-- Package gladidator as a DMG/APP
 - Support autocomplete (primarily Glimmer DSL syntax)
 - Support jumping between parts of a programming expression underscores or dots instead of an entire expression on ALT LEFT & RIGHT
-- Support collapsing blocks of code (e.g. class Name {...}) and expanding them again, collapsing line numbers next to them too. 
+- Support collapsing blocks of code (e.g. class Name {...}) and expanding them again, collapsing line numbers next to them too.
 This allows easy copying/pasting of big blocks of code without making mistakes in grabbing the end of the block that matches the beginning.
 - Remember caret position and top of file in every file opened, not just the last one
 - Hot reloading
@@ -134,7 +137,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Find/Replace All
 - Highlight line we are on in the line number text widget on the left side
 - Multi-selection in tree and multi-deletion
-- Close open file if deleted
 - Make tree data binding editing (adding new node) resort into the right place
 - Strip lines of empty space when performing copy/cut/paste/duplicate/comment/uncomment actions
 - Support CMD+SHIFT+TAB for Tab Close Undo

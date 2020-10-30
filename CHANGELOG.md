@@ -2,11 +2,12 @@
 
 ## 0.4.2
 
-- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line 
+- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line
 - Minor performance optimization by not syntax highlighting file line numbers (using standard uniform foreground coloring)
 - Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 - Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with producing extra space at the end of some lines
+- Fix scroll jitter on move line up/down
 
 ## 0.4.1
 
@@ -69,12 +70,12 @@
 
 - Undo/Redo
 - Case-sensitive Find (and Replace by extension)
-- Make CMD+SHIFT+] at the last tab go to the first tab (and vice versa with CMD+SHIFT+[) 
+- Make CMD+SHIFT+] at the last tab go to the first tab (and vice versa with CMD+SHIFT+[)
 - Fix Line/Find/Replace actions when no file is open (to avoid crash)
 - Fix issue with file lookup list expanding all the way down, covering the file tree
-- Fix issue with hitting home/end with selection keeping selection instead of removing it 
+- Fix issue with hitting home/end with selection keeping selection instead of removing it
 - Fix issue with crashing if no file was open, no file is found in lookup list, and you attempt to hit enter in keyboard
-  
+
 ## 0.1.7
 
 - Relaxed Glimmer version requirement
@@ -85,7 +86,7 @@
 - Make file tree maintain expansion state on refreshes caused by internal & external changes
 
 ## 0.1.5
-    
+
 - Remember all open text editor tabs when closing and reopening
 - Support closing text editor tabs with keyboard shortcuts (closing current tab, closing all tabs other than current one, closing all tabs)
 - Support prefix new indented line when hitting CMD+SHIFT+ENTER in the middle of a line
