@@ -81,6 +81,12 @@ module Glimmer
                 key_event.doit = !Command.undo(file)
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'a'
                 key_event.widget.selectAll
+              elsif !OS.windows? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'a'
+                Command.do(file, :start_of_line)
+                key_event.doit = false
+              elsif !OS.windows? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'e'
+                Command.do(file, :end_of_line)
+                key_event.doit = false
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '/'
                 Command.do(file, :comment_line!)
                 key_event.doit = false

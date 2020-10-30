@@ -2,12 +2,8 @@
 
 ## Up Next
 
-- Fix tree slow refresh and lost refreshes on directory file changes
-- Do syntax coloring in a background thread
-- Don't monitor .gladiator for changes
 - Add all possible keyboard shortcut actions into the menu and denote their shorcuts
 - Try optimizing by avoiding line style coloring if file content hasn't changed
-- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line 
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
 - Support a scratch pad to run any ruby code

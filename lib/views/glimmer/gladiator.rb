@@ -16,7 +16,8 @@ module Glimmer
     include Glimmer::UI::CustomShell
     
     APP_ROOT = ::File.expand_path('../../../..', __FILE__)  
-    COMMAND_KEY = OS.mac? ? :command : :ctrl
+    # TODO make sure COMMAND_KEY doesn't clash on Linux/Windows for CMD+CTRL shortcuts
+    COMMAND_KEY = OS.mac? ? :command : :ctrl 
 
     class << self
       attr_accessor :drag_and_drop

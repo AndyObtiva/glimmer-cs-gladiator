@@ -51,7 +51,7 @@ module Glimmer
       end
       
       def backup_properties
-        [:selection, :find_text, :replace_text, :top_pixel, :case_sensitive].reduce({}) do |hash, property|
+        [:find_text, :replace_text, :case_sensitive, :top_pixel, :selection].reduce({}) do |hash, property|
           hash.merge(property => send(property))
         end                
       end
@@ -394,6 +394,14 @@ module Glimmer
       def end
         self.selection_count = 0
         self.line_number = lines.size
+      end
+      
+      def start_of_line
+        self.caret_position = caret_position_for_line_index(self.line_number - 1)
+      end
+  
+      def end_of_line
+        self.caret_position = caret_position_for_line_index(self.line_number) - 1
       end
   
       def move_up!
