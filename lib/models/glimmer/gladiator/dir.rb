@@ -34,7 +34,7 @@ module Glimmer
         @is_local_dir = is_local_dir
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
-        @ignore_paths = ['packages', 'tmp', 'vendor']
+        @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'tmp', 'vendor']
         self.filtered_path_options = []
       end
 
@@ -166,6 +166,12 @@ module Glimmer
       
       def selected_child_path
         @selected_child&.path
+      end
+      
+      def selected_child=(new_child)        
+        file_properties = @selected_child&.backup_properties if @selected_child == new_child
+        @selected_child = new_child
+        @selected_child.restore_properties(file_properties) if file_properties
       end
       
       def delete!

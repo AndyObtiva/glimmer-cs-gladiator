@@ -2,16 +2,23 @@
 
 ## Up Next
 
+- Fix tree slow refresh and lost refreshes on directory file changes
+- Do syntax coloring in a background thread
+- Don't monitor .gladiator for changes
+- Add all possible keyboard shortcut actions into the menu and denote their shorcuts
+- Try optimizing by avoiding line style coloring if file content hasn't changed
 - Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line 
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
 - Support a scratch pad to run any ruby code
 - Fix scroll jitter on move line up/down
+- Support CMD+CTRL+UP and DOWN for moving between split editor panes (since we can split vertically too now)
 
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
 - Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
 - Add Coolbar/Toolbar with edit menu operations
 
+- Support instrumenting Gladiator with DRuby to start on a new project quickly if open already
 - Support simultaneous multiple workspaces/projects
 - Support opening a single file
 - Add gladiator-setup to make gladiator executable available everywhere
@@ -26,6 +33,9 @@
 - Save/Load Config for the Split Orientation
 - Use a Sash between the text editor area and tree/list area
 - Make the File/Line/Find/Replace area collapsable
+- Consider replacing tab_folder with c_tab_folder to have tabs show up on the left if there is only one tab (not center like it currently is)
+- A new line on a comment produces a new comment
+- Have the closing curly brace or "end" keyword light up the opening curly brace or "do" keyword when landing on it
 
 ## Bugs
 
@@ -34,7 +44,6 @@
 - Fix issue with line numbers sometimes not lining up perfectly with text editor (problem is back)
 - Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)
 - Stop tree from scrolling upon renaming a file
-- Fix tree slow refresh and lost refreshes on directory file changes
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
 - Fix issue with Replace continuing to replace if Enter was pressed after all occurrences were replaced
 - Fix issue with crashing when closing a file and then trying to delete another file from the tree (might happen if you try to rename closed file) says getData returned nil
@@ -92,7 +101,6 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
   add_static_expression at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:107
               Gladiator at /Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:264
 
-- Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 - Make file renames also rename the open file tab
 
 ## Refactorings

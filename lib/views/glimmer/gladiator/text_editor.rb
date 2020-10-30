@@ -21,13 +21,17 @@ module Glimmer
         composite {
           layout_data :fill, :fill, true, true
           grid_layout 2, false
-          @line_numbers_text = send(@text_widget, :multi, :border) {
+          @line_numbers_text = styled_text(:multi, :border) {
             layout_data(:right, :fill, false, true)
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
-            foreground rgb(75, 75, 75)
+            foreground rgb(0, 0, 250)
             text bind(file, 'line_numbers_content')
             top_pixel bind(file, 'top_pixel', read_only: true)
+            top_margin 5
+            right_margin 5
+            bottom_margin 5
+            left_margin 5
             on_focus_gained {
               @text&.swt_widget.setFocus
             }

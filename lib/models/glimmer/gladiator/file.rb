@@ -50,6 +50,19 @@ module Glimmer
         @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')      
       end
       
+      def backup_properties
+        [:selection, :find_text, :replace_text, :top_pixel, :case_sensitive].reduce({}) do |hash, property|
+          hash.merge(property => send(property))
+        end                
+      end
+      
+      def restore_properties(properties_hash)
+        return if properties_hash[:selection].x == 0 && properties_hash[:selection].y == 0 && properties_hash[:find_text].nil? && properties_hash[:replace_text].nil? && properties_hash[:top_pixel] == 0 && properties_hash[:case_sensitive].nil?
+        properties_hash.each do |property, value|
+          send("#{property}=", value)
+        end
+      end
+      
       # to use for widget data-binding
       def content=(value)
         value = value.gsub("\t", '  ')

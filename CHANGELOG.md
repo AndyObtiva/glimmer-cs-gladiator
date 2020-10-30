@@ -1,8 +1,13 @@
 # Change Log
 
+## 0.4.2
+
+- Minor performance optimization by not syntax highlighting file line numbers (using standard uniform foreground coloring)
+- Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
+
 ## 0.4.1
 
-= Do not enable Ruby syntax highlighting in non-Ruby files
+- Do not enable Ruby syntax highlighting in non-Ruby files
 
 ## 0.4.0
 
