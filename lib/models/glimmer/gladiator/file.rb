@@ -96,7 +96,7 @@ module Glimmer
                   
       def name=(the_name)
         new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name)
-        @name = the_name
+        @name = the_name        
         if ::File.exists?(path)
           FileUtils.mv(path, new_path)
           self.path = new_path
@@ -168,14 +168,18 @@ module Glimmer
         the_lines = lines
         the_lines[line_number-1...line_number-1] = [current_line_indentation]
         self.dirty_content = the_lines.join("\n")
-        self.caret_position = caret_position_for_line_index(line_number-1) + current_line_indentation.size
+        caret_position_value = caret_position_for_line_index(line_number-1) + current_line_indentation.size
+        selection_count_value = 0
+        self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
       end
 
       def insert_new_line!
         the_lines = lines
         the_lines[line_number...line_number] = [current_line_indentation]
         self.dirty_content = the_lines.join("\n")
-        self.caret_position = caret_position_for_line_index(line_number) + current_line_indentation.size
+        caret_position_value = caret_position_for_line_index(line_number) + current_line_indentation.size
+        selection_count_value = 0
+        self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
       end
 
       def comment_line!
@@ -203,7 +207,7 @@ module Glimmer
             delta += 2
           end
         end
-        self.dirty_content = new_lines.join("\n")   
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")
         if old_selection_count.to_i > 0
           self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
           self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
@@ -229,7 +233,7 @@ module Glimmer
           new_lines[the_line_index] = "  #{the_line}"
         end
         old_caret_position = self.caret_position
-        self.dirty_content = new_lines.join("\n")   
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")   
         if old_selection_count.to_i > 0
           caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
           selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
@@ -259,7 +263,7 @@ module Glimmer
             delta = -1
           end
         end
-        self.dirty_content = new_lines.join("\n")   
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")   
         if old_selection_count.to_i > 0
           caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
           selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
@@ -279,7 +283,7 @@ module Glimmer
         old_caret_position = self.caret_position
         old_line_index = self.line_number - 1
         line_position = line_position_for_caret_position(old_caret_position)
-        self.dirty_content = "#{new_lines.join("\n")}\n"
+        self.dirty_content = "#{new_lines.map(&:rstrip).join("\n")}\n"
         self.caret_position = caret_position_for_line_index(old_line_index) + [line_position, lines[old_line_index].to_s.size].min
         self.selection_count = 0
       end
@@ -295,11 +299,11 @@ module Glimmer
         old_end_caret_line_index = end_caret_position_line_index(caret_position, selection_count)
         the_line_indices = line_indices_for_selection(caret_position, selection_count)
         the_lines = lines_for_selection(caret_position, selection_count)
-        delta = the_lines.join("\n").size + 1
+        delta = the_lines.map(&:rstrip).join("\n").size + 1
         the_lines.each_with_index do |the_line, i|
           new_lines.insert(the_line_indices.first + i, the_line)
         end
-        self.dirty_content = new_lines.join("\n")
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")
         if old_selection_count.to_i > 0
           self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
           self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
@@ -418,7 +422,7 @@ module Glimmer
         new_line_index = [the_line_indices.first - 1, 0].max
         new_lines[the_line_indices.first..the_line_indices.last] = []
         new_lines[new_line_index...new_line_index] = the_lines
-        self.dirty_content = new_lines.join("\n")
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end
@@ -437,7 +441,7 @@ module Glimmer
         new_line_index = [the_line_indices.first + 1, new_lines.size - 1].min
         new_lines[the_line_indices.first..the_line_indices.last] = []
         new_lines[new_line_index...new_line_index] = the_lines
-        self.dirty_content = new_lines.join("\n")
+        self.dirty_content = new_lines.map(&:rstrip).join("\n")
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end

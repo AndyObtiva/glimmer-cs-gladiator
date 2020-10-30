@@ -6,6 +6,7 @@
 - Minor performance optimization by not syntax highlighting file line numbers (using standard uniform foreground coloring)
 - Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 - Fix tree slow refresh and lost refreshes on directory file changes
+- Fix issue with producing extra space at the end of some lines
 
 ## 0.4.1
 
