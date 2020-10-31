@@ -6,16 +6,17 @@ module Glimmer
       attr_accessor :dirty_content, :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
       attr_reader :name, :path, :project_dir
 
-      def initialize(path, project_dir)
-        raise "Not a file path: #{path}" unless ::File.file?(path)
+      def initialize(path=nil, project_dir=nil)
+        path = nil if path&.strip&.empty?
+        raise "Not a file path: #{path}" if !path.nil? && !::File.file?(path)
         @project_dir = project_dir
         @command_history = []
-        @name = ::File.basename(path)
-        self.path = ::File.expand_path(path)
+        @name = path.nil? ? 'Scratchpad' : ::File.basename(path)
+        self.path = ::File.expand_path(path) unless path.nil?
         @top_pixel = 0
         @selection_count = 0
         @selection = Point.new(0, 0 + @selection_count)
-        read_dirty_content = ::File.read(path)
+        read_dirty_content = path.nil? ? '' : ::File.read(path)
         begin
           # test read dirty content
           read_dirty_content.split("\n")
@@ -24,7 +25,7 @@ module Glimmer
             self.line_numbers_content = lines.size.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
           end
           @line_number = 1
-          self.dirty_content = read_dirty_content # TODO might be a good point to get rid of hanging right space with rstrip
+          self.dirty_content = read_dirty_content
           observe(self, :selection) do
             self.line_number = line_index_for_caret_position(caret_position) + 1
           end
@@ -41,11 +42,13 @@ module Glimmer
       end
 
       def path=(the_path)
+        the_path = nil if the_path&.strip&.empty?
         @path = the_path
         generate_display_path
       end
 
       def generate_display_path
+        return if @path.nil?
         @display_path = @path.sub(project_dir.path, '').sub(/^\//, '')
       end
 
@@ -94,20 +97,21 @@ module Glimmer
       end
 
       def name=(the_name)
-        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name)
+        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name) unless path.nil?
         @name = the_name
-        if ::File.exists?(path)
+        if !path.nil? && ::File.exist?(path)
           FileUtils.mv(path, new_path)
           self.path = new_path
         end
       end
 
       def dirty_content=(the_content)
-        @dirty_content = the_content if ::File.exist?(path)
+        @dirty_content = the_content
         notify_observers(:content)
       end
 
       def start_filewatcher
+        return if @path.nil?
         @filewatcher = Filewatcher.new(@path)
         @thread = Thread.new(@filewatcher) do |fw|
           fw.watch do |filename, event|
@@ -136,7 +140,7 @@ module Glimmer
       end
 
       def write_dirty_content
-        return unless ::File.exist?(path)
+        return if path.nil? || !::File.exist?(path)
         format_dirty_content_for_writing!
         ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
@@ -145,7 +149,7 @@ module Glimmer
       end
 
       def write_raw_dirty_content
-        return unless ::File.exist?(path)
+        return if path.nil? || !::File.exist?(path)
         ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
         puts "Error in writing raw dirty content for #{path}"
@@ -161,13 +165,13 @@ module Glimmer
       end
 
       def delete!
-        FileUtils.rm(path)
+        FileUtils.rm(path) unless path.nil?
       end
 
       def prefix_new_line!
         the_lines = lines
         the_lines[line_number-1...line_number-1] = [current_line_indentation]
-        self.dirty_content = the_lines.join("\n")  # TODO fix issue with rstrip on an all space line and refactor code to avoid repeating the join statement
+        self.dirty_content = the_lines.join("\n")
         self.caret_position = caret_position_for_line_index(line_number-1) + current_line_indentation.size
         self.selection_count = 0
       end
@@ -233,9 +237,8 @@ module Glimmer
         old_caret_position = self.caret_position
         self.dirty_content = new_lines.join("\n")
         if old_selection_count.to_i > 0
-          caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
-          selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
-          self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
+          self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
+          self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
         else
           self.caret_position = old_caret_position + delta
         end
@@ -263,9 +266,8 @@ module Glimmer
         end
         self.dirty_content = new_lines.join("\n")
         if old_selection_count.to_i > 0
-          caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
-          selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
-          self.selection = Point.new(caret_position_value, caret_position_value + selection_count_value)
+          self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
+          self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
         else
           new_caret_position = old_caret_position + delta
           new_caret_position = [new_caret_position, old_caret_position_line_caret_position].max
@@ -327,7 +329,6 @@ module Glimmer
             if occurrence_index
               self.caret_position = caret_position_for_line_index(the_index) + start_position + occurrence_index
               self.selection_count = find_text.to_s.size
-              self.selection = Point.new(self.caret_position, self.caret_position + self.selection_count)
               return
             end
           end

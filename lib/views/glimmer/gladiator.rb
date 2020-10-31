@@ -23,7 +23,7 @@ module Glimmer
       attr_accessor :drag_and_drop
       attr_accessor :drag
     end
-    
+
     ## Add options like the following to configure CustomShell by outside consumers
     #
     # options :title, :background_color
@@ -48,6 +48,7 @@ module Glimmer
       Display.setAppName('Gladiator')
       @display = display {
         on_swt_keydown { |key_event|
+          # TODO - Fix CMD+F and other shortcuts when having multiple projects open at the same time (perhaps by moving into the shell instead)
           if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
             if @text_editor&.text_widget&.getSelectionText && @text_editor&.text_widget&.getSelectionText&.size.to_i > 0
               @find_text.swt_widget.setText @text_editor.text_widget.getSelectionText
@@ -58,6 +59,8 @@ module Glimmer
             Clipboard.copy(project_dir.selected_child.path)
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
             project_dir.selected_child.find_previous
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 's'
+            project_dir.selected_child = File.new
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
             @tab_folder.swt_widget.getItems.each do |tab_item|
               project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
@@ -279,7 +282,18 @@ module Glimmer
             text '&File'
 
             menu_item {
-              text 'Open Project...'
+              text 'New &Scratchpad'
+              on_widget_selected {
+                begin
+                  project_dir.selected_child = File.new
+                rescue => e
+                  pd e
+                end
+              }
+            }
+            menu_item(:separator)
+            menu_item {
+              text 'Open &Project...'
               on_widget_selected {
                 # TODO display a progress bar while opening new project files
                 selected_directory = directory_dialog.open
@@ -317,9 +331,17 @@ module Glimmer
 #               }
 #             }
             menu_item {
-              text '&Current Ruby File'
+              text '&Ruby'
               on_widget_selected {
-                load project_dir.selected_child.path
+                begin
+                  if project_dir.selected_child.path.nil?
+                    eval project_dir.selected_child.content
+                  else
+                    load project_dir.selected_child.path
+                  end
+                rescue => e
+                  puts e.full_message
+                end
               }
             }
           }
@@ -614,12 +636,15 @@ module Glimmer
         open_file_paths1.to_a.each do |file_path|
           project_dir.selected_child_path = file_path
         end
+        # TODO replace the next line with one that selects the visible tab
+        project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths1.to_a.include?(@config[:selected_child_path])
         Gladiator.drag = true
         open_file_paths2.to_a.each do |file_path|
           project_dir.selected_child_path = file_path
         end
+        # TODO replace the next line with one that selects the visible tab
+        project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths2.to_a.include?(@config[:selected_child_path])
         Gladiator.drag = false
-        project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
         project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
         project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
       else

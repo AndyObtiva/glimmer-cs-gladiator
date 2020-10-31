@@ -1,9 +1,10 @@
 # Change Log
 
-## 0.4.2
+## 0.5.0
 
 - File Menu to allow Opening a Project
-- Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line
+- Scratchpad for running any Ruby/Glimmer code for experimentation/debugging/instrumenting
+- CTRL+A and CTRL+E shortcuts for beginning of line and end of line
 - Minor performance optimization by not syntax highlighting file line numbers (using standard uniform foreground coloring)
 - Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 - Fix tree slow refresh and lost refreshes on directory file changes

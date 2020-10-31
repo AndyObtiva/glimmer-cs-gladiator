@@ -8,7 +8,7 @@ module Glimmer
       attr_reader :text_proxy, :text_widget
       
       before_body {
-        @is_code_file = file.path.end_with?('.rb')
+        @is_code_file = file.path.nil? || file.path.end_with?('.rb')
         @text_widget = @is_code_file ? 'code_text' : 'styled_text'
       }
 
@@ -73,7 +73,11 @@ module Glimmer
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'r'
                 project_dir.selected_child.write_dirty_content
                 begin
-                  load  #child.path
+                  if project_dir.selected_child.path.nil?
+                    eval project_dir.selected_child.content
+                  else
+                    load project_dir.selected_child.path
+                  end
                 rescue => e
                   puts e.full_message
                 end

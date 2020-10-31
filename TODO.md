@@ -2,6 +2,8 @@
 
 ## Up Next
 
+- Fix CMD+F and other shortcuts when having multiple projects open at the same time
+- Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
 
@@ -11,7 +13,6 @@
 - Try optimizing by avoiding line style coloring if file content hasn't changed
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
-- Support a scratch pad to run any ruby code
 - Support CMD+CTRL+UP and DOWN for moving between split editor panes (since we can split vertically too now)
 
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
@@ -35,6 +36,9 @@
 - Consider replacing tab_folder with c_tab_folder to have tabs show up on the left if there is only one tab (not center like it currently is)
 - A new line on a comment produces a new comment
 - Have the closing curly brace or "end" keyword light up the opening curly brace or "do" keyword when landing on it
+- Make a text editor fit the screen (from the left or right) from the sash form (add keyboard shortcuts and menu items for that)
+- Recent Projects menu item
+- Add rubocop like warnings while using Gladiator like when a file is too large or a method is too long, showing a special color somewhere live.
 
 ## Bugs
 

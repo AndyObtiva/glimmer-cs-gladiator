@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.4.1 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.5.0 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -6,7 +6,7 @@
 
 Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
-Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer. 
+Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
 
 ## Features
@@ -22,7 +22,7 @@ Gladiator currently supports the following text editing features (including keyb
 - Jump to Line (CMD+L)
 - Multiple tab support (CMD+SHIFT+[ & CMD+SHIFT+] for tab navigation. CMD+1-9 to jump to a specific tab)
 - Remember opened tabs, caret position, top line, window size, and window location
-- Autosave on focus out/quit/open new file 
+- Autosave on focus out/quit/open new file
 - Duplicate Line(s)/selection (CMD+D)
 - Kill Line(s)/selection (CMD+K)
 - Move line/selection up (CMD+UP)
@@ -31,7 +31,8 @@ Gladiator currently supports the following text editing features (including keyb
 - Indent/Unindent line/selection (CMD+] & CMD+[)
 - Insert/Prefix New Line (CMD+ENTER & CMD+SHIFT+ENTER)
 - Drag and Drop Text Editor Split Screen (drag a file from File Tree or File Lookup List, and it splits the screen)
-- Run current Ruby file via Run Menu (CMD+SHIFT+R)
+- Run current Ruby code via Run Menu (CMD+SHIFT+R)
+- Scratchpad for running any arbitrary Ruby code without saving to disk (CMD+SHIFT+S)
 - Change Split Orientation to Horizontal/Vertical via View Menu (CMD+SHIFT+O)
 
 ## Platforms
@@ -98,11 +99,11 @@ bin/gladiator relative-or-absolute-path/to/project
 
 ### Glimmer Custom Shell Reuse
 
-To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application, add the 
+To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application, add the
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.4.1'
+gem 'glimmer-cs-gladiator', '~> 0.5.0'
 ```
 
 Run:
@@ -115,7 +116,7 @@ And, then instantiate the Gladiator [custom shell](https://github.com/AndyObtiva
 
 ## Env Var Options
 
-Gladiator opens with the current directory as the root by default. 
+Gladiator opens with the current directory as the root by default.
 If you would like to open another directory, set `LOCAL_DIR` environment variable.
 
 Example:
