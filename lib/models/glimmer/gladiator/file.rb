@@ -378,7 +378,7 @@ module Glimmer
         find_next
         find_next if replace_text.to_s.include?(find_text) && !replace_text.to_s.start_with?(find_text)
       end
-
+      
       def page_up
         self.selection_count = 0
         self.line_number = [(self.line_number - 15), 1].max

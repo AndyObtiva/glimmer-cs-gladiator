@@ -6,6 +6,7 @@
 - Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
+- Show Progress Bar while opening a new project
 
 - Make file renames also rename the open file tab
 - Close open file if deleted

@@ -47,7 +47,13 @@ module Glimmer
       end
       Display.setAppName('Gladiator')
       @display = display {
-        on_swt_keydown { |key_event|
+        on_swt_keyup { |key_event|
+          # TODO support multiple gladiators by hooking events on display once and switching shell depending on what is in focus
+#           pd key_event.widgOet.shell
+#           pd display.focus_control.shell
+#           pd key_event.widget.shell != display.focus_control.shell
+          return if key_event.widget.shell != display.focus_control.shell
+          # display.focus_control.shell.get_data('custom_shell').project_dir.path
           # TODO - Fix CMD+F and other shortcuts when having multiple projects open at the same time (perhaps by moving into the shell instead)
           if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
             if @text_editor&.text_widget&.getSelectionText && @text_editor&.text_widget&.getSelectionText&.size.to_i > 0
@@ -55,10 +61,13 @@ module Glimmer
             end
             @find_text.swt_widget.selectAll
             @find_text.swt_widget.setFocus
+            key_event.doit = false
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
             Clipboard.copy(project_dir.selected_child.path)
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
             project_dir.selected_child.find_previous
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'p'
+            open_project
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 's'
             project_dir.selected_child = File.new
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
@@ -295,9 +304,7 @@ module Glimmer
             menu_item {
               text 'Open &Project...'
               on_widget_selected {
-                # TODO display a progress bar while opening new project files
-                selected_directory = directory_dialog.open
-                gladiator(project_dir_path: selected_directory).open if selected_directory
+                open_project
               }
             }
           }
@@ -339,7 +346,7 @@ module Glimmer
                   else
                     load project_dir.selected_child.path
                   end
-                rescue => e
+                rescue SyntaxError, StandardError => e
                   puts e.full_message
                 end
               }
@@ -797,6 +804,37 @@ module Glimmer
       event.keyCode.chr
     rescue => e
       nil
+    end
+    
+    def open_project
+      selected_directory = directory_dialog.open
+      @progress_bar_shell = shell(body_root) {
+        text 'Opening Project'
+        fill_layout(:vertical) {
+          margin_width 15
+          margin_height 15
+          spacing 5
+        }
+        label(:center) {
+          text "Opening Project: #{::File.basename(selected_directory)}"
+          font height: 20
+        }
+#         @progress_bar = progress_bar(:horizontal, :indeterminate)
+      }
+      Thread.new {
+        async_exec {
+          @progress_bar_shell.open
+        }
+      }
+      Thread.new {
+        async_exec {
+          gladiator(project_dir_path: selected_directory) {
+            on_swt_show {
+              @progress_bar_shell.close
+            }
+          }.open if selected_directory
+        }
+      }
     end
   end
 end

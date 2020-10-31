@@ -78,7 +78,7 @@ module Glimmer
                   else
                     load project_dir.selected_child.path
                   end
-                rescue => e
+                rescue SyntaxError, StandardError => e
                   puts e.full_message
                 end
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'z'
