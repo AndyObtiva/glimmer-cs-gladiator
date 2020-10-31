@@ -4,10 +4,11 @@ module Glimmer
       include Glimmer
 
       attr_accessor :dirty_content, :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
-      attr_reader :name, :path
+      attr_reader :name, :path, :project_dir
 
-      def initialize(path)
+      def initialize(path, project_dir)
         raise "Not a file path: #{path}" unless ::File.file?(path)
+        @project_dir = project_dir
         @command_history = []
         @name = ::File.basename(path)
         self.path = ::File.expand_path(path)
@@ -23,7 +24,7 @@ module Glimmer
             self.line_numbers_content = lines.size.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
           end
           @line_number = 1
-          self.dirty_content = read_dirty_content
+          self.dirty_content = read_dirty_content # TODO might be a good point to get rid of hanging right space with rstrip
           observe(self, :selection) do
             self.line_number = line_index_for_caret_position(caret_position) + 1
           end
@@ -45,7 +46,7 @@ module Glimmer
       end
 
       def generate_display_path
-        @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')
+        @display_path = @path.sub(project_dir.path, '').sub(/^\//, '')
       end
 
       def backup_properties
@@ -130,6 +131,7 @@ module Glimmer
 
       def format_dirty_content_for_writing!
         new_dirty_content = "#{dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
+        new_dirty_content = new_dirty_content.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
         self.dirty_content = new_dirty_content if new_dirty_content != self.dirty_content
       end
 
@@ -165,7 +167,7 @@ module Glimmer
       def prefix_new_line!
         the_lines = lines
         the_lines[line_number-1...line_number-1] = [current_line_indentation]
-        self.dirty_content = the_lines.join("\n")
+        self.dirty_content = the_lines.join("\n")  # TODO fix issue with rstrip on an all space line and refactor code to avoid repeating the join statement
         self.caret_position = caret_position_for_line_index(line_number-1) + current_line_indentation.size
         self.selection_count = 0
       end
@@ -203,7 +205,7 @@ module Glimmer
             delta += 2
           end
         end
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")
+        self.dirty_content = new_lines.join("\n")
         if old_selection_count.to_i > 0
           self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
           self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
@@ -229,7 +231,7 @@ module Glimmer
           new_lines[the_line_index] = "  #{the_line}"
         end
         old_caret_position = self.caret_position
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")
+        self.dirty_content = new_lines.join("\n")
         if old_selection_count.to_i > 0
           caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
           selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
@@ -259,7 +261,7 @@ module Glimmer
             delta = -1
           end
         end
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")
+        self.dirty_content = new_lines.join("\n")
         if old_selection_count.to_i > 0
           caret_position_value = caret_position_for_line_index(old_caret_position_line_index)
           selection_count_value = (caret_position_for_line_index(old_end_caret_line_index + 1) - caret_position_value)
@@ -279,7 +281,7 @@ module Glimmer
         old_caret_position = self.caret_position
         old_line_index = self.line_number - 1
         line_position = line_position_for_caret_position(old_caret_position)
-        self.dirty_content = "#{new_lines.map(&:rstrip).join("\n")}\n"
+        self.dirty_content = "#{new_lines.join("\n")}\n"
         self.caret_position = caret_position_for_line_index(old_line_index) + [line_position, lines[old_line_index].to_s.size].min
         self.selection_count = 0
       end
@@ -295,11 +297,11 @@ module Glimmer
         old_end_caret_line_index = end_caret_position_line_index(caret_position, selection_count)
         the_line_indices = line_indices_for_selection(caret_position, selection_count)
         the_lines = lines_for_selection(caret_position, selection_count)
-        delta = the_lines.map(&:rstrip).join("\n").size + 1
+        delta = the_lines.join("\n").size + 1
         the_lines.each_with_index do |the_line, i|
           new_lines.insert(the_line_indices.first + i, the_line)
         end
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")
+        self.dirty_content = new_lines.join("\n")
         if old_selection_count.to_i > 0
           self.caret_position = caret_position_for_line_index(old_caret_position_line_index)
           self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
@@ -418,7 +420,7 @@ module Glimmer
         new_line_index = [the_line_indices.first - 1, 0].max
         new_lines[the_line_indices.first..the_line_indices.last] = []
         new_lines[new_line_index...new_line_index] = the_lines
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")
+        self.dirty_content = new_lines.join("\n")
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end
@@ -437,7 +439,7 @@ module Glimmer
         new_line_index = [the_line_indices.first + 1, new_lines.size - 1].min
         new_lines[the_line_indices.first..the_line_indices.last] = []
         new_lines[new_line_index...new_line_index] = the_lines
-        self.dirty_content = new_lines.map(&:rstrip).join("\n")
+        self.dirty_content = new_lines.join("\n")
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
       end

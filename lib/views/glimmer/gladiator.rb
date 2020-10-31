@@ -23,12 +23,17 @@ module Glimmer
       attr_accessor :drag_and_drop
       attr_accessor :drag
     end
-
+    
     ## Add options like the following to configure CustomShell by outside consumers
     #
     # options :title, :background_color
     # option :width, 320
     # option :height, 240
+    option :project_dir_path
+    
+    def project_dir
+      @project_dir ||= Dir.new(project_dir_path)
+    end
 
     attr_accessor :split_orientation
 
@@ -36,6 +41,10 @@ module Glimmer
     #
     #
     before_body {
+      project_dir #pre-initialize directory
+      at_exit do
+        project_dir.selected_child&.write_raw_dirty_content
+      end
       Display.setAppName('Gladiator')
       @display = display {
         on_swt_keydown { |key_event|
@@ -46,30 +55,30 @@ module Glimmer
             @find_text.swt_widget.selectAll
             @find_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
-            Clipboard.copy(Dir.local_dir.selected_child.path)
+            Clipboard.copy(project_dir.selected_child.path)
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
-            Dir.local_dir.selected_child.find_previous
+            project_dir.selected_child.find_previous
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
             @tab_folder.swt_widget.getItems.each do |tab_item|
-              Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
+              project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
               tab_item.getData('proxy')&.dispose
             end
             close_tab_folder
-            @tab_item = @text_editor = Dir.local_dir.selected_child = nil
+            @tab_item = @text_editor = project_dir.selected_child = nil
             @filter_text.swt_widget.selectAll
             @filter_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :alt) && extract_char(key_event) == 'w'
             other_tab_items.each do |tab_item|
-              Dir.local_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
+              project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
               tab_item.getData('proxy')&.dispose
             end
           elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'w'
             if selected_tab_item
-              Dir.local_dir.selected_child_path_history.delete(Dir.local_dir.selected_child.path)
+              project_dir.selected_child_path_history.delete(project_dir.selected_child.path)
               selected_tab_item.getData('proxy')&.dispose
               close_tab_folder
               if selected_tab_item.nil?
-                @tab_item = @text_editor = Dir.local_dir.selected_child = nil
+                @tab_item = @text_editor = project_dir.selected_child = nil
                 @filter_text.swt_widget.selectAll
                 @filter_text.swt_widget.setFocus
               else
@@ -92,7 +101,7 @@ module Glimmer
                 @tab_folder = @tab_folder1
               end
               @tab_item = @tab_folder.swt_widget.getData('selected_tab_item')
-              Dir.local_dir.selected_child = @tab_item&.swt_tab_item&.getData('file')
+              project_dir.selected_child = @tab_item&.swt_tab_item&.getData('file')
               @tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
             end
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '['
@@ -103,7 +112,7 @@ module Glimmer
                 @tab_folder = @tab_folder2
               end
               @tab_item = @tab_folder.swt_widget.getData('selected_tab_item')
-              Dir.local_dir.selected_child = @tab_item&.swt_tab_item&.getData('file')
+              project_dir.selected_child = @tab_item&.swt_tab_item&.getData('file')
               @tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
             end
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
@@ -134,7 +143,7 @@ module Glimmer
             @tab_folder.swt_widget.setSelection(@tab_folder.swt_widget.getItemCount - 1) if @tab_folder.swt_widget.getItemCount > 0
             @text_editor&.text_widget&.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'g'
-            Dir.local_dir.selected_child.find_next
+            project_dir.selected_child.find_next
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'l'
             @line_number_text.swt_widget.selectAll
             @line_number_text.swt_widget.setFocus
@@ -146,7 +155,7 @@ module Glimmer
             @tree.swt_widget.setFocus
           elsif key_event.keyCode == swt(:esc)
             if @text_editor
-              Dir.local_dir.selected_child_path = @text_editor.file.path
+              project_dir.selected_child_path = @text_editor.file.path
               @text_editor&.text_widget&.setFocus
             end
           end
@@ -154,20 +163,19 @@ module Glimmer
       }
 
       @split_orientation = swt(:horizontal)
-      local_dir = ENV['LOCAL_DIR'] || '.'
-      @config_file_path = ::File.join(local_dir, '.gladiator')
+      @config_file_path = ::File.join(project_dir.path, '.gladiator')
       @config = {}
       load_config_ignore_paths
-#       Dir.local_dir.all_children # pre-caches children
+#       project_dir.all_children # pre-caches children
     }
 
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body {
-      observe(Dir.local_dir, 'children') do
+      observe(project_dir, 'children') do
         select_tree_item unless @rename_in_progress
       end
-      observe(Dir.local_dir, 'selected_child') do |selected_file|
+      observe(project_dir, 'selected_child') do |selected_file|
         if selected_file
           if Gladiator.drag && !@tab_folder2
             @tab_folder1 = @tab_folder
@@ -188,7 +196,7 @@ module Glimmer
               @tab_item = tab_item { |the_tab_item|
                 text selected_file.name
                 fill_layout :horizontal
-                @text_editor = the_text_editor = text_editor(file: selected_file)
+                @text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file)
                 @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
                 @text_editor.text_proxy.content {
                   on_focus_gained {
@@ -198,7 +206,7 @@ module Glimmer
                     @text_editor = the_text_editor
                     @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
                     @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
-                    Dir.local_dir.selected_child = @tab_item.swt_tab_item.getData('file')
+                    project_dir.selected_child = @tab_item.swt_tab_item.getData('file')
                   }
                 }
                 on_swt_show {
@@ -207,7 +215,7 @@ module Glimmer
                   @tab_folder = @tab_item.swt_widget.getParent.getData('proxy')
                   @tab_folder.swt_widget.setData('selected_tab_item', @tab_item)
                   @tab_folder.swt_widget.setSelection(@tab_item.swt_tab_item)
-                  Dir.local_dir.selected_child = selected_file
+                  project_dir.selected_child = selected_file
                   async_exec {
                     @text_editor&.text_widget&.setFocus
                   }
@@ -224,13 +232,13 @@ module Glimmer
           @text_editor&.text_widget&.setFocus
         end
       end
-      observe(Dir.local_dir, 'selected_child') do
+      observe(project_dir, 'selected_child') do
         save_config
       end
-      observe(Dir.local_dir, 'selected_child.caret_position') do
+      observe(project_dir, 'selected_child.caret_position') do
         save_config
       end
-      observe(Dir.local_dir, 'selected_child.top_pixel') do
+      observe(project_dir, 'selected_child.top_pixel') do
         save_config
       end
       load_config
@@ -241,7 +249,7 @@ module Glimmer
     #
     body {
       shell {
-        text "Gladiator - #{::File.expand_path(Dir.local_dir.path)}"
+        text "Gladiator - #{::File.expand_path(project_dir.path)}"
         minimum_size 520, 250
         size 1440, 900
         grid_layout(2, false)
@@ -251,10 +259,10 @@ module Glimmer
           @loaded_config = true
         }
         on_swt_close {
-          Dir.local_dir.selected_child&.write_dirty_content
+          project_dir.selected_child&.write_dirty_content
         }
         on_widget_disposed {
-          Dir.local_dir.selected_child&.write_dirty_content
+          project_dir.selected_child&.write_dirty_content
         }
         on_control_resized {
           save_config
@@ -268,9 +276,16 @@ module Glimmer
 
         menu_bar {
           menu {
-            text '&File'            
-            
-            
+            text '&File'
+
+            menu_item {
+              text 'Open Project...'
+              on_widget_selected {
+                # TODO display a progress bar while opening new project files
+                selected_directory = directory_dialog.open
+                gladiator(project_dir_path: selected_directory).open if selected_directory
+              }
+            }
           }
           menu {
             text '&View'
@@ -291,7 +306,7 @@ module Glimmer
 #             menu_item {
 #               text 'Launch Glimmer &App'
 #               on_widget_selected {
-#                 parent_path = Dir.local_dir.path
+#                 parent_path = project_dir.path
 ##                 current_directory_name = ::File.basename(parent_path)
 ##                 assumed_shell_script = ::File.join(parent_path, 'bin', current_directory_name)
 ##                 assumed_shell_script = ::Dir.glob(::File.join(parent_path, 'bin', '*')).detect {|f| ::File.file?(f) && !::File.read(f).include?('#!/usr/bin/env')} if !::File.exist?(assumed_shell_script)
@@ -302,9 +317,9 @@ module Glimmer
 #               }
 #             }
             menu_item {
-              text '&Current File'
+              text '&Current Ruby File'
               on_widget_selected {
-                load Dir.local_dir.selected_child.path
+                load project_dir.selected_child.path
               }
             }
           }
@@ -317,7 +332,7 @@ module Glimmer
           }
           @filter_text = text {
             layout_data :fill, :center, true, false
-            text bind(Dir.local_dir, 'filter')
+            text bind(project_dir, 'filter')
             on_key_pressed { |key_event|
               if key_event.keyCode == swt(:tab) ||
                   key_event.keyCode == swt(:cr) ||
@@ -334,14 +349,14 @@ module Glimmer
             }
             layout_data(:fill, :fill, true, true)
             @list = list(:border, :h_scroll, :v_scroll) {
-              #visible bind(Dir, 'local_dir.filter') {|f| !!f}
-              selection bind(Dir.local_dir, :filtered_path)
+              #visible bind(self, 'project_dir.filter') {|f| !!f}
+              selection bind(project_dir, :filtered_path)
               on_mouse_up {
-                Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
+                project_dir.selected_child_path = @list.swt_widget.getSelection.first
               }
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
-                  Dir.local_dir.selected_child_path = @list.swt_widget.getSelection.first
+                  project_dir.selected_child_path = @list.swt_widget.getSelection.first
                   @text_editor&.text_widget&.setFocus
                 end
               }
@@ -355,8 +370,8 @@ module Glimmer
               }
             }
             @tree = tree(:virtual, :border, :h_scroll, :v_scroll) {
-              #visible bind(Dir, 'local_dir.filter') {|f| !f}
-              items bind(Dir, :local_dir), tree_properties(children: :children, text: :name)
+              #visible bind(self, 'project_dir.filter') {|f| !f}
+              items bind(self, :project_dir), tree_properties(children: :children, text: :name)
               drag_source(DND::DROP_COPY) {
                 transfer [TextTransfer.getInstance].to_java(Transfer)
                 on_drag_set_data { |event|
@@ -370,7 +385,7 @@ module Glimmer
                 @open_menu_item = menu_item {
                   text 'Open'
                   on_widget_selected {
-                    Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
+                    project_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection.first)
                   }
                 }
                 menu_item(:separator)
@@ -384,7 +399,7 @@ module Glimmer
                 menu_item {
                   text 'Refresh'
                   on_widget_selected {
-                    Dir.local_dir.refresh
+                    project_dir.refresh
                   }
                 }
                 menu_item {
@@ -414,13 +429,13 @@ module Glimmer
                 if Gladiator.drag_and_drop
                   Gladiator.drag_and_drop = false
                 else
-                  Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
+                  project_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
                   @text_editor&.text_widget&.setFocus
                 end
               }
               on_key_pressed { |key_event|
                 if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
-                  Dir.local_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
+                  project_dir.selected_child_path = extract_tree_item_path(@tree.swt_widget.getSelection&.first)
                   @text_editor&.text_widget&.setFocus
                 end
               }
@@ -458,7 +473,7 @@ module Glimmer
               background color(:widget_background)
               editable false
               caret nil
-              text bind(Dir.local_dir, 'selected_child.path')
+              text bind(project_dir, 'selected_child.path')
               on_mouse_up {
                 @file_path_label.swt_widget.selectAll
               }
@@ -476,7 +491,7 @@ module Glimmer
               layout_data(:fill, :fill, true, false) {
                 minimum_width 400
               }
-              text bind(Dir.local_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
+              text bind(project_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
                   @text_editor&.text_widget&.setFocus
@@ -497,24 +512,24 @@ module Glimmer
               layout_data(:fill, :center, true, false) {
                 minimum_width 400
               }
-              text bind(Dir.local_dir, 'selected_child.find_text')
+              text bind(project_dir, 'selected_child.find_text')
               on_key_pressed { |key_event|
                 if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
-                  Dir.local_dir.selected_child.case_sensitive = !Dir.local_dir.selected_child.case_sensitive
-                  Dir.local_dir.selected_child&.find_next
+                  project_dir.selected_child.case_sensitive = !project_dir.selected_child.case_sensitive
+                  project_dir.selected_child&.find_next
                 end
                 if key_event.keyCode == swt(:cr)
-                  Dir.local_dir.selected_child&.find_next
+                  project_dir.selected_child&.find_next
                 end
               }
             }
             composite {
               row_layout
               button(:check) {
-                selection bind(Dir.local_dir, 'selected_child.case_sensitive')
+                selection bind(project_dir, 'selected_child.case_sensitive')
                 on_key_pressed { |key_event|
                   if key_event.keyCode == swt(:cr)
-                    Dir.local_dir.selected_child&.find_next
+                    project_dir.selected_child&.find_next
                   end
                 }
               }
@@ -532,14 +547,14 @@ module Glimmer
               layout_data(:fill, :fill, true, false) {
                 minimum_width 300
               }
-              text bind(Dir.local_dir, 'selected_child.replace_text')
+              text bind(project_dir, 'selected_child.replace_text')
               on_focus_gained {
-                Dir.local_dir.selected_child&.ensure_find_next
+                project_dir.selected_child&.ensure_find_next
               }
               on_key_pressed { |key_event|
                 if key_event.keyCode == swt(:cr)
-                  if Dir.local_dir.selected_child
-                    Command.do(Dir.local_dir.selected_child, :replace_next!)
+                  if project_dir.selected_child
+                    Command.do(project_dir.selected_child, :replace_next!)
                   end
                 end
               }
@@ -580,8 +595,8 @@ module Glimmer
         config_yaml = ::File.read(@config_file_path)
         return if config_yaml.to_s.strip.empty?
         @config = YAML.load(config_yaml)
-        Dir.local_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
-        Dir.local_dir.ignore_paths ||= ['packages', 'tmp']
+        project_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
+        project_dir.ignore_paths ||= ['packages', 'tmp']
       else
         @loaded_config = true
       end
@@ -592,21 +607,21 @@ module Glimmer
         config_yaml = ::File.read(@config_file_path)
         return if config_yaml.to_s.strip.empty?
         @config = YAML.load(config_yaml)
-        Dir.local_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
-        Dir.local_dir.ignore_paths ||= ['packages', 'tmp']
+        project_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
+        project_dir.ignore_paths ||= ['packages', 'tmp']
         open_file_paths1 = @config[:open_file_paths1] || @config[:open_file_paths]
         open_file_paths2 = @config[:open_file_paths2]
         open_file_paths1.to_a.each do |file_path|
-          Dir.local_dir.selected_child_path = file_path
+          project_dir.selected_child_path = file_path
         end
         Gladiator.drag = true
         open_file_paths2.to_a.each do |file_path|
-          Dir.local_dir.selected_child_path = file_path
+          project_dir.selected_child_path = file_path
         end
         Gladiator.drag = false
-        Dir.local_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
-        Dir.local_dir.selected_child&.caret_position  = Dir.local_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
-        Dir.local_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+        project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
+        project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
+        project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
       else
         @loaded_config = true
       end
@@ -614,7 +629,7 @@ module Glimmer
 
     def save_config
       return unless @loaded_config
-      child = Dir.local_dir.selected_child
+      child = project_dir.selected_child
       return if child.nil?
       tab_folder1 = @tab_folder1 || @tab_folder
       tab_folder2 = @tab_folder2
@@ -630,7 +645,7 @@ module Glimmer
         shell_y: swt_widget&.getBounds&.y,
         open_file_paths1: open_file_paths1,
         open_file_paths2: open_file_paths2,
-        ignore_paths: Dir.local_dir.ignore_paths
+        ignore_paths: project_dir.ignore_paths
       }
       config_yaml = YAML.dump(@config)
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?
@@ -651,18 +666,18 @@ module Glimmer
 
         @tab_item = @tab_folder.swt_widget.getData('selected_tab_item')
         @text_editor = @tab_item.swt_tab_item.getData('text_editor')
-        Dir.local_dir.selected_child = @tab_item.swt_tab_item.getData('file')
+        project_dir.selected_child = @tab_item.swt_tab_item.getData('file')
 
         body_root.pack_same_size
       end
     end
 
     def selected_tab_item
-      @tab_folder.swt_widget.getItems.detect { |ti| ti.getData('file_path') == Dir.local_dir.selected_child&.path }
+      @tab_folder.swt_widget.getItems.detect { |ti| ti.getData('file_path') == project_dir.selected_child&.path }
     end
 
     def other_tab_items
-      @tab_folder.swt_widget.getItems.reject { |ti| ti.getData('file_path') == Dir.local_dir.selected_child&.path }
+      @tab_folder.swt_widget.getItems.reject { |ti| ti.getData('file_path') == project_dir.selected_child&.path }
     end
 
     def extract_tree_item_path(tree_item)
@@ -670,13 +685,13 @@ module Glimmer
       if tree_item.getParentItem
         ::File.join(extract_tree_item_path(tree_item.getParentItem), tree_item.getText)
       else
-        Dir.local_dir.path
+        project_dir.path
       end
     end
 
     def select_tree_item
-      return unless Dir.local_dir.selected_child&.name
-      tree_items_to_select = @tree.depth_first_search { |ti| ti.getData.path == Dir.local_dir.selected_child.path }
+      return unless project_dir.selected_child&.name
+      tree_items_to_select = @tree.depth_first_search { |ti| ti.getData.path == project_dir.selected_child.path }
       @tree.swt_widget.setSelection(tree_items_to_select)
     end
 
@@ -685,7 +700,7 @@ module Glimmer
       file = tree_item.getData
       parent_path = ::File.dirname(file.path)
       file.delete! # TODO consider supporting command undo/redo
-      Dir.local_dir.refresh(async: false)
+      project_dir.refresh(async: false)
       parent_tree_item = @tree.depth_first_search {|ti| ti.getData.path == parent_path}.first
       @tree.swt_widget.showItem(parent_tree_item)
       parent_tree_item.setExpanded(true)
@@ -698,13 +713,13 @@ module Glimmer
     end
 
     def rename_selected_tree_item
-      Dir.local_dir.pause_refresh
+      project_dir.pause_refresh
       tree_item = @tree.swt_widget.getSelection.first
       rename_tree_item(tree_item)
     end
 
     def add_new_directory_to_selected_tree_item
-      Dir.local_dir.pause_refresh
+      project_dir.pause_refresh
       tree_item = @tree.swt_widget.getSelection.first
       directory_path = extract_tree_item_path(tree_item)
       return if directory_path.nil?
@@ -714,14 +729,14 @@ module Glimmer
       end
       new_directory_path = ::File.expand_path(::File.join(directory_path, 'new_directory'))
       FileUtils.mkdir_p(new_directory_path)
-      Dir.local_dir.refresh(async: false, force: true)
+      project_dir.refresh(async: false, force: true)
       new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_directory_path}.first
       @tree.swt_widget.showItem(new_tree_item)
       rename_tree_item(new_tree_item, true)
     end
 
     def add_new_file_to_selected_tree_item
-      Dir.local_dir.pause_refresh
+      project_dir.pause_refresh
       tree_item = @tree.swt_widget.getSelection.first
       directory_path = extract_tree_item_path(tree_item)
       if !::Dir.exist?(directory_path)
@@ -731,7 +746,7 @@ module Glimmer
       new_file_path = ::File.expand_path(::File.join(directory_path, 'new_file'))
       FileUtils.touch(new_file_path)
       # TODO look into refreshing only the parent directory to avoid slowdown
-      Dir.local_dir.refresh(async: false, force: true)
+      project_dir.refresh(async: false, force: true)
       new_tree_item = @tree.depth_first_search {|ti| ti.getData.path == new_file_path}.first
       @tree.swt_widget.showItem(new_tree_item)
       rename_tree_item(new_tree_item, true)
@@ -744,11 +759,11 @@ module Glimmer
           file = edited_tree_item.getData
           file_path = file.path
           # TODO rename file in tab title
-          Dir.local_dir.selected_child_path = file_path if open_afterwards
-          Dir.local_dir.resume_refresh
+          project_dir.selected_child_path = file_path if open_afterwards
+          project_dir.resume_refresh
         },
         after_cancel: -> {
-          Dir.local_dir.resume_refresh
+          project_dir.resume_refresh
         }
       )
     end

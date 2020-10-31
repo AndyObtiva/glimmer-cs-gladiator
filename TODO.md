@@ -2,8 +2,6 @@
 
 ## Up Next
 
-- Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
-- File Menu to allow Opening a Project
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
 
@@ -40,6 +38,8 @@
 
 ## Bugs
 
+- Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
+- Fix issue with slowdown upon inserting a new file/directory into the tree
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
 - Fix issue with line numbers sometimes not lining up perfectly with text editor (problem is back)
 - Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)

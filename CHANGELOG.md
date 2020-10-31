@@ -2,12 +2,14 @@
 
 ## 0.4.2
 
+- File Menu to allow Opening a Project
 - Support CTRL+A and CTRL+E shortcuts for beginning of line and end of line
 - Minor performance optimization by not syntax highlighting file line numbers (using standard uniform foreground coloring)
 - Fix issue with going back to top of file when CMD+Tabbing to another app (losing focus) and then coming back (gaining focus)
 - Fix tree slow refresh and lost refreshes on directory file changes
-- Fix issue with producing extra space at the end of some lines
 - Fix scroll jitter on move line up/down
+- Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
+- Fix issue with producing extra space at the end of some lines
 
 ## 0.4.1
 

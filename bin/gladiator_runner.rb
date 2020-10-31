@@ -2,4 +2,5 @@ require_relative '../lib/glimmer-cs-gladiator'
 
 include Glimmer
 
-gladiator.open
+local_dir = ENV['LOCAL_DIR'] || '.'
+gladiator(project_dir_path: local_dir).open

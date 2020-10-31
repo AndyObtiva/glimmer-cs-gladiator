@@ -7,35 +7,35 @@ module Glimmer
 
       REFRESH_DELAY = 7
   
-      class << self
-        def local_dir
-          unless @local_dir
-            @local_dir = new(ENV['LOCAL_DIR'] || '.', true)
-#             @local_dir.refresh
-            @filewatcher = Filewatcher.new(@local_dir.path)
-            @thread = Thread.new(@filewatcher) do |fw| 
-              fw.watch do |filename, event|
-                if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
-                  @local_dir.refresh if !filename.include?('new_file') && !@local_dir.selected_child_path_history.include?(filename) && filename != @local_dir.selected_child_path
-                end
-                @last_update = Time.now.to_f
-              end
-            end
-          end
-          @local_dir
-        end        
-      end
-  
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
-      attr_reader :name, :parent, :path, :is_local_dir
+      attr_reader :name, :parent, :path
       attr_writer :all_children
   
-      def initialize(path, is_local_dir = false)
-        @is_local_dir = is_local_dir
+      def initialize(path, project_dir = nil)
+        @project_dir = project_dir
+        if is_local_dir
+         @filewatcher = Filewatcher.new(path)
+         @thread = Thread.new(@filewatcher) do |fw| 
+           fw.watch do |filename, event|
+             if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
+               refresh if !filename.include?('new_file') && !selected_child_path_history.include?(filename) && filename != selected_child_path
+             end
+             @last_update = Time.now.to_f
+           end
+         end
+        end        
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
         @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'tmp', 'vendor']
         self.filtered_path_options = []
+      end
+
+      def is_local_dir
+        @project_dir.nil?
+      end
+
+      def project_dir
+        @project_dir || self
       end
 
       def path=(the_path)
@@ -44,7 +44,7 @@ module Glimmer
       end
       
       def generate_display_path
-        is_local_dir ? path : @display_path = @path.sub(Dir.local_dir.path, '').sub(/^\//, '')
+        is_local_dir ? path : @display_path = @path.sub(project_dir.path, '').sub(/^\//, '')
       end
       
       def name=(the_name)
@@ -62,11 +62,11 @@ module Glimmer
       def retrieve_children
         @children = ::Dir.glob(::File.join(@path, '*')).reject do |p|
           # TODO make sure to configure ignore_paths in a preferences dialog 
-          Dir.local_dir.ignore_paths.reduce(false) do |result, ignore_path|
+          project_dir.ignore_paths.reduce(false) do |result, ignore_path|
             result || p.include?(ignore_path)
           end
         end.map do |p| 
-          ::File.file?(p) ? Gladiator::File.new(p) : Gladiator::Dir.new(p)
+          ::File.file?(p) ? Gladiator::File.new(p, project_dir) : Gladiator::Dir.new(p, project_dir)
         end.sort_by do |c| 
           c.path.to_s.downcase 
         end.sort_by do |c| 
@@ -118,7 +118,7 @@ module Glimmer
         return if filter.nil?
         children_files = !@last_filter.to_s.empty? && filter.downcase.start_with?(@last_filter.downcase) ? @last_filtered : all_children_files
         children_files.select do |child| 
-          child_path = child.path.to_s.sub(Dir.local_dir.path, '')
+          child_path = child.path.to_s.sub(project_dir.path, '')
           child_path.downcase.include?(filter.downcase) ||
             child_path.downcase.gsub(/[_\/.-]/, '').include?(filter.downcase.gsub(/[_\/.-]/, ''))
         end.sort_by {|c| c.path.to_s.downcase}
@@ -141,14 +141,14 @@ module Glimmer
       end
   
       def selected_child_path=(selected_path)
-        full_selected_path = selected_path.include?(Dir.local_dir.path) ? selected_path : ::File.join(Dir.local_dir.path, selected_path)
+        full_selected_path = selected_path.include?(project_dir.path) ? selected_path : ::File.join(project_dir.path, selected_path)
         return if selected_path.nil? || 
                   ::Dir.exist?(full_selected_path) || 
                   (selected_child && selected_child.path == full_selected_path)
         selected_path = full_selected_path
         if ::File.file?(selected_path)
           @selected_child&.write_dirty_content
-          new_child = Gladiator::File.new(selected_path)
+          new_child = Gladiator::File.new(selected_path, project_dir)
           begin
             unless new_child.dirty_content.nil?
               self.selected_child&.stop_filewatcher
@@ -191,9 +191,5 @@ module Glimmer
       end
     end  
   end
-end
-
-at_exit do
-  Glimmer::Gladiator::Dir.local_dir.selected_child&.write_raw_dirty_content
 end
   

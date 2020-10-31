@@ -3,7 +3,7 @@ module Glimmer
     class TextEditor
       include Glimmer::UI::CustomWidget
 
-      options :file
+      options :file, :project_dir
 
       attr_reader :text_proxy, :text_widget
       
@@ -58,22 +58,22 @@ module Glimmer
               }
               on_drop { |event|
                 Gladiator.drag_and_drop = true
-                Dir.local_dir.selected_child = nil
-                Dir.local_dir.selected_child_path = event.data
+                project_dir.selected_child = nil
+                project_dir.selected_child_path = event.data
                 Gladiator.drag = false
               }
-            }                  
+            }
             
             on_focus_lost {
               file&.write_dirty_content
-            }              
+            }
             on_verify_key { |key_event|
-              if (Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'z') || (key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'y')                
+              if (Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'z') || (key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'y')
                 key_event.doit = !Command.redo(file)
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'r'
-                Dir.local_dir.selected_child.write_dirty_content              
+                project_dir.selected_child.write_dirty_content
                 begin
-                  load Dir.local_dir.selected_child.path
+                  load  #child.path
                 rescue => e
                   puts e.full_message
                 end
@@ -129,7 +129,7 @@ module Glimmer
               end
             }
             on_verify_text { |verify_event|
-              # TODO convert these into File commands to support Undo/Redo                             
+              # TODO convert these into File commands to support Undo/Redo
               case verify_event.text
               when "\n"
                 if file.selection_count.to_i == 0
