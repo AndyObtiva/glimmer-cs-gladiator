@@ -6,7 +6,9 @@ describe Glimmer::Gladiator::File do
   let(:two_line_file)  { File.join(SPEC_ROOT, 'fixtures/two_line_file') }
   let(:ten_line_file)  { File.join(SPEC_ROOT, 'fixtures/ten_line_file') }
   
-  subject { described_class.new(file) }
+  let(:project_dir) { Glimmer::Gladiator::Dir.new(File.join(SPEC_ROOT, 'fixtures')) }
+  
+  subject { described_class.new(file, project_dir) }
 
   describe '#kill_line!' do
     context 'in an empty file' do
@@ -97,7 +99,7 @@ describe Glimmer::Gladiator::File do
         MULTI
         )
       end
-    end  
+    end
   end
 
   describe '#find_next' do
@@ -146,7 +148,7 @@ describe Glimmer::Gladiator::File do
      
           expect(subject.caret_position).to eq(expected_caret_position)
         end
-      end  
+      end
     end
 
     context 'in a ten line file' do
@@ -218,7 +220,7 @@ describe Glimmer::Gladiator::File do
      
           expect(subject.caret_position).to eq(expected_caret_position)
         end
-      end  
+      end
     end
 
     context 'in a ten line file' do
@@ -304,7 +306,7 @@ describe Glimmer::Gladiator::File do
           one Hello, World! and Hello, World! and Hello, World!
         MULTI
         )
-      end  
+      end
     end
 
     context 'in a ten line file' do

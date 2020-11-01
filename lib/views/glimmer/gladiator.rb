@@ -717,7 +717,6 @@ module Glimmer
     
     def handle_display_shortcut(key_event)
       if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
-        pd current_text_editor
         if current_text_editor&.text_widget&.getSelectionText && current_text_editor&.text_widget&.getSelectionText&.size.to_i > 0
           find_text.swt_widget.setText current_text_editor.text_widget.getSelectionText
         end

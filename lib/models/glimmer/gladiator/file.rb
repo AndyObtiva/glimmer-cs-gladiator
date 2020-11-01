@@ -127,8 +127,8 @@ module Glimmer
       end
 
       def format_dirty_content_for_writing!
-        new_dirty_content = "#{dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
-        new_dirty_content = new_dirty_content.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
+        new_dirty_content = dirty_content.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
+        new_dirty_content = "#{new_dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
         self.dirty_content = new_dirty_content if new_dirty_content != self.dirty_content
       end
 

@@ -32,7 +32,7 @@ Gladiator currently supports the following text editing features (including keyb
 - Insert/Prefix New Line (CMD+ENTER & CMD+SHIFT+ENTER)
 - Drag and Drop Text Editor Split Screen (drag a file from File Tree or File Lookup List, and it splits the screen)
 - Run Ruby code (CMD+SHIFT+R)
-- Scratchpad for running any arbitrary Ruby code without saving to disk (CMD+SHIFT+S)
+- Scratchpad for running arbitrary Ruby/Glimmer code without saving to disk (CMD+SHIFT+S)
 - Change Split Orientation to Horizontal/Vertical via View Menu (CMD+SHIFT+O)
 
 ## Platforms
