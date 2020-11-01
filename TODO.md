@@ -2,9 +2,8 @@
 
 ## Up Next
 
-- Fix issue with keyboard shortcuts triggered in multiple projects
 # TODO inspect if name= method is needed in file.rb and dir.rb. If not, delete
-
+- Fix issue with keyboard shortcuts triggered in multiple projects
 
 - Fix CMD+F and other shortcuts when having multiple projects open at the same time
 - Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it

@@ -8,7 +8,7 @@ module Glimmer
       attr_reader :text_proxy, :text_widget
       
       before_body {
-        @is_code_file = file.path.empty? || file.path.end_with?('.rb')
+        @is_code_file = file.scratchpad? || file.path.end_with?('.rb')
         @text_widget = @is_code_file ? 'code_text' : 'styled_text'
       }
 

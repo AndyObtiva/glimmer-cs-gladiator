@@ -139,6 +139,7 @@ module Glimmer
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '3'
             @tab_folder.swt_widget.setSelection(2) if @tab_folder.swt_widget.getItemCount >= 3
             @text_editor&.text_widget&.setFocus
+          elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '4'
             @tab_folder.swt_widget.setSelection(3) if @tab_folder.swt_widget.getItemCount >= 4
             @text_editor&.text_widget&.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '5'
