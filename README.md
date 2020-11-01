@@ -1,10 +1,10 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.5.0 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.5.1 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
 ![Gladiator](images/glimmer-gladiator.png)
 
-Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
+Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample beta project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
@@ -103,7 +103,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.5.0'
+gem 'glimmer-cs-gladiator', '~> 0.5.1'
 ```
 
 Run:

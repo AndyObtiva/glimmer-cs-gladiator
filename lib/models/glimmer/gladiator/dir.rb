@@ -134,14 +134,14 @@ module Glimmer
       end
   
       def selected_child_path=(selected_path)
+        return (project_dir.selected_child = nil) if selected_path.nil?
         # scratchpad scenario
-        if selected_path&.empty? #scratchpad
+        if selected_path.empty? #scratchpad
           @selected_child&.write_dirty_content
           return (self.selected_child = File.new)
         end
         full_selected_path = selected_path.include?(project_dir.path) ? selected_path : ::File.join(project_dir.path, selected_path)
-        return if selected_path.nil? ||
-                  ::Dir.exist?(full_selected_path) ||
+        return if ::Dir.exist?(full_selected_path) ||
                   (selected_child && selected_child.path == full_selected_path)
         selected_path = full_selected_path
         if ::File.file?(selected_path)
