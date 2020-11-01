@@ -4,8 +4,6 @@
 
 ![Gladiator](images/glimmer-gladiator.png)
 
-(Now, slightly less ugly with Ruby syntax highlighting colors)
-
 Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer. 
