@@ -12,6 +12,7 @@
 - Fix issue with opening the last file open on both sides of split text editor upon launching Gladiator
 - Fix issue with producing extra space at the end of some lines
 - Fix issue with CMD+4 not working for jumping to the 4th tab
+- Fix issue with keyboard shortcuts triggered in multiple projects
 
 ## 0.4.1
 

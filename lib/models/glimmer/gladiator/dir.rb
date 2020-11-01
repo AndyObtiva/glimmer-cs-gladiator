@@ -4,6 +4,7 @@ module Glimmer
   class Gladiator
     class Dir
       include Glimmer
+      include Glimmer::DataBinding::ObservableModel
 
       REFRESH_DELAY = 7
   
