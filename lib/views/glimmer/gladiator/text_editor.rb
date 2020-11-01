@@ -8,7 +8,7 @@ module Glimmer
       attr_reader :text_proxy, :text_widget
       
       before_body {
-        @is_code_file = file.path.nil? || file.path.end_with?('.rb')
+        @is_code_file = file.path.empty? || file.path.end_with?('.rb')
         @text_widget = @is_code_file ? 'code_text' : 'styled_text'
       }
 
@@ -71,16 +71,7 @@ module Glimmer
               if (Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'z') || (key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'y')
                 key_event.doit = !Command.redo(file)
               elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'r'
-                project_dir.selected_child.write_dirty_content
-                begin
-                  if project_dir.selected_child.path.nil?
-                    eval project_dir.selected_child.content
-                  else
-                    load project_dir.selected_child.path
-                  end
-                rescue SyntaxError, StandardError => e
-                  puts e.full_message
-                end
+                project_dir.selected_child.run
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'z'
                 key_event.doit = !Command.undo(file)
               elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'a'

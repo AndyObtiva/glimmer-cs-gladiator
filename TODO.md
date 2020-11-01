@@ -2,6 +2,10 @@
 
 ## Up Next
 
+- Fix issue with keyboard shortcuts triggered in multiple projects
+# TODO inspect if name= method is needed in file.rb and dir.rb. If not, delete
+
+
 - Fix CMD+F and other shortcuts when having multiple projects open at the same time
 - Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it
 - Package gladidator as a DMG/MSI
@@ -40,6 +44,7 @@
 - Make a text editor fit the screen (from the left or right) from the sash form (add keyboard shortcuts and menu items for that)
 - Recent Projects menu item
 - Add rubocop like warnings while using Gladiator like when a file is too large or a method is too long, showing a special color somewhere live.
+- Ability to right-click tabs and close them with the mouse
 
 ## Bugs
 

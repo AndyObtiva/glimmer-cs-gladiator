@@ -47,11 +47,13 @@ module Glimmer
       end
       Display.setAppName('Gladiator')
       @display = display {
-        on_swt_keyup { |key_event|
+        on_swt_keydown { |key_event|
           # TODO support multiple gladiators by hooking events on display once and switching shell depending on what is in focus
 #           pd key_event.widgOet.shell
 #           pd display.focus_control.shell
 #           pd key_event.widget.shell != display.focus_control.shell
+#           pd key_event
+#           pd key_event.hash
           return if key_event.widget.shell != display.focus_control.shell
           # display.focus_control.shell.get_data('custom_shell').project_dir.path
           # TODO - Fix CMD+F and other shortcuts when having multiple projects open at the same time (perhaps by moving into the shell instead)
@@ -61,7 +63,6 @@ module Glimmer
             end
             @find_text.swt_widget.selectAll
             @find_text.swt_widget.setFocus
-            key_event.doit = false
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
             Clipboard.copy(project_dir.selected_child.path)
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
@@ -69,7 +70,7 @@ module Glimmer
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'p'
             open_project
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 's'
-            project_dir.selected_child = File.new
+            project_dir.selected_child_path = ''
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
             @tab_folder.swt_widget.getItems.each do |tab_item|
               project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
@@ -77,7 +78,9 @@ module Glimmer
             end
             close_tab_folder
             @tab_item = @text_editor = project_dir.selected_child = nil
+            pd 'select all...'
             @filter_text.swt_widget.selectAll
+            pd 'focusing...'
             @filter_text.swt_widget.setFocus
           elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :alt) && extract_char(key_event) == 'w'
             other_tab_items.each do |tab_item|
@@ -294,7 +297,7 @@ module Glimmer
               text 'New &Scratchpad'
               on_widget_selected {
                 begin
-                  project_dir.selected_child = File.new
+                  project_dir.selected_child_path = ''
                 rescue => e
                   pd e
                 end
@@ -340,15 +343,7 @@ module Glimmer
             menu_item {
               text '&Ruby'
               on_widget_selected {
-                begin
-                  if project_dir.selected_child.path.nil?
-                    eval project_dir.selected_child.content
-                  else
-                    load project_dir.selected_child.path
-                  end
-                rescue SyntaxError, StandardError => e
-                  puts e.full_message
-                end
+                project_dir.selected_child.run
               }
             }
           }

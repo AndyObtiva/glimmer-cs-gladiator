@@ -6,17 +6,16 @@ module Glimmer
       attr_accessor :dirty_content, :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
       attr_reader :name, :path, :project_dir
 
-      def initialize(path=nil, project_dir=nil)
-        path = nil if path&.strip&.empty?
-        raise "Not a file path: #{path}" if !path.nil? && !::File.file?(path)
+      def initialize(path='', project_dir=nil)
+        raise "Not a file path: #{path}" if path.nil? || (!path.empty? && !::File.file?(path))
         @project_dir = project_dir
         @command_history = []
-        @name = path.nil? ? 'Scratchpad' : ::File.basename(path)
-        self.path = ::File.expand_path(path) unless path.nil?
+        @name = path.empty? ? 'Scratchpad' : ::File.basename(path)
+        self.path = ::File.expand_path(path) unless path.empty?
         @top_pixel = 0
         @selection_count = 0
         @selection = Point.new(0, 0 + @selection_count)
-        read_dirty_content = path.nil? ? '' : ::File.read(path)
+        read_dirty_content = path.empty? ? '' : ::File.read(path)
         begin
           # test read dirty content
           read_dirty_content.split("\n")
@@ -42,14 +41,17 @@ module Glimmer
       end
 
       def path=(the_path)
-        the_path = nil if the_path&.strip&.empty?
         @path = the_path
         generate_display_path
       end
 
       def generate_display_path
-        return if @path.nil?
+        return if @path.empty?
         @display_path = @path.sub(project_dir.path, '').sub(/^\//, '')
+      end
+      
+      def scratchpad?
+        path.empty?
       end
 
       def backup_properties
@@ -97,9 +99,10 @@ module Glimmer
       end
 
       def name=(the_name)
-        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name) unless path.nil?
+        # TODO inspect if this method is needed. If not, delete
+        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name) unless scratchpad?
         @name = the_name
-        if !path.nil? && ::File.exist?(path)
+        if !scratchpad? && ::File.exist?(path)
           FileUtils.mv(path, new_path)
           self.path = new_path
         end
@@ -111,7 +114,7 @@ module Glimmer
       end
 
       def start_filewatcher
-        return if @path.nil?
+        return if scratchpad?
         @filewatcher = Filewatcher.new(@path)
         @thread = Thread.new(@filewatcher) do |fw|
           fw.watch do |filename, event|
@@ -140,7 +143,7 @@ module Glimmer
       end
 
       def write_dirty_content
-        return if path.nil? || !::File.exist?(path)
+        return if scratchpad? || !::File.exist?(path)
         format_dirty_content_for_writing!
         ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
@@ -149,7 +152,7 @@ module Glimmer
       end
 
       def write_raw_dirty_content
-        return if path.nil? || !::File.exist?(path)
+        return if scratchpad? || !::File.exist?(path)
         ::File.write(path, dirty_content) if ::File.exists?(path)
       rescue => e
         puts "Error in writing raw dirty content for #{path}"
@@ -165,7 +168,7 @@ module Glimmer
       end
 
       def delete!
-        FileUtils.rm(path) unless path.nil?
+        FileUtils.rm(path) unless scratchpad?
       end
 
       def prefix_new_line!
@@ -443,6 +446,19 @@ module Glimmer
         self.dirty_content = new_lines.join("\n")
         self.caret_position = caret_position_for_line_index(new_line_index) + [old_caret_position_line_position, new_lines[new_line_index].size].min
         self.selection_count = old_selection_count.to_i if old_selection_count.to_i > 0
+      end
+      
+      def run
+        begin
+          if scratchpad?
+            eval content
+          else
+            write_dirty_content
+            load path
+          end
+        rescue SyntaxError, StandardError => e
+          puts e.full_message
+        end
       end
 
       def lines
