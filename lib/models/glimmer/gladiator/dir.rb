@@ -47,14 +47,6 @@ module Glimmer
         is_local_dir ? path : @display_path = @path.sub(project_dir.path, '').sub(/^\//, '')
       end
       
-      def name=(the_name)
-        self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
-        @name = the_name
-        new_path = ::File.expand_path(display_path)
-        FileUtils.mv(path, new_path)
-        self.path = display_path
-      end
-  
       def children
         @children ||= retrieve_children
       end
