@@ -51,7 +51,7 @@ module Glimmer
       end
       
       def scratchpad?
-        path.empty?
+        path.to_s.empty?
       end
 
       def backup_properties
@@ -98,6 +98,15 @@ module Glimmer
         self.selection = Point.new(caret_position, caret_position + value.to_i)
       end
 
+      def name=(the_name)
+        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name) unless scratchpad?
+        @name = the_name
+        if !scratchpad? && ::File.exist?(path)
+          FileUtils.mv(path, new_path)
+          self.path = new_path
+        end
+      end
+      
       def dirty_content=(the_content)
         @dirty_content = the_content
         notify_observers(:content)

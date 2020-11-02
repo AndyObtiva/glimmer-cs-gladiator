@@ -26,12 +26,13 @@ module Glimmer
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
             foreground rgb(0, 0, 250)
-            text bind(file, 'line_numbers_content')
-            top_pixel bind(file, 'top_pixel', read_only: true)
+            text bind(self, 'file.line_numbers_content')
+            top_pixel bind(self, 'file.top_pixel', read_only: true)
             top_margin 5
             right_margin 5
             bottom_margin 5
             left_margin 5
+            editable false
             on_focus_gained {
               @text&.swt_widget.setFocus
             }
@@ -47,10 +48,10 @@ module Glimmer
             layout_data :fill, :fill, true, true
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             foreground rgb(75, 75, 75)
-            text bind(file, :content)
+            text bind(self, 'file.content')
             focus true
-            selection bind(file, :selection)
-            top_pixel bind(file, 'top_pixel')
+            selection bind(self, 'file.selection')
+            top_pixel bind(self, 'file.top_pixel')
             drop_target(DND::DROP_COPY) {
               transfer [TextTransfer.getInstance].to_java(Transfer)
               on_drag_enter { |event|

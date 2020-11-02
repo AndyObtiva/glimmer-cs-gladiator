@@ -23,7 +23,7 @@ module Glimmer
         args = SWTProxy.constantify_args(args)
         @swt_layout = self.class.swt_layout_class_for(underscored_layout_name).new(*args)
         @widget_proxy.swt_widget.setLayout(@swt_layout)
-      end    
+      end
     end
   end
 end

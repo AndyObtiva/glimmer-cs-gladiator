@@ -1,6 +1,6 @@
 module Glimmer
   class Gladiator
-    class Command    
+    class Command
       class << self
         include Glimmer
         
@@ -10,10 +10,10 @@ module Glimmer
         
         def command_history_for(file)
           # keeping a first command to make redo support work by remembering next command after undoing all
-          command_history[file] ||= [Command.new(file)] 
+          command_history[file] ||= [Command.new(file)]
         end
         
-        def do(file, method = nil, command: nil)        
+        def do(file, method = nil, command: nil)
           command ||= Command.new(file, method)
           command_history_for(file)&.last&.next_command = command
           command.do
@@ -21,7 +21,7 @@ module Glimmer
         end
         
         def undo(file)
-          return if command_history_for(file).size <= 1        
+          return if command_history_for(file).size <= 1
           command = command_history_for(file).pop
           command&.undo
         end

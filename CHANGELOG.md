@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.5.2
+
+- Fix issue with file/directory rename not working
+- Fix issue with not renaming tab text when renaming file
+- Fix issue with not closing tab when deleting file
+
+## 0.5.1
+
+- Fixed a Windows issue with opening Ruby styled text editors
+
 ## 0.5.0
 
 - File Menu to allow Opening a Project

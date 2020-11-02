@@ -23,7 +23,7 @@ module Glimmer
       attr_accessor :drag_and_drop
       attr_accessor :drag
     end
-
+    
     ## Add options like the following to configure CustomShell by outside consumers
     #
     # options :title, :background_color
@@ -42,9 +42,8 @@ module Glimmer
     #
     #
     before_body {
-      Thread.new {
-        project_dir #pre-initialize directory
-      }
+      # TODO consider doing loading project files after displaying the GUI instead of holding it up before
+      project_dir #pre-initialize directory
       at_exit do
         project_dir.selected_child&.write_raw_dirty_content
       end
@@ -582,8 +581,12 @@ module Glimmer
       end
     end
 
+    def find_tab_item(file_path)
+      @current_tab_folder.swt_widget.getItems.detect { |ti| ti.getData('file_path') == file_path }
+    end
+
     def selected_tab_item
-      @current_tab_folder.swt_widget.getItems.detect { |ti| ti.getData('file_path') == project_dir.selected_child&.path }
+      find_tab_item(project_dir.selected_child&.path)
     end
 
     def other_tab_items
@@ -615,17 +618,13 @@ module Glimmer
       @file_tree.swt_widget.showItem(parent_tree_item)
       parent_tree_item.setExpanded(true)
       # TODO close text editor tab
-#       if file.is_a?(::File)
-        # close tab
-#       end
+      found_tab_item = find_tab_item(file.path)
+      if found_tab_item
+        project_dir.selected_child_path_history.delete(found_tab_item.getData('file_path'))
+        found_tab_item.getData('proxy')&.dispose
+      end
     rescue => e
       puts e.full_message
-    end
-
-    def rename_selected_tree_item
-      project_dir.pause_refresh
-      tree_item = @file_tree.swt_widget.getSelection.first
-      rename_tree_item(tree_item)
     end
 
     def add_new_directory_to_selected_tree_item
@@ -642,7 +641,7 @@ module Glimmer
       project_dir.refresh(async: false, force: true)
       new_tree_item = @file_tree.depth_first_search {|ti| ti.getData.path == new_directory_path}.first
       @file_tree.swt_widget.showItem(new_tree_item)
-      rename_tree_item(new_tree_item, true)
+      rename_tree_item(new_tree_item)
     end
 
     def add_new_file_to_selected_tree_item
@@ -662,14 +661,37 @@ module Glimmer
       rename_tree_item(new_tree_item, true)
     end
 
-    def rename_tree_item(tree_item, open_afterwards = false)
+    def rename_selected_tree_item
+      project_dir.pause_refresh
+      tree_item = @file_tree.swt_widget.getSelection.first
+      rename_tree_item(tree_item)
+    end
+
+    def rename_tree_item(tree_item, new_file = false)
+      original_file = tree_item.getData
+      current_file = project_dir.selected_child_path == original_file.path
+      found_tab_item = find_tab_item(original_file.path)
+      found_text_editor = found_tab_item&.getData('text_editor')
       @file_tree.edit_tree_item(
         tree_item,
         after_write: -> (edited_tree_item) {
           file = edited_tree_item.getData
           file_path = file.path
-          # TODO rename file in tab title
-          project_dir.selected_child_path = file_path if open_afterwards
+          file.name
+          if new_file
+            project_dir.selected_child_path = file_path
+          else
+            found_text_editor&.file = file
+            found_tab_item&.setData('file', file)
+            found_tab_item&.setData('file_path', file.path)
+            found_tab_item&.setText(file.name)
+            body_root.pack_same_size
+            if current_file
+              project_dir.selected_child_path = file_path
+            else
+              selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
+            end
+          end
           project_dir.resume_refresh
         },
         after_cancel: -> {
