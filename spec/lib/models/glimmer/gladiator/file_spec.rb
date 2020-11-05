@@ -8,8 +8,12 @@ describe Glimmer::Gladiator::File do
   
   let(:project_dir) { Glimmer::Gladiator::Dir.new(File.join(SPEC_ROOT, 'fixtures')) }
   
-  subject { described_class.new(file, project_dir) }
-
+  subject do
+    described_class.new(file, project_dir).tap do |the_file|
+      the_file.init_content
+    end
+  end
+  
   describe '#kill_line!' do
     context 'in an empty file' do
       let(:file) { empty_file }
@@ -293,14 +297,14 @@ describe Glimmer::Gladiator::File do
         subject.line_number = 2
   
         expect(subject.caret_position).to eq(54)
-  
+
         subject.move_up!
   
         expect(subject.caret_position).to eq(0)
         expect(subject.line_number).to eq(1)
   
         subject.format_dirty_content_for_writing!
-  
+        
         expect(subject.dirty_content).to eq(<<~MULTI
           two Howdy, Universe! and Howdy, Universe! and Howdy, Universe!
           one Hello, World! and Hello, World! and Hello, World!

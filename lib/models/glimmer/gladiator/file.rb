@@ -3,7 +3,7 @@ module Glimmer
     class File
       include Glimmer
 
-      attr_accessor :dirty_content, :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
+      attr_accessor :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
       attr_reader :name, :path, :project_dir
 
       def initialize(path='', project_dir=nil)
@@ -15,31 +15,45 @@ module Glimmer
         @top_pixel = 0
         @selection_count = 0
         @selection = Point.new(0, 0 + @selection_count)
-        read_dirty_content = path.empty? ? '' : ::File.read(path)
-        begin
-          # test read dirty content
-          read_dirty_content.split("\n")
-          observe(self, :dirty_content) do
-            lines_text_size = lines.size.to_s.size
-            self.line_numbers_content = lines.size.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
-          end
-          @line_number = 1
-          self.dirty_content = read_dirty_content
-          observe(self, :selection) do
-            self.line_number = line_index_for_caret_position(caret_position) + 1
-          end
-          observe(self, :line_number) do
-            if line_number
-              line_index = line_number - 1
-              new_caret_position = caret_position_for_line_index(line_index)
-              self.caret_position = new_caret_position unless self.caret_position && line_index_for_caret_position(new_caret_position) == line_index_for_caret_position(caret_position)
+        @line_number = 1
+      end
+      
+      def init_content
+        unless @init
+          @init = true
+          begin
+            # test read dirty content
+            observe(self, :dirty_content) do
+              lines_text_size = lines.size.to_s.size
+              old_top_pixel = top_pixel
+              self.line_numbers_content = lines.size.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
+              self.top_pixel = old_top_pixel
             end
+            the_dirty_content = read_dirty_content
+            the_dirty_content.split("\n") # test that it is not a binary file (crashes to rescue block otherwise)
+            self.dirty_content = the_dirty_content
+            observe(self, :selection) do
+              new_line_number = line_index_for_caret_position(caret_position) + 1
+              async_exec {
+                self.line_number = new_line_number
+              }
+            end
+            observe(self, :line_number) do
+              if line_number
+                line_index = line_number - 1
+                new_caret_position = caret_position_for_line_index(line_index)
+                current_caret_position = self.caret_position
+                async_exec {
+                  self.caret_position = new_caret_position unless current_caret_position && line_index_for_caret_position(new_caret_position) == line_index_for_caret_position(current_caret_position)
+                }
+              end
+            end
+          rescue # in case of a binary file
+            stop_filewatcher
           end
-        rescue
-          # no op in case of a binary file
         end
       end
-
+      
       def path=(the_path)
         @path = the_path
         generate_display_path
@@ -71,6 +85,7 @@ module Glimmer
       def content=(value)
         value = value.gsub("\t", '  ')
         if dirty_content != value
+          # TODO fix this command recording hack by truly recording every text change as a proper command (add process_key command, paste command, cut command, etc...)
           Command.do(self) # record a native (OS-widget) operation
           self.dirty_content = value
         end
@@ -107,9 +122,26 @@ module Glimmer
         end
       end
       
+      def dirty_content
+        init_content
+        @dirty_content
+      end
+      
       def dirty_content=(the_content)
+        # TODO set partial dirty content by line(s) for enhanced performance
         @dirty_content = the_content
+        old_caret_position = caret_position
+        old_top_pixel = top_pixel
         notify_observers(:content)
+        if @formatting_dirty_content_for_writing
+          self.caret_position = old_caret_position
+          self.selection_count = 0
+          self.top_pixel = old_top_pixel
+        end
+      end
+      
+      def read_dirty_content
+        path.empty? ? '' : ::File.read(path)
       end
 
       def start_filewatcher
@@ -117,15 +149,13 @@ module Glimmer
         @filewatcher = Filewatcher.new(@path)
         @thread = Thread.new(@filewatcher) do |fw|
           fw.watch do |filename, event|
-            begin
-              read_dirty_content = ::File.read(path)
-              # test read dirty content
-              read_dirty_content.split("\n")
-              async_exec do
+            async_exec do
+              begin
                 self.dirty_content = read_dirty_content if read_dirty_content != dirty_content
+              rescue StandardError, Errno::ENOENT
+                # in case of a binary file
+                stop_filewatcher
               end
-            rescue
-              # no op in case of a binary file
             end
           end
         end
@@ -135,19 +165,24 @@ module Glimmer
         @filewatcher&.stop
       end
 
+      def write_dirty_content
+        # TODO write partial dirty content by line(s) for enhanced performance
+        return if scratchpad? || !::File.exist?(path) || !::File.exists?(path) || read_dirty_content == dirty_content
+        format_dirty_content_for_writing!
+        ::File.write(path, dirty_content)
+      rescue StandardError, ArgumentError => e
+        puts "Error in writing dirty content for #{path}"
+        puts e.full_message
+      end
+
       def format_dirty_content_for_writing!
         new_dirty_content = dirty_content.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
         new_dirty_content = "#{new_dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
-        self.dirty_content = new_dirty_content if new_dirty_content != self.dirty_content
-      end
-
-      def write_dirty_content
-        return if scratchpad? || !::File.exist?(path)
-        format_dirty_content_for_writing!
-        ::File.write(path, dirty_content) if ::File.exists?(path)
-      rescue => e
-        puts "Error in writing dirty content for #{path}"
-        puts e.full_message
+        if new_dirty_content != self.dirty_content
+          @formatting_dirty_content_for_writing = true
+          self.dirty_content = new_dirty_content
+          @formatting_dirty_content_for_writing = false
+        end
       end
 
       def write_raw_dirty_content
@@ -185,7 +220,7 @@ module Glimmer
         self.caret_position = caret_position_for_line_index(line_number) + current_line_indentation.size
         self.selection_count = 0
       end
-
+      
       def comment_line!
         old_lines = lines
         return if old_lines.size < 1
@@ -219,6 +254,7 @@ module Glimmer
           new_caret_position = old_caret_position + delta
           new_caret_position = [new_caret_position, old_caret_position_line_caret_position].max
           self.caret_position = new_caret_position
+          self.selection_count = 0
         end
       end
 
@@ -243,6 +279,7 @@ module Glimmer
           self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
         else
           self.caret_position = old_caret_position + delta
+          self.selection_count = 0
         end
       end
 
@@ -274,6 +311,7 @@ module Glimmer
           new_caret_position = old_caret_position + delta
           new_caret_position = [new_caret_position, old_caret_position_line_caret_position].max
           self.caret_position = new_caret_position
+          self.selection_count = 0
         end
       end
 
@@ -311,6 +349,7 @@ module Glimmer
           self.selection_count = (caret_position_for_line_index(old_end_caret_line_index + 1) - self.caret_position)
         else
           self.caret_position = old_caret_position + delta
+          self.selection_count = 0
         end
       end
 

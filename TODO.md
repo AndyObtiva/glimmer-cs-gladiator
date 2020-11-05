@@ -2,21 +2,17 @@
 
 ## Up Next
 
-- Fix issue with creating new directories
-
 - Fix CMD+F and other shortcuts when having multiple projects open at the same time
 - Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
-- Show Progress Bar while opening a new project
+- Show Progress Bar ticks while opening a new project
+- Show Progress Bar ticks while opening last open files
 
-- Make file renames also rename the open file tab
-- Close open file if deleted
 - Edit Menu with all possible keyboard shortcut actions into the menu and denote their shorcuts
 - Try optimizing by avoiding line style coloring if file content hasn't changed
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
-- Support CMD+CTRL+UP and DOWN for moving between split editor panes (since we can split vertically too now)
 
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
 - Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
@@ -28,12 +24,10 @@
 - Fix issue with creating empty dir followed by empty file inside it does not work
 - Support emojis in text editor
 - Pack when you close a text editor split pane
-- Fix issue with creating directories not allowing save/rename
 - Remember Undo/Redo per text editor tab
 - Strip line strings on save
 - Do not strip the final line out if possible
 - Support Preferences dialog for setting up ignored paths
-- Save/Load Config for the Split Orientation
 - Use a Sash between the text editor area and tree/list area
 - Make the File/Line/Find/Replace area collapsable
 - Consider replacing tab_folder with c_tab_folder to have tabs show up on the left if there is only one tab (not center like it currently is)
@@ -43,18 +37,17 @@
 - Recent Projects menu item
 - Add rubocop like warnings while using Gladiator like when a file is too large or a method is too long, showing a special color somewhere live.
 - Ability to right-click tabs and close them with the mouse
+- Menu bar items for rake tasks and keyboard shortcut to bring them up
 
 ## Bugs
 
 - Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
 - Fix issue with slowdown upon inserting a new file/directory into the tree
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
-- Fix issue with line numbers sometimes not lining up perfectly with text editor (problem is back)
 - Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)
 - Stop tree from scrolling upon renaming a file
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
 - Fix issue with Replace continuing to replace if Enter was pressed after all occurrences were replaced
-- Fix issue with crashing when closing a file and then trying to delete another file from the tree (might happen if you try to rename closed file) says getData returned nil
 - Eliminate flicker upon indent/outdent of multiple lines
 - Fix this issue (happens after closing all tabs and then attempting a file lookup find operation):
 The signal TERM is in use by the JVM and will not work correctly on this platform
@@ -147,6 +140,12 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Multi-selection in tree and multi-deletion
 - Make tree data binding editing (adding new node) resort into the right place
 - Strip lines of empty space when performing copy/cut/paste/duplicate/comment/uncomment actions
-- Support CMD+SHIFT+TAB for Tab Close Undo
+- Support CMD+SHIFT+T for Tab Close Undo
 - Text Column selection (StyledText setBlockSelection)
-- Add multi-project support
+- Enhance File Explorer Tree with directory/file icons
+- Enhance Tabs with file type icons
+- Enhance File Explorer Tree with file type icons
+- Use a horizontal sash between list/tree & text editors/find
+- Use a vertical sash between find area and text editors
+- Provide a maximize current file menu/shortcut that minimizes other split editor
+- Provide an ultra-maximize current file menu/shortcut that minimizes all sash areas (list/tree/find)

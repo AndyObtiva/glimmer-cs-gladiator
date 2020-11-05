@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.5.3 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.5.4 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -13,6 +13,9 @@ I leave building truly professional text editors to software tooling experts who
 
 Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux):
 - Ruby Syntax Highlighting with colors
+- Open Project from File Menu (CMD+SHIFT+P)
+- Scratchpad for running arbitrary Ruby/Glimmer code without saving to disk (CMD+SHIFT+S)
+- Run Ruby code (CMD+SHIFT+R)
 - File explorer navigation with context menu to open file, rename, delete, add new file, add new directory, or refresh tree (CMD+T)
 - File lookup by name ignoring slashes, underscores, and dots to ease lookup (CMD+R)
 - Watch open file for external changes to automatically refresh in editor
@@ -30,10 +33,8 @@ Gladiator currently supports the following text editing features (including keyb
 - Comment/Uncomment line/selection (CMD+/)
 - Indent/Unindent line/selection (CMD+] & CMD+[)
 - Insert/Prefix New Line (CMD+ENTER & CMD+SHIFT+ENTER)
-- Drag and Drop Text Editor Split Screen (drag a file from File Tree or File Lookup List, and it splits the screen)
-- Run Ruby code (CMD+SHIFT+R)
-- Scratchpad for running arbitrary Ruby/Glimmer code without saving to disk (CMD+SHIFT+S)
-- Change Split Orientation to Horizontal/Vertical via View Menu (CMD+SHIFT+O)
+- Split Pane & Change Split Orientation to Horizontal/Vertical via View Menu (CMD+SHIFT+O)
+- Drag and Drop Text Editor Split Screen (drag a file from File Tree or File Lookup List, and it splits the pane)
 
 ## Platforms
 
@@ -77,6 +78,12 @@ You may run the `gladiator` command to bring up the text editor in the project d
 gladiator
 ```
 
+On Linux, you may need to run with extra memory via this command instead:
+
+```
+gladiator -J-Xmx1200M
+```
+
 On Windows, you may need to run with extra memory via this command instead:
 
 ```
@@ -103,7 +110,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.5.3'
+gem 'glimmer-cs-gladiator', '~> 0.5.4'
 ```
 
 Run:
@@ -132,13 +139,9 @@ Opens Gladiator with "/Users/User/code" as the root directory.
 Gladiator automatically saves configuration data in a `.gladiator` file at the directory it is run from.
 
 It currently remembers:
-- Last opened file
-- Caret position
-- Top line position
-- Window size
-- Opened tabs
-- Split tabs
-- Ignore Paths
+- Last opened files (in both split panes if split)
+- Window size and position
+- Ignore Paths (default: '.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor')
 
 ## Gotcha
 

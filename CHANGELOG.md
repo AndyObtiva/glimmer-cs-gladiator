@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.5.4
+
+- CMD+SHIFT+O now splits the Text Editor without requiring Drag & Drop
+- Close open files when deleting their parent directory
+- Make rename refocus on the file renamed in the tree if different from the file being edited
+- Save/Load Config for the Split Orientation
+- Right aligned line numbers in Scratchpad and new files
+- Show a friendly progress message when opening last open files
+- Use SashForm for container/separator of File Lookup List and File Explorer Tree, making them resizable
+- Enhance startup performance by only loading content of last open files
+- Avoid extra writes to open files when no changes occurred
+- Upgrade to glimmer-dsl-swt gem v4.17.10.1
+- Upgrade to clipboard gem v1.3.5
+- Fix issue with over-refreshing directories on focus out and back in
+- Fix glitches with certain single line file operations causing unnecessary text editor scroll jitter
+- Fix issue with creating directories not allowing save/rename
+- Fix issue with crashing when closing a file and then trying to delete another file from the tree (might happen if you try to rename closed file) says getData returned nil
+- Fix issue with line numbers not lining up perfectly with code/text lines in non-ruby files
+
 ## 0.5.3
 
 - Upgraded to glimmer-dsl-swt v4.17.8.3, with performance optimizations for `code_text`

@@ -38,3 +38,9 @@ RSpec.configure do |config|
   end
 
 end
+
+class Glimmer::Gladiator::File
+  def async_exec(&block)
+    block.call
+  end
+end

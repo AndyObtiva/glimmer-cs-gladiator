@@ -21,7 +21,7 @@ module Glimmer
         composite {
           layout_data :fill, :fill, true, true
           grid_layout 2, false
-          @line_numbers_text = styled_text(:multi, :border) {
+          @line_numbers_text = styled_text(:multi, :wrap, :border) {
             layout_data(:right, :fill, false, true)
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
@@ -33,6 +33,7 @@ module Glimmer
             bottom_margin 5
             left_margin 5
             editable false
+            alignment swt(:right)
             on_focus_gained {
               @text&.swt_widget.setFocus
             }
@@ -52,6 +53,10 @@ module Glimmer
             focus true
             selection bind(self, 'file.selection')
             top_pixel bind(self, 'file.top_pixel')
+            top_margin 5
+            right_margin 5
+            bottom_margin 5
+            left_margin 5
             drop_target(DND::DROP_COPY) {
               transfer [TextTransfer.getInstance].to_java(Transfer)
               on_drag_enter { |event|
@@ -132,12 +137,8 @@ module Glimmer
                   verify_event.text += file.current_line_indentation
                 end
               when "\t"
-                if file.selection_count.to_i > 0
-                  Command.do(file, :indent!)
-                  verify_event.doit = false
-                else
-                  verify_event.text = '  '
-                end
+                Command.do(file, :indent!)
+                verify_event.doit = false
               end
             }
           }

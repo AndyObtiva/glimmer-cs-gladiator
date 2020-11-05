@@ -35,8 +35,26 @@ module Glimmer
       @project_dir ||= Dir.new(project_dir_path)
     end
 
-    attr_reader :find_text, :tab_folder1, :tab_folder2, :filter_text, :rename_in_progress, :line_number_text, :file_tree
-    attr_accessor :split_orientation, :current_tab_item, :current_tab_folder, :current_text_editor
+    def split_orientation=(value)
+      @split_orientation = value
+      save_config
+      if @loaded_config && !split_pane?
+        Gladiator.drag = true
+        child_path = project_dir.selected_child_path
+        project_dir.selected_child = nil
+        project_dir.selected_child_path = child_path
+        Gladiator.drag = false
+      end
+      @split_orientation
+    end
+    
+    def split_pane?
+      pane_count = @tab_folder_sash_form&.children&.size
+      pane_count && pane_count > 1
+    end
+
+    attr_reader :find_text, :tab_folder1, :tab_folder2, :filter_text, :rename_in_progress, :line_number_text, :file_tree, :split_orientation
+    attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor
 
     ## Uncomment before_body block to pre-initialize variables to use in body
     #
@@ -180,7 +198,7 @@ module Glimmer
                 begin
                   project_dir.selected_child_path = ''
                 rescue => e
-                  pd e
+                  puts e.full_message
                 end
               }
             }
@@ -198,11 +216,15 @@ module Glimmer
               text '&Split'
               menu_item(:radio) {
                 text '&Horizontal'
-                selection bind(self, :split_orientation, on_read: ->(o) { o == swt(:horizontal)}, on_write: ->(b) { b ? swt(:horizontal) : swt(:vertical)})
+                selection bind(self, :split_orientation, 
+                                      on_read: ->(o) { split_pane? && o == swt(:horizontal)}, 
+                                      on_write: ->(b) { b ? swt(:horizontal) : swt(:vertical) })
               }
               menu_item(:radio) {
                 text '&Vertical'
-                selection bind(self, :split_orientation, on_read: ->(o) { o == swt(:vertical)}, on_write: ->(b) { b ? swt(:vertical) : swt(:horizontal)})
+                selection bind(self, :split_orientation, 
+                                      on_read: ->(o) { split_pane? && o == swt(:vertical)}, 
+                                      on_write: ->(b) { b ? swt(:vertical) : swt(:horizontal) })
               }
             }
           }
@@ -248,11 +270,9 @@ module Glimmer
               end
             }
           }
-          composite {
-            fill_layout(:vertical) {
-              spacing 5
-            }
+          sash_form(:vertical) {
             layout_data(:fill, :fill, true, true)
+            sash_width 4
             @list = list(:border, :h_scroll, :v_scroll) {
               #visible bind(self, 'project_dir.filter') {|f| !!f}
               selection bind(project_dir, :filtered_path)
@@ -517,20 +537,59 @@ module Glimmer
         project_dir.ignore_paths ||= ['packages', 'tmp']
         open_file_paths1 = @config[:open_file_paths1] || @config[:open_file_paths]
         open_file_paths2 = @config[:open_file_paths2]
+        self.split_orientation = swt(@config[:split_orientation] || :horizontal) rescue swt(:horizontal)
+        if @progress_bar_shell.nil?
+          @progress_bar_shell = shell(body_root) {
+            text 'Opening Last Open Files'
+            fill_layout(:vertical) {
+              margin_width 15
+              margin_height 15
+              spacing 5
+            }
+            label(:center) {
+              text "Opening Last Open Files"
+              font height: 20
+            }
+    #         @progress_bar = progress_bar(:horizontal, :indeterminate)
+          }
+          async_exec {
+            @progress_bar_shell.open
+          }
+        end
         open_file_paths1.to_a.each do |file_path|
-          project_dir.selected_child_path = file_path
+          async_exec {
+            Gladiator.drag = false
+            project_dir.selected_child_path = file_path
+          }
         end
         # TODO replace the next line with one that selects the visible tab
-        project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths1.to_a.include?(@config[:selected_child_path])
-        Gladiator.drag = true
-        open_file_paths2.to_a.each do |file_path|
-          project_dir.selected_child_path = file_path
-        end
-        # TODO replace the next line with one that selects the visible tab
-        project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths2.to_a.include?(@config[:selected_child_path])
-        Gladiator.drag = false
-        project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
-        project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+        async_exec {
+          Gladiator.drag = false
+          project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths1.to_a.include?(@config[:selected_child_path])
+          project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
+          project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+        }
+        async_exec {
+          open_file_paths2.to_a.each do |file_path|
+            async_exec {
+              Gladiator.drag = true
+              project_dir.selected_child_path = file_path
+            }
+          end
+          # TODO replace the next line with one that selects the visible tab
+          async_exec {
+            Gladiator.drag = true
+            project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths2.to_a.include?(@config[:selected_child_path])
+            project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
+            project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+          }
+          async_exec {
+            Gladiator.drag = false
+            @progress_bar_shell.close
+            @progress_bar_shell = nil
+            @loaded_config = true
+          }
+        }
       else
         @loaded_config = true
       end
@@ -546,6 +605,7 @@ module Glimmer
       open_file_paths2 = tab_folder2&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
       @config = {
         selected_child_path: child.path,
+        split_orientation: split_orientation == swt(:horizontal) ? 'horizontal' : 'vertical',
         caret_position: child.caret_position,
         top_pixel: child.top_pixel,
         shell_width: swt_widget&.getBounds&.width,
@@ -612,17 +672,23 @@ module Glimmer
       return if tree_item.nil?
       file = tree_item.getData
       parent_path = ::File.dirname(file.path)
+      if file.is_a?(Gladiator::Dir)
+        file_paths = file.all_children.select {|f| f.is_a?(Gladiator::File)}.map(&:path)
+      else
+        file_paths = [file.path]
+      end
+      file_paths.each do |file_path|
+        found_tab_item = find_tab_item(file_path)
+        if found_tab_item
+          project_dir.selected_child_path_history.delete(found_tab_item.getData('file_path'))
+          found_tab_item.getData('proxy')&.dispose
+        end
+      end
       file.delete! # TODO consider supporting command undo/redo
       project_dir.refresh(async: false)
       parent_tree_item = @file_tree.depth_first_search {|ti| ti.getData.path == parent_path}.first
       @file_tree.swt_widget.showItem(parent_tree_item)
       parent_tree_item.setExpanded(true)
-      # TODO close text editor tab
-      found_tab_item = find_tab_item(file.path)
-      if found_tab_item
-        project_dir.selected_child_path_history.delete(found_tab_item.getData('file_path'))
-        found_tab_item.getData('proxy')&.dispose
-      end
     rescue => e
       puts e.full_message
     end
@@ -691,6 +757,9 @@ module Glimmer
             else
               selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
             end
+            async_exec {
+              @file_tree.swt_widget.showItem(edited_tree_item)
+            }
           end
           project_dir.resume_refresh
         },
@@ -721,19 +790,16 @@ module Glimmer
         }
 #         @progress_bar = progress_bar(:horizontal, :indeterminate)
       }
-      Thread.new {
-        async_exec {
-          @progress_bar_shell.open
-        }
+      async_exec {
+        @progress_bar_shell.open
       }
-      Thread.new {
-        async_exec {
-          gladiator(project_dir_path: selected_directory) {
-            on_swt_show {
-              @progress_bar_shell.close
-            }
-          }.open if selected_directory
-        }
+      async_exec {
+        gladiator(project_dir_path: selected_directory) {
+          on_swt_show {
+            @progress_bar_shell.close
+            @progress_bar_shell = nil
+          }
+        }.open if selected_directory
       }
     end
     
@@ -780,7 +846,7 @@ module Glimmer
           end
         end
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'o'
-        self.split_orientation = split_orientation == swt(:horizontal) ? swt(:vertical) : swt(:horizontal)
+        self.split_orientation = split_pane? && split_orientation == swt(:horizontal) ? swt(:vertical) : swt(:horizontal)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
         current_tab_folder.swt_widget.setSelection((current_tab_folder.swt_widget.getSelectionIndex() + 1) % current_tab_folder.swt_widget.getItemCount) if current_tab_folder.swt_widget.getItemCount > 0
         current_text_editor&.text_widget&.setFocus

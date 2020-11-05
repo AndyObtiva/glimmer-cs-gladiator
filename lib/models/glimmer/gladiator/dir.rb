@@ -6,8 +6,6 @@ module Glimmer
       include Glimmer
       include Glimmer::DataBinding::ObservableModel
 
-      REFRESH_DELAY = 7
-  
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
       attr_reader :name, :parent, :path
       attr_writer :all_children
@@ -15,19 +13,30 @@ module Glimmer
       def initialize(path, project_dir = nil)
         @project_dir = project_dir
         if is_local_dir
-         @filewatcher = Filewatcher.new(path)
-         @thread = Thread.new(@filewatcher) do |fw|
-           fw.watch do |filename, event|
-             if @last_update.nil? || (Time.now.to_f - @last_update) > REFRESH_DELAY
-               refresh if !filename.include?('new_file') && !selected_child_path_history.include?(filename) && filename != selected_child_path
-             end
-             @last_update = Time.now.to_f
-           end
-         end
+          @filewatcher = Filewatcher.new(path)
+          Thread.new(@filewatcher) do |fw|
+            begin
+              fw.watch do |filename, event|
+                # TODO do fine grained processing of events for enhanced performance (e.g. dir refresh vs file change)
+                # TODO do fine grained file change only without a refresh delay for enhanced performance
+                begin
+                  if !@refresh_in_progress && !filename.include?('new_file') && (event != :updated || find_child_file(filename).nil?)
+                    Thread.new {
+                      refresh
+                    }
+                  end
+                rescue => e
+                  puts e.full_message
+                end
+              end
+            rescue => e
+              puts e.full_message
+            end
+          end
         end
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
-        @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'tmp', 'vendor']
+        @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor']
         self.filtered_path_options = []
       end
       
@@ -67,7 +76,7 @@ module Glimmer
             result || p.include?(ignore_path)
           end
         end.map do |p|
-          ::File.file?(p) ? Gladiator::File.new(p, project_dir) : Gladiator::Dir.new(p, project_dir)
+          ::File.file?(p) ? File.new(p, project_dir) : Dir.new(p, project_dir)
         end.sort_by do |c|
           c.path.to_s.downcase
         end.sort_by do |c|
@@ -75,6 +84,22 @@ module Glimmer
         end.each do |child|
           child.retrieve_children if child.is_a?(Dir)
         end
+      end
+      
+      def find_child_file(child_path)
+        depth_first_search_file(self, child_path)
+      end
+      
+      def depth_first_search_file(dir, file_path)
+        dir.children.each do |child|
+          if child.is_a?(File)
+            return child if child.path.include?(file_path)
+          else
+            result = depth_first_search_file(child, file_path)
+            return result unless result.nil?
+          end
+        end
+        nil
       end
   
       def selected_child_path_history
@@ -91,6 +116,7 @@ module Glimmer
 
       def refresh(async: true, force: false)
         return if @refresh_paused && !force
+        @refresh_in_progress = true
         retrieve_children
         collect_all_children
         refresh_operation = lambda do
@@ -102,6 +128,7 @@ module Glimmer
         else
           sync_exec(&refresh_operation)
         end
+        @refresh_in_progress = false
       end
   
       def filter=(value)
@@ -144,7 +171,7 @@ module Glimmer
       def selected_child_path=(selected_path)
         return (project_dir.selected_child = nil) if selected_path.nil?
         # scratchpad scenario
-        if selected_path.empty? #scratchpad
+        if selected_path.empty? # Scratchpad
           @selected_child&.write_dirty_content
           return (self.selected_child = File.new)
         end
@@ -154,7 +181,7 @@ module Glimmer
         selected_path = full_selected_path
         if ::File.file?(selected_path)
           @selected_child&.write_dirty_content
-          new_child = Gladiator::File.new(selected_path, project_dir)
+          new_child = find_child_file(selected_path)
           begin
             unless new_child.dirty_content.nil?
               self.selected_child&.stop_filewatcher
@@ -175,6 +202,7 @@ module Glimmer
       end
       
       def selected_child=(new_child)
+        return if selected_child == new_child
         file_properties = @selected_child&.backup_properties if @selected_child == new_child
         @selected_child = new_child
         @selected_child.restore_properties(file_properties) if file_properties
