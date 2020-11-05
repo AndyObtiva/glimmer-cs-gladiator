@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Fix issue with creating new directories
 
 - Fix CMD+F and other shortcuts when having multiple projects open at the same time
 - Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it

@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.5.3
+
+- Upgraded to glimmer-dsl-swt v4.17.8.3, with performance optimizations for `code_text`
+
 ## 0.5.2
 
 - Fix issue with file/directory rename not working
