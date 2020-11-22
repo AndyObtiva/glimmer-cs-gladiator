@@ -21,8 +21,9 @@ module Glimmer
         composite {
           layout_data :fill, :fill, true, true
           grid_layout 2, false
-          @line_numbers_text = styled_text(:multi, :wrap, :border) {
+          @line_numbers_text = styled_text(:multi, :border) {
             layout_data(:right, :fill, false, true)
+            
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
             foreground rgb(0, 0, 250)
@@ -33,7 +34,6 @@ module Glimmer
             bottom_margin 5
             left_margin 5
             editable false
-            alignment swt(:right)
             on_focus_gained {
               @text&.swt_widget.setFocus
             }
@@ -51,7 +51,8 @@ module Glimmer
             foreground rgb(75, 75, 75)
             text bind(self, 'file.content')
             focus true
-            selection bind(self, 'file.selection')
+            selection_count bind(self, 'file.selection_count')
+            caret_position bind(self, 'file.caret_position')
             top_pixel bind(self, 'file.top_pixel')
             top_margin 5
             right_margin 5
@@ -144,7 +145,7 @@ module Glimmer
           }
         }
       }
-            
+           
       def extract_char(event)
         event.keyCode.chr
       rescue => e

@@ -216,14 +216,14 @@ module Glimmer
               text '&Split'
               menu_item(:radio) {
                 text '&Horizontal'
-                selection bind(self, :split_orientation, 
-                                      on_read: ->(o) { split_pane? && o == swt(:horizontal)}, 
+                selection bind(self, :split_orientation,
+                                      on_read: ->(o) { split_pane? && o == swt(:horizontal)},
                                       on_write: ->(b) { b ? swt(:horizontal) : swt(:vertical) })
               }
               menu_item(:radio) {
                 text '&Vertical'
-                selection bind(self, :split_orientation, 
-                                      on_read: ->(o) { split_pane? && o == swt(:vertical)}, 
+                selection bind(self, :split_orientation,
+                                      on_read: ->(o) { split_pane? && o == swt(:vertical)},
                                       on_write: ->(b) { b ? swt(:vertical) : swt(:horizontal) })
               }
             }
@@ -486,6 +486,39 @@ module Glimmer
               }
             }
             label
+                        
+            ##row 5
+#
+            label {
+              text 'Caret Position:'
+            }
+            label {
+              layout_data(:fill, :fill, true, false)
+              text bind(project_dir, 'selected_child.caret_position')
+            }
+            label
+#
+            ##row 6
+#
+            label {
+              text 'Selection Count:'
+            }
+            label {
+              layout_data(:fill, :fill, true, false)
+              text bind(project_dir, 'selected_child.selection_count')
+            }
+            label
+#
+            ##row 7
+#
+            label {
+              text 'Top Pixel:'
+            }
+            label {
+              layout_data(:fill, :fill, true, false)
+              text bind(project_dir, 'selected_child.top_pixel')
+            }
+            label
           }
           @tab_folder_sash_form = sash_form {
             layout_data(:fill, :fill, true, true) {
@@ -539,8 +572,8 @@ module Glimmer
         open_file_paths2 = @config[:open_file_paths2]
         self.split_orientation = swt(@config[:split_orientation] || :horizontal) rescue swt(:horizontal)
         if @progress_bar_shell.nil?
-          @progress_bar_shell = shell(body_root) {
-            text 'Opening Last Open Files'
+          @progress_bar_shell = shell(body_root, :title) {
+            text 'Gladiator'
             fill_layout(:vertical) {
               margin_width 15
               margin_height 15
@@ -625,9 +658,11 @@ module Glimmer
     def close_tab_folder
       if @tab_folder2 && !selected_tab_item
         if @current_tab_folder == @tab_folder2
+          @tab_folder2.swt_widget.children.map(&:get_data).each(&:close)
           @tab_folder2.swt_widget.dispose
           @current_tab_folder = @tab_folder1
         else
+          @tab_folder1.swt_widget.children.map(&:get_data).each(&:close)
           @tab_folder1.swt_widget.dispose
           @current_tab_folder = @tab_folder1 = @tab_folder2
         end
@@ -674,8 +709,10 @@ module Glimmer
       parent_path = ::File.dirname(file.path)
       if file.is_a?(Gladiator::Dir)
         file_paths = file.all_children.select {|f| f.is_a?(Gladiator::File)}.map(&:path)
+        file.remove_all_observers
       else
         file_paths = [file.path]
+        file.close
       end
       file_paths.each do |file_path|
         found_tab_item = find_tab_item(file_path)
@@ -777,8 +814,8 @@ module Glimmer
     
     def open_project
       selected_directory = directory_dialog.open
-      @progress_bar_shell = shell(body_root) {
-        text 'Opening Project'
+      @progress_bar_shell = shell(body_root, :title) {
+        text 'Gladiator'
         fill_layout(:vertical) {
           margin_width 15
           margin_height 15

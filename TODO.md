@@ -2,18 +2,20 @@
 
 ## Up Next
 
-- Fix CMD+F and other shortcuts when having multiple projects open at the same time
-- Address performance slowdowns when opening a new project, perhaps backgrounding some of the work or async_execing it
+- Clear undo/redo history for a file upon closing
+- Add menu items for showing/hiding caret position, selection count, top pixel
+
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
-- Show Progress Bar ticks while opening a new project
-- Show Progress Bar ticks while opening last open files
 
 - Edit Menu with all possible keyboard shortcut actions into the menu and denote their shorcuts
+- Add Menu for Rake Tasks
 - Try optimizing by avoiding line style coloring if file content hasn't changed
 - Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
 
+- Show Progress Bar ticks while opening a new project
+- Show Progress Bar ticks while opening last open files
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
 - Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
 - Add Coolbar/Toolbar with edit menu operations
@@ -24,7 +26,6 @@
 - Fix issue with creating empty dir followed by empty file inside it does not work
 - Support emojis in text editor
 - Pack when you close a text editor split pane
-- Remember Undo/Redo per text editor tab
 - Strip line strings on save
 - Do not strip the final line out if possible
 - Support Preferences dialog for setting up ignored paths
@@ -41,6 +42,8 @@
 
 ## Bugs
 
+- Fix caret position after formatting dirty content (perhaps relying on diffing)
+- Fix issue with moving lines down at the end of the file making selection go out of wack
 - Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
 - Fix issue with slowdown upon inserting a new file/directory into the tree
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
@@ -107,6 +110,7 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
 
 - Refactor code around ignore_paths
 - Automate running tests on git push
+- Upgrade undo/redo support to be diff based
 
 ## Enhancements
 
@@ -117,6 +121,7 @@ Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be han
 ## Features
 
 - Make into a tray icon always-on app
+- Jump to method feature
 - Add popups to Gladiator showing the shortcut of each field (e.g. CMD+L for Line)
 - Support autocomplete (primarily Glimmer DSL syntax)
 - Support jumping between parts of a programming expression underscores or dots instead of an entire expression on ALT LEFT & RIGHT
@@ -149,3 +154,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Use a vertical sash between find area and text editors
 - Provide a maximize current file menu/shortcut that minimizes other split editor
 - Provide an ultra-maximize current file menu/shortcut that minimizes all sash areas (list/tree/find)
+- Merge undo history commands into a single command for text changes that occur within 50ms of each other

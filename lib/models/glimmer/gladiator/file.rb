@@ -3,7 +3,7 @@ module Glimmer
     class File
       include Glimmer
 
-      attr_accessor :line_numbers_content, :selection, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive
+      attr_accessor :line_numbers_content, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive, :caret_position, :selection_count, :last_caret_position, :last_selection_count # :selection no longer needed TODO remove comment
       attr_reader :name, :path, :project_dir
 
       def initialize(path='', project_dir=nil)
@@ -13,9 +13,11 @@ module Glimmer
         @name = path.empty? ? 'Scratchpad' : ::File.basename(path)
         self.path = ::File.expand_path(path) unless path.empty?
         @top_pixel = 0
+        @caret_position = 0
         @selection_count = 0
-        @selection = Point.new(0, 0 + @selection_count)
+        @last_selection_count = 0
         @line_number = 1
+        @init = nil
       end
       
       def init_content
@@ -24,29 +26,27 @@ module Glimmer
           begin
             # test read dirty content
             observe(self, :dirty_content) do
-              lines_text_size = lines.size.to_s.size
+              line_count = lines.empty? ? 1 : lines.size
+              lines_text_size = [line_count.to_s.size, 4].max
               old_top_pixel = top_pixel
-              self.line_numbers_content = lines.size.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
+              self.line_numbers_content = line_count.times.map {|n| (' ' * (lines_text_size - (n+1).to_s.size)) + (n+1).to_s }.join("\n")
               self.top_pixel = old_top_pixel
             end
             the_dirty_content = read_dirty_content
             the_dirty_content.split("\n") # test that it is not a binary file (crashes to rescue block otherwise)
             self.dirty_content = the_dirty_content
-            observe(self, :selection) do
+            observe(self, :caret_position) do |new_caret_position|
               new_line_number = line_index_for_caret_position(caret_position) + 1
-              async_exec {
-                self.line_number = new_line_number
-              }
+              current_line_number = line_number
+              self.line_number = new_line_number unless new_caret_position == 0 || (current_line_number && current_line_number == new_line_number)
             end
-            observe(self, :line_number) do
-              if line_number
-                line_index = line_number - 1
-                new_caret_position = caret_position_for_line_index(line_index)
-                current_caret_position = self.caret_position
-                async_exec {
-                  self.caret_position = new_caret_position unless current_caret_position && line_index_for_caret_position(new_caret_position) == line_index_for_caret_position(current_caret_position)
-                }
-              end
+            observe(self, :line_number) do |new_line_number|
+              line_index = line_number - 1
+              new_caret_position = caret_position_for_line_index(line_index)
+              current_caret_position = caret_position
+              line_index_for_new_caret_position = line_index_for_caret_position(new_caret_position)
+              line_index_for_current_caret_position = line_index_for_caret_position(current_caret_position)
+              self.caret_position = new_caret_position unless (current_caret_position && line_index_for_new_caret_position == line_index_for_current_caret_position)
             end
           rescue # in case of a binary file
             stop_filewatcher
@@ -62,6 +62,15 @@ module Glimmer
       def generate_display_path
         return if @path.empty?
         @display_path = @path.sub(project_dir.path, '').sub(/^\//, '')
+      end
+
+      def name=(the_name)
+        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name) unless scratchpad?
+        @name = the_name
+        if !scratchpad? && ::File.exist?(path)
+          FileUtils.mv(path, new_path)
+          self.path = new_path
+        end
       end
       
       def scratchpad?
@@ -80,48 +89,18 @@ module Glimmer
           send("#{property}=", value)
         end
       end
-
-      # to use for widget data-binding
-      def content=(value)
-        value = value.gsub("\t", '  ')
-        if dirty_content != value
-          # TODO fix this command recording hack by truly recording every text change as a proper command (add process_key command, paste command, cut command, etc...)
-          Command.do(self) # record a native (OS-widget) operation
-          self.dirty_content = value
-        end
-      end
-
-      def content
-        dirty_content
-      end
-
+      
       def caret_position=(value)
-        old_top_pixel = top_pixel
-        self.selection = Point.new(value, value + selection_count.to_i)
-        self.top_pixel = old_top_pixel
-      end
-
-      def caret_position
-        selection.x
-      end
-
-      def selection_count
-        selection.y - selection.x
+        @last_caret_position = @caret_position
+        @caret_position = value
       end
 
       def selection_count=(value)
-        self.selection = Point.new(caret_position, caret_position + value.to_i)
+        #@last_selection_count = @selection_count
+        @selection_count = value
+        @last_selection_count = @selection_count
       end
 
-      def name=(the_name)
-        new_path = path.sub(/#{Regexp.escape(@name)}$/, the_name) unless scratchpad?
-        @name = the_name
-        if !scratchpad? && ::File.exist?(path)
-          FileUtils.mv(path, new_path)
-          self.path = new_path
-        end
-      end
-      
       def dirty_content
         init_content
         @dirty_content
@@ -132,12 +111,53 @@ module Glimmer
         @dirty_content = the_content
         old_caret_position = caret_position
         old_top_pixel = top_pixel
+        
         notify_observers(:content)
-        if @formatting_dirty_content_for_writing
-          self.caret_position = old_caret_position
-          self.selection_count = 0
-          self.top_pixel = old_top_pixel
+        #sync_exec {
+#           if @formatting_dirty_content_for_writing #&& !@commmand_in_progress
+#             self.caret_position = old_caret_position
+#             self.top_pixel = old_top_pixel
+#           end
+        #}
+      end
+      
+      def content
+        dirty_content
+      end
+
+      # to use for widget data-binding
+      def content=(value)
+        value = value.gsub("\t", '  ')
+        if dirty_content != value
+          Command.do(self, :change_content!, value)
         end
+      end
+      
+      def change_content!(value)
+#         content_size_diff = value.size - dirty_content.size
+#         current_caret_position = caret_position
+        self.dirty_content = value
+#         if self.selection_count == 0 && content_size_diff > 0
+#          self.caret_position = current_caret_position + content_size_diff
+#         end
+      end
+
+      def start_command
+        @commmand_in_progress = true
+      end
+      
+      def end_command
+        @commmand_in_progress = false
+      end
+      
+      def command_in_progress?
+        @commmand_in_progress
+      end
+      
+      def close
+        stop_filewatcher
+        remove_all_observers
+        initialize(path, project_dir)
       end
       
       def read_dirty_content
@@ -176,13 +196,15 @@ module Glimmer
       end
 
       def format_dirty_content_for_writing!
-        new_dirty_content = dirty_content.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
+        return if @commmand_in_progress
+        # TODO  f ix c ar e t pos it ion after formatting dirty content (diff?)
+        new_dirty_content = dirty_content.to_s.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
         new_dirty_content = "#{new_dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
-        if new_dirty_content != self.dirty_content
-          @formatting_dirty_content_for_writing = true
-          self.dirty_content = new_dirty_content
-          @formatting_dirty_content_for_writing = false
-        end
+#         if new_dirty_content != self.dirty_content
+#           @formatting_dirty_content_for_writing = true
+#           self.dirty_content = new_dirty_content
+#           @formatting_dirty_content_for_writing = false
+#         end
       end
 
       def write_raw_dirty_content

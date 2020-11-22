@@ -301,9 +301,9 @@ describe Glimmer::Gladiator::File do
         subject.move_up!
   
         expect(subject.caret_position).to eq(0)
-        expect(subject.line_number).to eq(1)
   
         subject.format_dirty_content_for_writing!
+        expect(subject.line_number).to eq(1)
         
         expect(subject.dirty_content).to eq(<<~MULTI
           two Howdy, Universe! and Howdy, Universe! and Howdy, Universe!

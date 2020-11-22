@@ -219,7 +219,7 @@ module Glimmer
       def eql?(other)
         self.path.eql?(other&.path)
       end
-      
+
       def hash
         self.path.hash
       end
