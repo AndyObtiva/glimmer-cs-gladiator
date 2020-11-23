@@ -383,150 +383,198 @@ module Glimmer
           @file_tree_editor.minimumHeight = 20;
 
         }
-        @editor_container = composite {
-          grid_layout 1, false
+        
+        composite {
+          grid_layout 1, false          
           layout_data :fill, :fill, true, true
-          composite {
-            grid_layout 3, false
+          
+          @navigation_expand_bar = expand_bar {
+            layout_data :fill, :top, true, false
+            font height: 20
+            
+            @navigation_expand_item = expand_item {
+              text 'Navigation'
 
-            # row 1
-
-            label {
-              text 'File:'
-            }
-
-            @file_path_label = styled_text(:none) {
-              layout_data(:fill, :fill, true, false) {
-                horizontal_span 2
+              grid_layout(5, false) {
+                margin_right 5
               }
-              background color(:widget_background)
-              editable false
-              caret nil
-              text bind(project_dir, 'selected_child.path')
-              on_mouse_up {
-                @file_path_label.swt_widget.selectAll
+                            
+              stat_font = {name: 'Consolas', height: OS.mac? ? 15 : 12}
+  
+              # row 1
+  
+              label {
+                layout_data(:left, :center, false, false)
+                text 'File:'
               }
-              on_focus_lost {
-                @file_path_label.swt_widget.setSelection(0, 0)
+  
+              @file_path_label = styled_text(:none) {
+                layout_data(:fill, :center, true, false) {
+                  horizontal_span 2
+                }
+                background color(:widget_background)
+                editable false
+                caret nil
+                text bind(project_dir, 'selected_child.path')
+                on_mouse_up {
+                  @file_path_label.swt_widget.selectAll
+                }
+                on_focus_lost {
+                  @file_path_label.swt_widget.setSelection(0, 0)
+                }
               }
-            }
-
-            # row 2
-
-            label {
-              text 'Line:'
-            }
-            @line_number_text = text {
-              layout_data(:fill, :fill, true, false) {
-                minimum_width 400
+                          
+              label {
+                layout_data(:left, :center, false, false)
+                text 'Caret Position:'
               }
-              text bind(project_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
-              on_key_pressed { |key_event|
-                if key_event.keyCode == swt(:cr)
-                  @current_text_editor&.text_widget&.setFocus
-                end
+              label(:right) {
+                layout_data(:fill, :center, true, false)
+                text bind(project_dir, 'selected_child.caret_position')
+                font stat_font
+                background :white
               }
-              on_verify_text { |event|
-                event.doit = !event.text.match(/^\d*$/).to_a.empty?
+              
+              # row 2
+  
+              label {
+                layout_data(:left, :center, false, false)
+                text 'Line:'
               }
-            }
-            label
-
-            # row 3
-
-            label {
-              text 'Find:'
-            }
-            @find_text = text {
-              layout_data(:fill, :center, true, false) {
-                minimum_width 400
-              }
-              text bind(project_dir, 'selected_child.find_text')
-              on_key_pressed { |key_event|
-                if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
-                  project_dir.selected_child.case_sensitive = !project_dir.selected_child.case_sensitive
-                  project_dir.selected_child&.find_next
-                end
-                if key_event.keyCode == swt(:cr)
-                  project_dir.selected_child&.find_next
-                end
-              }
-            }
-            composite {
-              row_layout
-              button(:check) {
-                selection bind(project_dir, 'selected_child.case_sensitive')
+              @line_number_text = text {
+                layout_data(:fill, :center, true, false) {
+                  minimum_width 400
+                }
+                text bind(project_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
+                font stat_font
                 on_key_pressed { |key_event|
+                  if key_event.keyCode == swt(:cr)
+                    @current_text_editor&.text_widget&.setFocus
+                  end
+                }
+                on_verify_text { |event|
+                  event.doit = !event.text.match(/^\d*$/).to_a.empty?
+                }
+              }
+              label # filler
+  
+              label {
+                layout_data(:left, :center, false, false)
+                text 'Line Position:'
+              }
+              label(:right) {
+                layout_data(:fill, :center, true, false)
+                text bind(project_dir, 'selected_child.line_position')
+                font stat_font
+                background :white
+              }
+  
+              # row 3
+  
+              label {
+                layout_data(:left, :center, false, false)
+                text 'Find:'
+              }
+              @find_text = text {
+                layout_data(:fill, :center, true, false) {
+                  minimum_width 400
+                }
+                text bind(project_dir, 'selected_child.find_text')
+                font stat_font
+                on_key_pressed { |key_event|
+                  if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
+                    project_dir.selected_child.case_sensitive = !project_dir.selected_child.case_sensitive
+                    project_dir.selected_child&.find_next
+                  end
                   if key_event.keyCode == swt(:cr)
                     project_dir.selected_child&.find_next
                   end
                 }
               }
+              composite {
+                layout_data(:left, :center, true, false)
+                row_layout
+                button(:check) {
+                  selection bind(project_dir, 'selected_child.case_sensitive')
+                  on_key_pressed { |key_event|
+                    if key_event.keyCode == swt(:cr)
+                      project_dir.selected_child&.find_next
+                    end
+                  }
+                }
+                label {
+                  text 'Case-sensitive'
+                }
+              }
+              
               label {
-                text 'Case-sensitive'
+                layout_data(:left, :center, false, false)
+                text 'Selection Count:'
               }
-            }
-
-            # row 4
-
-            label {
-              text 'Replace:'
-            }
-            @replace_text = text {
-              layout_data(:fill, :fill, true, false) {
-                minimum_width 300
+              label(:right) {
+                layout_data(:fill, :center, true, false)
+                text bind(project_dir, 'selected_child.selection_count')
+                font stat_font
+                background :white
               }
-              text bind(project_dir, 'selected_child.replace_text')
-              on_focus_gained {
-                project_dir.selected_child&.ensure_find_next
+              
+              # row 4
+  
+              label {
+                layout_data(:left, :center, false, false)
+                text 'Replace:'
               }
-              on_key_pressed { |key_event|
-                if key_event.keyCode == swt(:cr)
-                  if project_dir.selected_child
-                    Command.do(project_dir.selected_child, :replace_next!)
+              @replace_text = text {
+                layout_data(:fill, :center, true, false) {
+                  minimum_width 400
+                }
+                text bind(project_dir, 'selected_child.replace_text')
+                font stat_font
+                on_focus_gained {
+                  project_dir.selected_child&.ensure_find_next
+                }
+                on_key_pressed { |key_event|
+                  if key_event.keyCode == swt(:cr)
+                    if project_dir.selected_child
+                      Command.do(project_dir.selected_child, :replace_next!)
+                    end
                   end
-                end
+                }
+              }
+              label # filler
+              label {
+                layout_data(:left, :center, false, false)
+                text 'Top Pixel:'
+              }
+              label(:right) {
+                layout_data(:fill, :center, true, false)
+                text bind(project_dir, 'selected_child.top_pixel')
+                font stat_font
+                background :white
               }
             }
-            label
-                        
-            ##row 5
-#
-            label {
-              text 'Caret Position:'
-            }
-            label {
-              layout_data(:fill, :fill, true, false)
-              text bind(project_dir, 'selected_child.caret_position')
-            }
-            label
-#
-            ##row 6
-#
-            label {
-              text 'Selection Count:'
-            }
-            label {
-              layout_data(:fill, :fill, true, false)
-              text bind(project_dir, 'selected_child.selection_count')
-            }
-            label
-#
-            ##row 7
-#
-            label {
-              text 'Top Pixel:'
-            }
-            label {
-              layout_data(:fill, :fill, true, false)
-              text bind(project_dir, 'selected_child.top_pixel')
-            }
-            label
+            
+            on_item_collapsed {
+              @navigation_expand_item_height = @navigation_expand_item.swt_expand_item.height if @navigation_expand_item.swt_expand_item.height > 0
+              @navigation_expand_item.swt_expand_item.height = 0
+              async_exec {
+                body_root.pack_same_size
+              }
+            }              
+          
+            on_item_expanded {
+              @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
+              async_exec {
+                body_root.pack_same_size
+              }
+            }              
+          
           }
+          
           @tab_folder_sash_form = sash_form {
             layout_data(:fill, :fill, true, true) {
-              width_hint 640
-              height_hint 480
+             width_hint 640
+             height_hint 480
             }
             sash_width 10
             orientation bind(self, :split_orientation)

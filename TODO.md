@@ -3,6 +3,7 @@
 ## Up Next
 
 - Add menu items for showing/hiding caret position, selection count, top pixel
+- Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)
 
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere

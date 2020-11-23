@@ -3,7 +3,7 @@ module Glimmer
     class File
       include Glimmer
 
-      attr_accessor :line_numbers_content, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive, :caret_position, :selection_count, :last_caret_position, :last_selection_count # :selection no longer needed TODO remove comment
+      attr_accessor :line_numbers_content, :line_number, :find_text, :replace_text, :top_pixel, :display_path, :case_sensitive, :caret_position, :selection_count, :last_caret_position, :last_selection_count, :line_position
       attr_reader :name, :path, :project_dir
 
       def initialize(path='', project_dir=nil)
@@ -39,6 +39,7 @@ module Glimmer
               new_line_number = line_index_for_caret_position(caret_position) + 1
               current_line_number = line_number
               self.line_number = new_line_number unless new_caret_position == 0 || (current_line_number && current_line_number == new_line_number)
+              self.line_position = caret_position - caret_position_for_line_index(line_number - 1) + 1
             end
             observe(self, :line_number) do |new_line_number|
               line_index = line_number - 1
