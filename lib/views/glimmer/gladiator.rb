@@ -76,6 +76,7 @@ module Glimmer
         }
       end
 
+      @default_foreground = :dark_blue
       @split_orientation = swt(:horizontal)
       @config_file_path = ::File.join(project_dir.path, '.gladiator')
       @config = {}
@@ -280,8 +281,8 @@ module Glimmer
             
             @file_lookup_expand_bar = expand_bar {
               layout_data :fill, :fill, true, true
-              font height: 16, style: :bold
-              foreground :dark_blue
+              font height: 17, style: :bold
+              foreground @default_foreground
               
               on_swt_show {
                 @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
@@ -315,6 +316,7 @@ module Glimmer
                   layout_data :fill, :fill, true, true
                   #visible bind(self, 'project_dir.filter') {|f| !!f}
                   selection bind(project_dir, :filtered_path)
+                  foreground @default_foreground
                   on_mouse_up {
                     project_dir.selected_child_path = @file_lookup_list.swt_widget.getSelection.first
                   }
@@ -354,8 +356,8 @@ module Glimmer
             
             @file_explorer_expand_bar = expand_bar {
               layout_data :fill, :fill, true, true
-              font height: 16, style: :bold
-              foreground :dark_blue
+              font height: 17, style: :bold
+              foreground @default_foreground
               
               on_swt_show {
                 @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
@@ -375,6 +377,7 @@ module Glimmer
                   layout_data :fill, :fill, true, true
                   #visible bind(self, 'project_dir.filter') {|f| !f}
                   items bind(self, :project_dir), tree_properties(children: :children, text: :name)
+                  foreground @default_foreground
                   drag_source(DND::DROP_COPY) {
                     transfer [TextTransfer.getInstance].to_java(Transfer)
                     on_drag_set_data { |event|
@@ -487,8 +490,8 @@ module Glimmer
           
           @navigation_expand_bar = expand_bar {
             layout_data :fill, :top, true, false
-            font height: 16, style: :bold
-            foreground :dark_blue
+            font height: 17, style: :bold
+            foreground @default_foreground
             
             @navigation_expand_item = expand_item {
               text 'Navigation'
@@ -505,6 +508,7 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'File:'
+                foreground @default_foreground
               }
   
               @file_path_label = styled_text(:none) {
@@ -512,6 +516,7 @@ module Glimmer
                   horizontal_span 2
                 }
                 background color(:widget_background)
+                foreground @default_foreground
                 editable false
                 caret nil
                 text bind(project_dir, 'selected_child.path')
@@ -526,10 +531,12 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Caret Position:'
+                foreground @default_foreground
               }
               label(:right) {
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.caret_position')
+                foreground @default_foreground
                 font stat_font
               }
               
@@ -538,12 +545,14 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Line:'
+                foreground @default_foreground
               }
               @line_number_text = text {
                 layout_data(:fill, :center, true, false) {
                   minimum_width 400
                 }
                 text bind(project_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
+                foreground @default_foreground
                 font stat_font
                 on_key_pressed { |key_event|
                   if key_event.keyCode == swt(:cr)
@@ -559,10 +568,12 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Line Position:'
+                foreground @default_foreground
               }
               label(:right) {
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.line_position')
+                foreground @default_foreground
                 font stat_font
               }
   
@@ -571,12 +582,14 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Find:'
+                foreground @default_foreground
               }
               @find_text = text {
                 layout_data(:fill, :center, true, false) {
                   minimum_width 400
                 }
                 text bind(project_dir, 'selected_child.find_text')
+                foreground @default_foreground
                 font stat_font
                 on_key_pressed { |key_event|
                   if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
@@ -610,10 +623,12 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Selection Count:'
+                foreground @default_foreground
               }
               label(:right) {
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.selection_count')
+                foreground @default_foreground
                 font stat_font
               }
               
@@ -622,12 +637,14 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Replace:'
+                foreground @default_foreground
               }
               @replace_text = text {
                 layout_data(:fill, :center, true, false) {
                   minimum_width 400
                 }
                 text bind(project_dir, 'selected_child.replace_text')
+                foreground @default_foreground
                 font stat_font
                 on_focus_gained {
                   project_dir.selected_child&.ensure_find_next
@@ -644,10 +661,12 @@ module Glimmer
               label {
                 layout_data(:left, :center, false, false)
                 text 'Top Pixel:'
+                foreground @default_foreground
               }
               label(:right) {
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.top_pixel')
+                foreground @default_foreground
                 font stat_font
               }
             }

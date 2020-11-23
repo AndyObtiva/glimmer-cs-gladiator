@@ -31,7 +31,7 @@ module Glimmer
             
             font name: 'Consolas', height: OS.mac? ? 15 : 12
             background color(:widget_background)
-            foreground rgb(0, 0, 250)
+            foreground :dark_blue
             text bind(self, 'file.line_numbers_content')
             top_pixel bind(self, 'file.top_pixel', read_only: true)
             top_margin 5

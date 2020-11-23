@@ -3,10 +3,11 @@
 ## Up Next
 
 - Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)
-
+- Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
 - Fix issue relating to clearing white space at the end of lines (the issue regressed)
 - Fix issue where typing does not bring caret_position to screen to make visible anymore
 - Make paste an undoable command separate from change_content!
+
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
 
@@ -44,7 +45,6 @@
 
 ## Bugs
 
-- Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
 - Fix caret position after formatting dirty content (perhaps relying on diffing)
 - Fix issue with moving lines down at the end of the file making selection go out of wack
 - Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
