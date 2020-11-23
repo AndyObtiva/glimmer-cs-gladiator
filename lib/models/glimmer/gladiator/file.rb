@@ -38,7 +38,7 @@ module Glimmer
             observe(self, :caret_position) do |new_caret_position|
               new_line_number = line_index_for_caret_position(caret_position) + 1
               current_line_number = line_number
-              self.line_number = new_line_number unless new_caret_position == 0 || (current_line_number && current_line_number == new_line_number)
+              self.line_number = new_line_number unless current_line_number && current_line_number == new_line_number
               self.line_position = caret_position - caret_position_for_line_index(line_number - 1) + 1
             end
             observe(self, :line_number) do |new_line_number|
@@ -114,12 +114,10 @@ module Glimmer
         old_top_pixel = top_pixel
         
         notify_observers(:content)
-        #sync_exec {
-#           if @formatting_dirty_content_for_writing #&& !@commmand_in_progress
-#             self.caret_position = old_caret_position
-#             self.top_pixel = old_top_pixel
-#           end
-        #}
+        if @formatting_dirty_content_for_writing
+          self.caret_position = old_caret_position
+          self.top_pixel = old_top_pixel
+        end
       end
       
       def content
@@ -135,12 +133,7 @@ module Glimmer
       end
       
       def change_content!(value)
-#         content_size_diff = value.size - dirty_content.size
-#         current_caret_position = caret_position
         self.dirty_content = value
-#         if self.selection_count == 0 && content_size_diff > 0
-#          self.caret_position = current_caret_position + content_size_diff
-#         end
       end
 
       def start_command
@@ -202,11 +195,11 @@ module Glimmer
         # TODO  f ix c ar e t pos it ion after formatting dirty content (diff?)
         new_dirty_content = dirty_content.to_s.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
         new_dirty_content = "#{new_dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
-#         if new_dirty_content != self.dirty_content
-#           @formatting_dirty_content_for_writing = true
-#           self.dirty_content = new_dirty_content
-#           @formatting_dirty_content_for_writing = false
-#         end
+        if new_dirty_content != self.dirty_content
+          @formatting_dirty_content_for_writing = true
+          self.dirty_content = new_dirty_content
+          @formatting_dirty_content_for_writing = false
+        end
       end
 
       def write_raw_dirty_content
