@@ -19,8 +19,13 @@ module Glimmer
       
       body {
         composite {
+          grid_layout(2, false) 
+          # TODO troubleshoot why adding margin height 0 causes gladiator to start resizing window smaller than necessary upon launch of Gladiator
+#           {
+#             margin_height 0
+#           }
+          
           layout_data :fill, :fill, true, true
-          grid_layout 2, false
           @line_numbers_text = styled_text(:multi, :border) {
             layout_data(:right, :fill, false, true)
             

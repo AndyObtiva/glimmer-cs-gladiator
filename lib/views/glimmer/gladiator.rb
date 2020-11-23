@@ -109,7 +109,10 @@ module Glimmer
             @current_tab_folder.content {
               @current_tab_item = tab_item { |the_tab_item|
                 text selected_file.name
-                fill_layout :horizontal
+                fill_layout(:horizontal) {
+                 margin_width 0
+                 margin_height 0
+                }
                 @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file)
                 @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
                 @current_text_editor.text_proxy.content {
@@ -136,7 +139,7 @@ module Glimmer
                 }
                 on_widget_disposed {
                   the_tab_item.swt_tab_item.get_data('file').close
-                }
+                }                
               }
               @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
               @current_tab_item.swt_tab_item.setData('file', selected_file)
@@ -277,7 +280,8 @@ module Glimmer
             
             @file_lookup_expand_bar = expand_bar {
               layout_data :fill, :fill, true, true
-              font height: 20
+              font height: 16, style: :bold
+              foreground :dark_blue
               
               on_swt_show {
                 @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
@@ -350,7 +354,8 @@ module Glimmer
             
             @file_explorer_expand_bar = expand_bar {
               layout_data :fill, :fill, true, true
-              font height: 20
+              font height: 16, style: :bold
+              foreground :dark_blue
               
               on_swt_show {
                 @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
@@ -482,10 +487,12 @@ module Glimmer
           
           @navigation_expand_bar = expand_bar {
             layout_data :fill, :top, true, false
-            font height: 20
+            font height: 16, style: :bold
+            foreground :dark_blue
             
             @navigation_expand_item = expand_item {
               text 'Navigation'
+              height 115
 
               grid_layout(5, false) {
                 margin_right 5
@@ -583,7 +590,10 @@ module Glimmer
               }
               composite {
                 layout_data(:left, :center, true, false)
-                row_layout
+                row_layout {
+                  margin_width 0
+                  margin_height 0
+                }
                 button(:check) {
                   selection bind(project_dir, 'selected_child.case_sensitive')
                   on_key_pressed { |key_event|
@@ -661,8 +671,10 @@ module Glimmer
           
           @tab_folder_sash_form = sash_form {
             layout_data(:fill, :fill, true, true) {
-             width_hint 640
-             height_hint 480
+              width_hint 768
+              height_hint 576              
+              minimum_width 768
+              minimum_height 576              
             }
             sash_width 10
             orientation bind(self, :split_orientation)
