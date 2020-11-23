@@ -1,7 +1,8 @@
 # Change Log
 
-## 0.5.5
+## 0.6.0
 
+- Collapsable File Lookup/File Explorer/Navigation Expand Bars
 - Improve Undo/Redo support by making it work for simple text editing
 - Clear Undo/Redo history for a file upon closing
 - Fix issue with the text editor caret dancing uncontrollably

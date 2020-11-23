@@ -166,10 +166,12 @@ module Glimmer
     #
     body {
       shell {
+        grid_layout(2, false)
+        
         text "Gladiator - #{::File.expand_path(project_dir.path)}"
         minimum_size 520, 250
         size 1440, 900
-        grid_layout(2, false)
+        
         on_swt_show {
           swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
           swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
@@ -256,124 +258,211 @@ module Glimmer
         }
 
         composite {
-          grid_layout 1, false
+          grid_layout(1, false) {
+            margin_width 0
+            margin_height 0
+          }
+          
           layout_data(:fill, :fill, false, true) {
             width_hint 300
           }
-          @filter_text = text {
-            layout_data :fill, :center, true, false
-            text bind(project_dir, 'filter')
-            on_key_pressed { |key_event|
-              if key_event.keyCode == swt(:tab) ||
-                  key_event.keyCode == swt(:cr) ||
-                  key_event.keyCode == swt(:arrow_up) ||
-                  key_event.keyCode == swt(:arrow_down)
-                @list.swt_widget.select(0) if @list.swt_widget.getSelectionIndex() == -1
-                @list.swt_widget.setFocus
-              end
-            }
-          }
-          sash_form(:vertical) {
+          @side_bar_sash_form = sash_form(:vertical) {
             layout_data(:fill, :fill, true, true)
             sash_width 4
-            @list = list(:border, :h_scroll, :v_scroll) {
-              #visible bind(self, 'project_dir.filter') {|f| !!f}
-              selection bind(project_dir, :filtered_path)
-              on_mouse_up {
-                project_dir.selected_child_path = @list.swt_widget.getSelection.first
-              }
-              on_key_pressed { |key_event|
-                if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
-                  project_dir.selected_child_path = @list.swt_widget.getSelection.first
-                  @current_text_editor&.text_widget&.setFocus
-                end
-              }
-              drag_source(DND::DROP_COPY) {
-                transfer [TextTransfer.getInstance].to_java(Transfer)
-                on_drag_set_data { |event|
-                  Gladiator.drag = true
-                  list = event.widget.getControl
-                  event.data = list.getSelection.first
-                }
-              }
+            
+            resize_expand_items = lambda { |event=nil|
+              @file_lookup_expand_item&.swt_expand_item&.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
+              @file_explorer_expand_item&.swt_expand_item&.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
             }
-            @file_tree = tree(:virtual, :border, :h_scroll, :v_scroll) {
-              #visible bind(self, 'project_dir.filter') {|f| !f}
-              items bind(self, :project_dir), tree_properties(children: :children, text: :name)
-              drag_source(DND::DROP_COPY) {
-                transfer [TextTransfer.getInstance].to_java(Transfer)
-                on_drag_set_data { |event|
-                  Gladiator.drag = true
-                  tree = event.widget.getControl
-                  tree_item = tree.getSelection.first
-                  event.data = tree_item.getData.path
+            
+            @file_lookup_expand_bar = expand_bar {
+              layout_data :fill, :fill, true, true
+              font height: 20
+              
+              on_swt_show {
+                @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
+              }      
+              
+              on_swt_Resize(&resize_expand_items)                                                                  
+              
+              @file_lookup_expand_item = expand_item {
+                grid_layout {
+                  margin_width 0
+                  margin_height 0
+                }      
+                text 'File Lookup'
+                height display.bounds.height
+                
+                @filter_text = text {
+                  layout_data :fill, :center, true, false
+                  text bind(project_dir, 'filter')
+                  on_key_pressed { |key_event|
+                    if key_event.keyCode == swt(:tab) ||
+                        key_event.keyCode == swt(:cr) ||
+                        key_event.keyCode == swt(:arrow_up) ||
+                        key_event.keyCode == swt(:arrow_down)
+                      @file_lookup_list.swt_widget.select(0) if @file_lookup_list.swt_widget.getSelectionIndex() == -1
+                      @file_lookup_list.swt_widget.setFocus
+                    end
+                  }
+                }
+              
+                @file_lookup_list = list(:border, :h_scroll, :v_scroll) {
+                  layout_data :fill, :fill, true, true
+                  #visible bind(self, 'project_dir.filter') {|f| !!f}
+                  selection bind(project_dir, :filtered_path)
+                  on_mouse_up {
+                    project_dir.selected_child_path = @file_lookup_list.swt_widget.getSelection.first
+                  }
+                  on_key_pressed { |key_event|
+                    if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
+                      project_dir.selected_child_path = @file_lookup_list.swt_widget.getSelection.first
+                      @current_text_editor&.text_widget&.setFocus
+                    end
+                  }
+                  drag_source(DND::DROP_COPY) {
+                    transfer [TextTransfer.getInstance].to_java(Transfer)
+                    on_drag_set_data { |event|
+                      Gladiator.drag = true
+                      list = event.widget.getControl
+                      event.data = list.getSelection.first
+                    }
+                  }
                 }
               }
-              menu {
-                @open_menu_item = menu_item {
-                  text 'Open'
-                  on_widget_selected {
-                    project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection.first)
-                  }
-                }
-                menu_item(:separator)
-                menu_item {
-                  text 'Delete'
-                  on_widget_selected {
-                    tree_item = @file_tree.swt_widget.getSelection.first
-                    delete_tree_item(tree_item)
-                  }
-                }
-                menu_item {
-                  text 'Refresh'
-                  on_widget_selected {
-                    project_dir.refresh
-                  }
-                }
-                menu_item {
-                  text 'Rename'
-                  on_widget_selected {
-                    rename_selected_tree_item
-                  }
-                }
-                menu_item {
-                  text 'New Directory'
-                  on_widget_selected {
-                    add_new_directory_to_selected_tree_item
-                  }
-                }
-                menu_item {
-                  text 'New File'
-                  on_widget_selected {
-                    add_new_file_to_selected_tree_item
-                  }
-                }
-              }
-              on_swt_menudetect { |event|
-                path = extract_tree_item_path(@file_tree.swt_widget.getSelection.first)
-                @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
-              }
-              on_mouse_up {
-                if Gladiator.drag_and_drop
-                  Gladiator.drag_and_drop = false
-                else
-                  project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection&.first)
-                  @current_text_editor&.text_widget&.setFocus
+              
+              on_item_collapsed { |event|
+                if @file_explorer_expand_item.swt_expand_item.get_expanded
+                  @file_lookup_expand_item_height = @file_lookup_expand_item.swt_expand_item.height
+                  @file_lookup_expand_item.swt_expand_item.height = 0
+                  @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
+                  @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
+                  @side_bar_sash_form.weights = [@file_lookup_expand_item.swt_expand_item.header_height, @file_lookup_expand_bar_height + @file_explorer_expand_bar_height - @file_lookup_expand_item.swt_expand_item.header_height]
                 end
-              }
-              on_key_pressed { |key_event|
-                if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
-                  project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection&.first)
-                  @current_text_editor&.text_widget&.setFocus
-                end
-              }
-              on_paint_control {
-                root_item = @file_tree.swt_widget.getItems.first
-                if root_item && !root_item.getExpanded
-                  root_item.setExpanded(true)
-                end
-              }
+              }              
+            
+              on_item_expanded {
+                @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_item_height if @file_lookup_expand_item_height
+                @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]                
+              }              
+              
             }
+            
+            @file_explorer_expand_bar = expand_bar {
+              layout_data :fill, :fill, true, true
+              font height: 20
+              
+              on_swt_show {
+                @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
+              }          
+              
+              on_swt_Resize(&resize_expand_items)                              
+                          
+              @file_explorer_expand_item = expand_item {
+                grid_layout {
+                  margin_width 0
+                  margin_height 0
+                }      
+                text 'File Explorer'
+                height display.bounds.height
+                
+                @file_tree = tree(:virtual, :border, :h_scroll, :v_scroll) {
+                  layout_data :fill, :fill, true, true
+                  #visible bind(self, 'project_dir.filter') {|f| !f}
+                  items bind(self, :project_dir), tree_properties(children: :children, text: :name)
+                  drag_source(DND::DROP_COPY) {
+                    transfer [TextTransfer.getInstance].to_java(Transfer)
+                    on_drag_set_data { |event|
+                      Gladiator.drag = true
+                      tree = event.widget.getControl
+                      tree_item = tree.getSelection.first
+                      event.data = tree_item.getData.path
+                    }
+                  }
+                  menu {
+                    @open_menu_item = menu_item {
+                      text 'Open'
+                      on_widget_selected {
+                        project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection.first)
+                      }
+                    }
+                    menu_item(:separator)
+                    menu_item {
+                      text 'Delete'
+                      on_widget_selected {
+                        tree_item = @file_tree.swt_widget.getSelection.first
+                        delete_tree_item(tree_item)
+                      }
+                    }
+                    menu_item {
+                      text 'Refresh'
+                      on_widget_selected {
+                        project_dir.refresh
+                      }
+                    }
+                    menu_item {
+                      text 'Rename'
+                      on_widget_selected {
+                        rename_selected_tree_item
+                      }
+                    }
+                    menu_item {
+                      text 'New Directory'
+                      on_widget_selected {
+                        add_new_directory_to_selected_tree_item
+                      }
+                    }
+                    menu_item {
+                      text 'New File'
+                      on_widget_selected {
+                        add_new_file_to_selected_tree_item
+                      }
+                    }
+                  }
+                  on_swt_menudetect { |event|
+                    path = extract_tree_item_path(@file_tree.swt_widget.getSelection.first)
+                    @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
+                  }
+                  on_mouse_up {
+                    if Gladiator.drag_and_drop
+                      Gladiator.drag_and_drop = false
+                    else
+                      project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection&.first)
+                      @current_text_editor&.text_widget&.setFocus
+                    end
+                  }
+                  on_key_pressed { |key_event|
+                    if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
+                      project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection&.first)
+                      @current_text_editor&.text_widget&.setFocus
+                    end
+                  }
+                  on_paint_control {
+                    root_item = @file_tree.swt_widget.getItems.first
+                    if root_item && !root_item.getExpanded
+                      root_item.setExpanded(true)
+                    end
+                  }
+                }
+              }
+              
+              on_item_collapsed { |event|
+                if @file_lookup_expand_item.swt_expand_item.get_expanded
+                  @file_explorer_expand_item_height = @file_explorer_expand_item.swt_expand_item.height
+                  @file_explorer_expand_item.swt_expand_item.height = 0
+                  @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
+                  @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
+                  @side_bar_sash_form.weights = [@file_explorer_expand_bar_height + @file_explorer_expand_bar_height - @file_explorer_expand_item.swt_expand_item.header_height, @file_explorer_expand_item.swt_expand_item.header_height]
+                end
+              }              
+            
+              on_item_expanded {
+                @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height
+                @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]                
+              }                      
+              
+            }            
+
           }
 
           # TODO see if you could replace some of this with Glimmer DSL/API syntax
@@ -385,7 +474,10 @@ module Glimmer
         }
         
         composite {
-          grid_layout 1, false          
+          grid_layout(1, false) {
+            margin_width 0
+            margin_height 0
+          }
           layout_data :fill, :fill, true, true
           
           @navigation_expand_bar = expand_bar {
@@ -432,7 +524,6 @@ module Glimmer
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.caret_position')
                 font stat_font
-                background :white
               }
               
               # row 2
@@ -466,7 +557,6 @@ module Glimmer
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.line_position')
                 font stat_font
-                background :white
               }
   
               # row 3
@@ -515,7 +605,6 @@ module Glimmer
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.selection_count')
                 font stat_font
-                background :white
               }
               
               # row 4
@@ -550,7 +639,6 @@ module Glimmer
                 layout_data(:fill, :center, true, false)
                 text bind(project_dir, 'selected_child.top_pixel')
                 font stat_font
-                background :white
               }
             }
             

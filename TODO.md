@@ -2,12 +2,13 @@
 
 ## Up Next
 
-- Add menu items for showing/hiding caret position, selection count, top pixel
 - Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)
 
+- Fix issue relating to clearing white space at the end of lines (the issue regressed)
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere
 
+- Display File:  as Scratchpad in Navigation for Scratchpad
 - Edit Menu with all possible keyboard shortcut actions into the menu and denote their shorcuts
 - Add Menu for Rake Tasks
 - Try optimizing by avoiding line style coloring if file content hasn't changed
@@ -30,7 +31,6 @@
 - Do not strip the final line out if possible
 - Support Preferences dialog for setting up ignored paths
 - Use a Sash between the text editor area and tree/list area
-- Make the File/Line/Find/Replace area collapsable
 - Consider replacing tab_folder with c_tab_folder to have tabs show up on the left if there is only one tab (not center like it currently is)
 - A new line on a comment produces a new comment
 - Have the closing curly brace or "end" keyword light up the opening curly brace or "do" keyword when landing on it
