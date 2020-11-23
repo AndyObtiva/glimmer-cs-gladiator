@@ -2,7 +2,6 @@
 
 ## Up Next
 
-- Clear undo/redo history for a file upon closing
 - Add menu items for showing/hiding caret position, selection count, top pixel
 
 - Package gladidator as a DMG/MSI
@@ -42,6 +41,7 @@
 
 ## Bugs
 
+- Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
 - Fix caret position after formatting dirty content (perhaps relying on diffing)
 - Fix issue with moving lines down at the end of the file making selection go out of wack
 - Fix transient issue of find_next not jumping properly after replacing a term near the end of the line

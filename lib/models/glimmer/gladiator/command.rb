@@ -27,8 +27,6 @@ module Glimmer
           else
             command_history_for(file) << command
           end
-rescue => e
-puts e.full_message
         end
         
         def undo(file)

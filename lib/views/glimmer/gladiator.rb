@@ -134,6 +134,9 @@ module Glimmer
                     @current_text_editor&.text_widget&.setFocus
                   }
                 }
+                on_widget_disposed {
+                  the_tab_item.swt_tab_item.get_data('file').close
+                }
               }
               @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
               @current_tab_item.swt_tab_item.setData('file', selected_file)
@@ -658,11 +661,9 @@ module Glimmer
     def close_tab_folder
       if @tab_folder2 && !selected_tab_item
         if @current_tab_folder == @tab_folder2
-          @tab_folder2.swt_widget.children.map(&:get_data).each(&:close)
           @tab_folder2.swt_widget.dispose
           @current_tab_folder = @tab_folder1
         else
-          @tab_folder1.swt_widget.children.map(&:get_data).each(&:close)
           @tab_folder1.swt_widget.dispose
           @current_tab_folder = @tab_folder1 = @tab_folder2
         end
@@ -712,7 +713,6 @@ module Glimmer
         file.remove_all_observers
       else
         file_paths = [file.path]
-        file.close
       end
       file_paths.each do |file_path|
         found_tab_item = find_tab_item(file_path)

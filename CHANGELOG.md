@@ -3,6 +3,7 @@
 ## 0.5.5
 
 - Improve Undo/Redo support by making it work for simple text editing
+- Clear Undo/Redo history for a file upon closing
 - Fix issue with the text editor caret dancing uncontrollably
 - Fix issue with quickly moving multiple lines up or down sometimes splintering and losing multi-line selection
 

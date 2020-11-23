@@ -158,6 +158,7 @@ module Glimmer
         stop_filewatcher
         remove_all_observers
         initialize(path, project_dir)
+        Command.clear(self)
       end
       
       def read_dirty_content
