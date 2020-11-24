@@ -140,7 +140,7 @@ module Glimmer
                 }
                 on_widget_disposed {
                   the_tab_item.swt_tab_item.get_data('file').close
-                }                
+                }
               }
               @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
               @current_tab_item.swt_tab_item.setData('file', selected_file)
@@ -286,15 +286,15 @@ module Glimmer
               
               on_swt_show {
                 @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
-              }      
+              }
               
-              on_swt_Resize(&resize_expand_items)                                                                  
+              on_swt_Resize(&resize_expand_items)
               
               @file_lookup_expand_item = expand_item {
                 grid_layout {
                   margin_width 0
                   margin_height 0
-                }      
+                }
                 text 'File Lookup'
                 height display.bounds.height
                 
@@ -345,12 +345,12 @@ module Glimmer
                   @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
                   @side_bar_sash_form.weights = [@file_lookup_expand_item.swt_expand_item.header_height, @file_lookup_expand_bar_height + @file_explorer_expand_bar_height - @file_lookup_expand_item.swt_expand_item.header_height]
                 end
-              }              
+              }
             
               on_item_expanded {
                 @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_item_height if @file_lookup_expand_item_height
-                @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]                
-              }              
+                @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
+              }
               
             }
             
@@ -361,15 +361,15 @@ module Glimmer
               
               on_swt_show {
                 @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
-              }          
+              }
               
-              on_swt_Resize(&resize_expand_items)                              
+              on_swt_Resize(&resize_expand_items)
                           
               @file_explorer_expand_item = expand_item {
                 grid_layout {
                   margin_width 0
                   margin_height 0
-                }      
+                }
                 text 'File Explorer'
                 height display.bounds.height
                 
@@ -462,14 +462,14 @@ module Glimmer
                   @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
                   @side_bar_sash_form.weights = [@file_explorer_expand_bar_height + @file_explorer_expand_bar_height - @file_explorer_expand_item.swt_expand_item.header_height, @file_explorer_expand_item.swt_expand_item.header_height]
                 end
-              }              
+              }
             
               on_item_expanded {
                 @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height
-                @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]                
-              }                      
+                @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
+              }
               
-            }            
+            }
 
           }
 
@@ -617,6 +617,7 @@ module Glimmer
                 }
                 label {
                   text 'Case-sensitive'
+                  foreground @default_foreground
                 }
               }
               
@@ -677,23 +678,23 @@ module Glimmer
               async_exec {
                 body_root.pack_same_size
               }
-            }              
+            }
           
             on_item_expanded {
               @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
               async_exec {
                 body_root.pack_same_size
               }
-            }              
+            }
           
           }
           
           @tab_folder_sash_form = sash_form {
             layout_data(:fill, :fill, true, true) {
               width_hint 768
-              height_hint 576              
+              height_hint 576
               minimum_width 768
-              minimum_height 576              
+              minimum_height 576
             }
             sash_width 10
             orientation bind(self, :split_orientation)

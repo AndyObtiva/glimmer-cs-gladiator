@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.1
+
+- Fixed issue relating to not recording text selection correctly when done by mouse
+
 ## 0.6.0
 
 - Collapsable File Lookup/File Explorer/Navigation Expand Bars
