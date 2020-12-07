@@ -36,10 +36,7 @@ module Glimmer
             the_dirty_content.split("\n") # test that it is not a binary file (crashes to rescue block otherwise)
             self.dirty_content = the_dirty_content
             observe(self, :caret_position) do |new_caret_position|
-              new_line_number = line_index_for_caret_position(caret_position) + 1
-              current_line_number = line_number
-              self.line_number = new_line_number unless current_line_number && current_line_number == new_line_number
-              self.line_position = caret_position - caret_position_for_line_index(line_number - 1) + 1
+              update_line_number_from_caret_position(new_caret_position)
             end
             observe(self, :line_number) do |new_line_number|
               line_index = line_number - 1
@@ -52,6 +49,16 @@ module Glimmer
           rescue # in case of a binary file
             stop_filewatcher
           end
+        end
+      end
+      
+      def update_line_number_from_caret_position(new_caret_position)
+        new_line_number = line_index_for_caret_position(caret_position) + 1
+        current_line_number = line_number
+        unless (current_line_number && current_line_number == new_line_number)
+          self.line_number = new_line_number
+          # TODO check if the following line is needed
+          self.line_position = caret_position - caret_position_for_line_index(line_number - 1) + 1
         end
       end
       
@@ -134,6 +141,7 @@ module Glimmer
       
       def change_content!(value)
         self.dirty_content = value
+        update_line_number_from_caret_position(caret_position)
       end
 
       def start_command
@@ -234,7 +242,7 @@ module Glimmer
         the_lines = lines
         the_lines[line_number...line_number] = [current_line_indentation]
         self.dirty_content = the_lines.join("\n")
-        self.caret_position = caret_position_for_line_index(line_number) + current_line_indentation.size
+        self.caret_position = caret_position_for_line_index(line_number)
         self.selection_count = 0
       end
       
@@ -527,7 +535,7 @@ module Glimmer
       def line_index_for_caret_position(caret_position)
         dirty_content[0...caret_position.to_i].count("\n")
       end
-
+      
       def caret_position_for_line_index(line_index)
         cp = lines[0...line_index].join("\n").size
         cp += 1 if line_index > 0

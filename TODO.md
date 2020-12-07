@@ -2,7 +2,6 @@
 
 ## Up Next
 
-- Fix this issue: Type till the end of the line. Hit CMD+SHIFT+ENTER to jump to the previous line while inserting a line. It jumps to the next line instead as if I did CMD+ENTER
 - Fix issue with find_next highlighting not scrolling found text into view
 - Have Find and Line number shortcuts show Navigation section if hidden
 - Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)

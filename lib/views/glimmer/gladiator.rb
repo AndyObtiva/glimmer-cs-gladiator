@@ -814,7 +814,7 @@ module Glimmer
           Thread.new {
             all_files = open_file_paths1.to_a + open_file_paths2.to_a
             all_files.each do |file|
-              project_dir.find_child_file(file).dirty_content
+              project_dir.find_child_file(file)&.dirty_content
             end
           }
         }
