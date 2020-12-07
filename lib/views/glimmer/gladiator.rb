@@ -89,7 +89,7 @@ module Glimmer
     #
     after_body {
       observe(project_dir, 'children') do
-        select_tree_item unless @rename_in_progress
+        select_tree_item unless @rename_in_progress || Gladiator.startup
       end
       observe(project_dir, 'selected_child') do |selected_file|
         if selected_file
@@ -100,7 +100,7 @@ module Glimmer
               @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
             }
           end
-          select_tree_item unless @rename_in_progress
+          select_tree_item unless @rename_in_progress || Gladiator.startup
           found_tab_item = selected_tab_item
           if found_tab_item
             @current_tab_folder.swt_widget.setSelection(found_tab_item)
@@ -788,7 +788,7 @@ module Glimmer
           open_file_paths2.to_a.each do |file_path|
             async_exec {
               Gladiator.drag = true
-              Gladiator.startup = file_path != open_file_paths2.to_a[-1]          
+              Gladiator.startup = file_path != open_file_paths2.to_a[-1]
               project_dir.selected_child_path = file_path
             }
           end
@@ -814,7 +814,7 @@ module Glimmer
           Thread.new {
             all_files = open_file_paths1.to_a + open_file_paths2.to_a
             all_files.each do |file|
-              project_dir.find_child_file(file).init_content
+              project_dir.find_child_file(file).dirty_content
             end
           }
         }
@@ -1034,11 +1034,18 @@ module Glimmer
     
     def handle_display_shortcut(key_event)
       if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
-        if current_text_editor&.text_widget&.getSelectionText && current_text_editor&.text_widget&.getSelectionText&.size.to_i > 0
-          find_text.swt_widget.setText current_text_editor.text_widget.getSelectionText
-        end
-        find_text.swt_widget.selectAll
-        find_text.swt_widget.setFocus
+        @navigation_expand_item.swt_expand_item.set_expanded true
+        @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
+        async_exec {
+          body_root.pack_same_size
+        }
+        async_exec {
+          if current_text_editor&.text_widget&.getSelectionText && current_text_editor&.text_widget&.getSelectionText&.size.to_i > 0
+            find_text.swt_widget.setText current_text_editor.text_widget.getSelectionText
+          end
+          find_text.swt_widget.selectAll
+          find_text.swt_widget.setFocus
+        }
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
         Clipboard.copy(project_dir.selected_child.path)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
@@ -1134,12 +1141,34 @@ module Glimmer
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'g'
         project_dir.selected_child.find_next
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == 'l'
-        line_number_text.swt_widget.selectAll
-        line_number_text.swt_widget.setFocus
+        unless @navigation_expand_item.swt_expand_item.get_expanded
+          @navigation_expand_item.swt_expand_item.set_expanded true
+          @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
+          async_exec {
+            body_root.pack_same_size
+          }
+          async_exec {
+            line_number_text.swt_widget.selectAll
+            line_number_text.swt_widget.setFocus
+          }
+        else
+          line_number_text.swt_widget.selectAll
+          line_number_text.swt_widget.setFocus
+        end
       elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'r'
+        unless @file_lookup_expand_item.swt_expand_item.get_expanded
+          @file_lookup_expand_item.swt_expand_item.set_expanded true
+          @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_item_height if @file_lookup_expand_item_height
+          @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
+        end
         filter_text.swt_widget.selectAll
         filter_text.swt_widget.setFocus
       elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 't'
+        unless @file_explorer_expand_item.swt_expand_item.get_expanded
+          @file_explorer_expand_item.swt_expand_item.set_expanded true
+          @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height
+          @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
+        end
         select_tree_item unless rename_in_progress
         file_tree.swt_widget.setFocus
       elsif key_event.keyCode == swt(:esc)

@@ -3,6 +3,9 @@
 ## 0.6.2
 
 - Speed up startup time by not truly opening all files beyond showing their tab (till navigated to)
+- Made CMD+F and CMD+L expand navigation section if collapsed
+- Made CMD+R expand file lookup section if collapsed
+- Made CMD+T expand file explorer section if collapsed
 
 ## 0.6.1
 
