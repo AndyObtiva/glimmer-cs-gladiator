@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.6.2
+
+- Speed up startup time by not truly opening all files beyond showing their tab (till navigated to)
+
 ## 0.6.1
 
 - Fixed issue relating to not recording text selection correctly when done by mouse

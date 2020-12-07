@@ -2,6 +2,9 @@
 
 ## Up Next
 
+- Fix this issue: Type till the end of the line. Hit CMD+SHIFT+ENTER to jump to the previous line while inserting a line. It jumps to the next line instead as if I did CMD+ENTER
+- Fix issue with find_next highlighting not scrolling found text into view
+- Have Find and Line number shortcuts show Navigation section if hidden
 - Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)
 - Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
 - Fix issue relating to clearing white space at the end of lines (the issue regressed)
@@ -46,6 +49,7 @@
 ## Bugs
 
 - Fix caret position after formatting dirty content (perhaps relying on diffing)
+- troubleshoot why adding margin to body root composite in Texteditor with margin_height 0 causes gladiator to start resizing window smaller than necessary upon launch of Gladiator
 - Fix issue with moving lines down at the end of the file making selection go out of wack
 - Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
 - Fix issue with slowdown upon inserting a new file/directory into the tree
@@ -158,3 +162,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Provide a maximize current file menu/shortcut that minimizes other split editor
 - Provide an ultra-maximize current file menu/shortcut that minimizes all sash areas (list/tree/find)
 - Merge undo history commands into a single command for text changes that occur within 50ms of each other
+- Consider sorting tabs alphabetically or providing a dropdown/menu to sort them or autosort them

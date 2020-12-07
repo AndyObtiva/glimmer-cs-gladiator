@@ -22,6 +22,7 @@ module Glimmer
     class << self
       attr_accessor :drag_and_drop
       attr_accessor :drag
+      attr_accessor :startup
     end
     
     ## Add options like the following to configure CustomShell by outside consumers
@@ -104,7 +105,7 @@ module Glimmer
           if found_tab_item
             @current_tab_folder.swt_widget.setSelection(found_tab_item)
             @current_tab_item = found_tab_item.getData('proxy')
-            @current_text_editor = found_tab_item.getData('text_editor')
+            @current_text_editor = found_tab_item.getData('text_editor') unless found_tab_item.getData('text_editor').nil?
             @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
           elsif selected_file
             @current_tab_folder.content {
@@ -114,19 +115,25 @@ module Glimmer
                  margin_width 0
                  margin_height 0
                 }
-                @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file)
-                @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                @current_text_editor.text_proxy.content {
-                  on_focus_gained {
-                    tab_folder = the_text_editor.swt_widget.getParent.getParent
-                    @current_tab_folder = tab_folder.getData('proxy')
-                    @current_tab_item = the_tab_item
-                    @current_text_editor = the_text_editor
-                    @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                    @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-                    project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
+                tab_folder = nil
+                the_text_editor = nil
+                the_tab_item.content {
+                  @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file)
+                  @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                  the_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
+                  @current_text_editor.text_proxy.content {
+                    on_focus_gained {
+                      tab_folder = the_text_editor.swt_widget.getParent.getParent
+                      @current_tab_folder = tab_folder.getData('proxy')
+                      @current_tab_item = the_tab_item
+                      @current_text_editor = the_text_editor
+                      @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                      @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                      project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
+                    }
                   }
                 }
+                
                 on_swt_show {
                   @current_tab_item = the_tab_item
                   @current_text_editor = the_text_editor
@@ -144,7 +151,6 @@ module Glimmer
               }
               @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
               @current_tab_item.swt_tab_item.setData('file', selected_file)
-              @current_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
               @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
             }
             @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
@@ -763,35 +769,53 @@ module Glimmer
         open_file_paths1.to_a.each do |file_path|
           async_exec {
             Gladiator.drag = false
+            Gladiator.startup = file_path != open_file_paths1.to_a[-1]
             project_dir.selected_child_path = file_path
           }
         end
         # TODO replace the next line with one that selects the visible tab
         async_exec {
-          Gladiator.drag = false
-          project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths1.to_a.include?(@config[:selected_child_path])
-          project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
-          project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+          # TODO check why this is not working
+          if open_file_paths1.to_a.include?(@config[:selected_child_path])
+            Gladiator.drag = false
+            Gladiator.startup = false
+            project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
+            project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
+            project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+          end
         }
         async_exec {
           open_file_paths2.to_a.each do |file_path|
             async_exec {
               Gladiator.drag = true
+              Gladiator.startup = file_path != open_file_paths2.to_a[-1]          
               project_dir.selected_child_path = file_path
             }
           end
           # TODO replace the next line with one that selects the visible tab
           async_exec {
-            Gladiator.drag = true
-            project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path] && open_file_paths2.to_a.include?(@config[:selected_child_path])
-            project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
-            project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+            # TODO check why this is not working
+            if open_file_paths2.to_a.include?(@config[:selected_child_path])
+              Gladiator.drag = true
+              Gladiator.startup = false
+              project_dir.selected_child_path = @config[:selected_child_path] if @config[:selected_child_path]
+              project_dir.selected_child&.caret_position  = project_dir.selected_child&.caret_position_for_caret_position_start_of_line(@config[:caret_position].to_i) if @config[:caret_position]
+              project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
+            end
           }
           async_exec {
             Gladiator.drag = false
             @progress_bar_shell.close
             @progress_bar_shell = nil
             @loaded_config = true
+          }
+        }
+        async_exec {
+          Thread.new {
+            all_files = open_file_paths1.to_a + open_file_paths2.to_a
+            all_files.each do |file|
+              project_dir.find_child_file(file).init_content
+            end
           }
         }
       else
