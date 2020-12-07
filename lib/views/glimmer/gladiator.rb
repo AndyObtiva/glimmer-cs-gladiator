@@ -194,7 +194,7 @@ module Glimmer
               tab_item.getData('proxy')&.dispose
             end
             close_tab_folder
-          end          
+          end
           current_tab_folder.swt_widget.getItems.each do |tab_item|
             tab_item.getData('proxy')&.dispose
           end

@@ -8,6 +8,7 @@
 - Made CMD+T expand file explorer section if collapsed
 - Fix this issue: Type till the end of the line. Hit CMD+SHIFT+ENTER to jump to the previous line while inserting a line. It jumps to the next line instead as if I did CMD+ENTER
 - Fix issue with closing a project shell with an x mouse click requiring multiple presses for every tab open
+- Fix issue with inserting new line via CMD+ENTER not maintaining indentation
 
 ## 0.6.1
 

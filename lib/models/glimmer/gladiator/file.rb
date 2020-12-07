@@ -141,9 +141,7 @@ module Glimmer
       
       def change_content!(value)
         self.dirty_content = value
-        current_caret_position = caret_position
         update_line_number_from_caret_position(caret_position)
-        self.caret_position = current_caret_position
       end
 
       def start_command
@@ -244,7 +242,7 @@ module Glimmer
         the_lines = lines
         the_lines[line_number...line_number] = [current_line_indentation]
         self.dirty_content = the_lines.join("\n")
-        self.caret_position = caret_position_for_line_index(line_number)
+        self.caret_position = caret_position_for_line_index(line_number) + current_line_indentation.size
         self.selection_count = 0
       end
       
