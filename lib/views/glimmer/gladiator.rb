@@ -187,8 +187,18 @@ module Glimmer
           swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
           @loaded_config = true
         }
-        on_swt_close {
+        on_shell_closed {
           project_dir.selected_child&.write_dirty_content
+          if @tab_folder2
+            current_tab_folder.swt_widget.getItems.each do |tab_item|
+              tab_item.getData('proxy')&.dispose
+            end
+            close_tab_folder
+          end          
+          current_tab_folder.swt_widget.getItems.each do |tab_item|
+            tab_item.getData('proxy')&.dispose
+          end
+          body_root.close unless current_tab_folder.swt_widget.getItems.empty?
         }
         on_widget_disposed {
           project_dir.selected_child&.write_dirty_content
@@ -805,7 +815,7 @@ module Glimmer
           }
           async_exec {
             Gladiator.drag = false
-            @progress_bar_shell.close
+            @progress_bar_shell&.close
             @progress_bar_shell = nil
             @loaded_config = true
           }
@@ -1006,6 +1016,7 @@ module Glimmer
     
     def open_project
       selected_directory = directory_dialog.open
+      return if selected_directory.nil?
       @progress_bar_shell = shell(body_root, :title) {
         text 'Gladiator'
         fill_layout(:vertical) {

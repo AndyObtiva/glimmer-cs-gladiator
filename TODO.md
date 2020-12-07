@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Fix issue with creating a new directory in a different project from the main one open
 - Fix issue with find_next highlighting not scrolling found text into view
 - Have Find and Line number shortcuts show Navigation section if hidden
 - Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)
@@ -31,7 +32,6 @@
 - Support opening a single file
 - Fix issue with creating empty dir followed by empty file inside it does not work
 - Support emojis in text editor
-- Pack when you close a text editor split pane
 - Strip line strings on save
 - Do not strip the final line out if possible
 - Support Preferences dialog for setting up ignored paths
@@ -58,59 +58,6 @@
 - Fix issue with Find/Replace showing word again inside replacement if it stayed but was prefixed (have it skip it instead)
 - Fix issue with Replace continuing to replace if Enter was pressed after all occurrences were replaced
 - Eliminate flicker upon indent/outdent of multiple lines
-- Fix this issue (happens after closing all tabs and then attempting a file lookup find operation):
-The signal TERM is in use by the JVM and will not work correctly on this platform
-Unhandled Java exception: org.eclipse.swt.SWTException: Failed to execute runnable (org.jruby.exceptions.NoMethodError: (NoMethodError) undefined method `text_widget' for nil:NilClass)
-org.eclipse.swt.SWTException: Failed to execute runnable (org.jruby.exceptions.NoMethodError: (NoMethodError) undefined method `text_widget' for nil:NilClass)
-                              error at org/eclipse/swt/SWT.java:4723
-                              error at org/eclipse/swt/SWT.java:4638
-                   runAsyncMessages at org/eclipse/swt/widgets/Synchronizer.java:188
-                   runAsyncMessages at org/eclipse/swt/widgets/Display.java:4126
-                    readAndDispatch at org/eclipse/swt/widgets/Display.java:3793
-                             invoke at java/lang/reflect/Method.java:498
-  invokeDirectWithExceptionHandling at org/jruby/javasupport/JavaMethod.java:441
-                       invokeDirect at org/jruby/javasupport/JavaMethod.java:305
-                   start_event_loop at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/swt/shell_proxy.rb:133
-                               open at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/swt/shell_proxy.rb:77
-                               open at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/ui/custom_shell.rb:16
-                  invokeOther3:open at Users/User/code/glimmer_minus_cs_minus_gladiator/bin//Users/User/code/glimmer-cs-gladiator/bin/gladiator_runner.rb:5
-                             <main> at Users/User/code/glimmer_minus_cs_minus_gladiator/bin//Users/User/code/glimmer-cs-gladiator/bin/gladiator_runner.rb:5
-                invokeWithArguments at java/lang/invoke/MethodHandle.java:627
-                          runScript at org/jruby/Ruby.java:1205
-                        runNormally at org/jruby/Ruby.java:1128
-                        runNormally at org/jruby/Ruby.java:1146
-                        runFromMain at org/jruby/Ruby.java:958
-                      doRunFromMain at org/jruby/Main.java:412
-                        internalRun at org/jruby/Main.java:304
-                                run at org/jruby/Main.java:234
-                               main at org/jruby/Main.java:206
-
-Caused by:
-org.jruby.exceptions.NoMethodError: (NoMethodError) undefined method `text_widget' for nil:NilClass
-    method_missing at org/jruby/RubyBasicObject.java:1708
-    method_missing at Users/User/$_dot_rvm/gems/jruby_minus_9_dot_2_dot_11_dot_1_at_40_glimmer_minus_cs_minus_gladiator/gems/glimmer_minus_0_dot_9_dot_3/lib//Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer.rb:57
-         Gladiator at Users/User/code/glimmer_minus_cs_minus_gladiator/lib/views/glimmer//Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:206
-  start_event_loop at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/swt/shell_proxy.rb:133
-              open at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/swt/shell_proxy.rb:77
-              open at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-dsl-swt-0.1.3/lib/glimmer/ui/custom_shell.rb:16
-            <main> at Users/User/code/glimmer_minus_cs_minus_gladiator/bin//Users/User/code/glimmer-cs-gladiator/bin/gladiator_runner.rb:5
-
-- Fix issue which happens when closing all tabs while in Find text box (or something like that):
-Glimmer::InvalidKeywordError: Glimmer keyword swt with args [:tab] cannot be handled! Check the validity of the code.
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:38
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-                 handle at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/expression_handler.rb:31
-              interpret at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:154
-  add_static_expression at /Users/User/.rvm/gems/jruby-9.2.11.1@glimmer-cs-gladiator/gems/glimmer-0.9.3/lib/glimmer/dsl/engine.rb:107
-              Gladiator at /Users/User/code/glimmer-cs-gladiator/lib/views/glimmer/gladiator.rb:264
-
 
 ## Refactorings
 

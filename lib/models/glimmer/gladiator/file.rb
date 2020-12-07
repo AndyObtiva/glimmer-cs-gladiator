@@ -141,7 +141,9 @@ module Glimmer
       
       def change_content!(value)
         self.dirty_content = value
+        current_caret_position = caret_position
         update_line_number_from_caret_position(caret_position)
+        self.caret_position = current_caret_position
       end
 
       def start_command
