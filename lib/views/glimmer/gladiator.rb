@@ -188,6 +188,7 @@ module Glimmer
           @loaded_config = true
         }
         on_shell_closed {
+          save_config
           project_dir.selected_child&.write_dirty_content
           if @tab_folder2
             current_tab_folder.swt_widget.getItems.each do |tab_item|
