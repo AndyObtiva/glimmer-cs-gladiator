@@ -2,12 +2,12 @@
 
 ## Up Next
 
+- Upgrade to glimmer-dsl-swt v4.18.0.0
+- Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
+- Fix issue with find highlighting of already selected word and hitting enter causing word to get deleted first time done in a just open file
 - Fix issue with creating a new directory in a different project from the main one open
-- Fix issue with find_next highlighting not scrolling found text into view
 - Have Find and Line number shortcuts show Navigation section if hidden
-- Look into issues with aligning extra space when hitting enter at the end of a line (or hitting CMD+ENTER CMD+SHIFT+ENTER)
 - Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
-- Fix issue relating to clearing white space at the end of lines (the issue regressed)
 - Fix issue where typing does not bring caret_position to screen to make visible anymore
 - Make paste an undoable command separate from change_content!
 
@@ -49,8 +49,6 @@
 
 - Fix caret position after formatting dirty content (perhaps relying on diffing)
 - troubleshoot why adding margin to body root composite in Texteditor with margin_height 0 causes gladiator to start resizing window smaller than necessary upon launch of Gladiator
-- Fix issue with moving lines down at the end of the file making selection go out of wack
-- Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
 - Fix issue with slowdown upon inserting a new file/directory into the tree
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
 - Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)
@@ -64,6 +62,7 @@
 - Refactor code around ignore_paths
 - Automate running tests on git push
 - Upgrade undo/redo support to be diff based
+- Look into ensuring freeing of memory upon closing projects
 
 ## Enhancements
 
@@ -102,10 +101,3 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Text Column selection (StyledText setBlockSelection)
 - Enhance File Explorer Tree with directory/file icons
 - Enhance Tabs with file type icons
-- Enhance File Explorer Tree with file type icons
-- Use a horizontal sash between list/tree & text editors/find
-- Use a vertical sash between find area and text editors
-- Provide a maximize current file menu/shortcut that minimizes other split editor
-- Provide an ultra-maximize current file menu/shortcut that minimizes all sash areas (list/tree/find)
-- Merge undo history commands into a single command for text changes that occur within 50ms of each other
-- Consider sorting tabs alphabetically or providing a dropdown/menu to sort them or autosort them

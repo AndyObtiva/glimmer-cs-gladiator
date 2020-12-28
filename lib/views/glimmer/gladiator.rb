@@ -18,6 +18,9 @@ module Glimmer
     APP_ROOT = ::File.expand_path('../../../..', __FILE__)
     # TODO make sure COMMAND_KEY doesn't clash on Linux/Windows for CMD+CTRL shortcuts
     COMMAND_KEY = OS.mac? ? :command : :ctrl
+    VERSION = ::File.read(::File.join(APP_ROOT, 'VERSION')).to_s.strip
+    LICENSE = ::File.read(::File.join(APP_ROOT, 'LICENSE.txt')).to_s.strip
+    ICON = ::File.expand_path(::File.join(APP_ROOT, 'images', 'glimmer-cs-gladiator-logo.png'))
 
     class << self
       attr_accessor :drag_and_drop
@@ -63,16 +66,24 @@ module Glimmer
     before_body {
       # TODO consider doing loading project files after displaying the GUI instead of holding it up before
       project_dir #pre-initialize directory
-      at_exit do
+      TOPLEVEL_BINDING.receiver.send(:at_exit) do
         project_dir.selected_child&.write_raw_dirty_content
       end
       Display.setAppName('Gladiator')
       # make sure the display events are only hooked once if multiple gladiators are created
       unless defined?(@@display)
         @@display = display {
+          # TODO look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
+          on_about {
+            display_about_dialog
+          }
           on_swt_keydown { |key_event|
             focused_gladiator = display.focus_control.shell&.get_data('custom_shell')
             focused_gladiator.handle_display_shortcut(key_event) if !focused_gladiator.nil? && key_event.widget.shell == focused_gladiator&.swt_widget
+          }
+          on_swt_Close {
+            save_config
+            project_dir.selected_child&.write_dirty_content
           }
         }
       end
@@ -95,6 +106,7 @@ module Glimmer
         if selected_file
           if Gladiator.drag && !@tab_folder2
             @tab_folder1 = @current_tab_folder
+            async_exec { body_root.pack_same_size}
             @tab_folder_sash_form.content {
               @current_tab_folder = @tab_folder2 = tab_folder
               @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
@@ -146,7 +158,9 @@ module Glimmer
                   }
                 }
                 on_widget_disposed {
-                  the_tab_item.swt_tab_item.get_data('file').close
+                  project_dir.selected_child&.write_dirty_content
+                  tab_item_file = the_tab_item.swt_tab_item.get_data('file')
+                  tab_item_file.close unless [@tab_folder1, @tab_folder2].compact.map(&:items).flatten(1).detect {|ti| ti.get_data('file') == tab_item_file}
                 }
               }
               @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
@@ -154,7 +168,9 @@ module Glimmer
               @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
             }
             @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+            
             body_root.pack_same_size
+            async_exec { body_root.pack_same_size}
           end
           @current_text_editor&.text_widget&.setFocus
         end
@@ -177,16 +193,17 @@ module Glimmer
     body {
       shell {
         grid_layout(2, false)
-        
         text "Gladiator - #{::File.expand_path(project_dir.path)}"
         minimum_size 520, 250
         size 1440, 900
+        image ICON
         
         on_swt_show {
           swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
           swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
           @loaded_config = true
         }
+        
         on_shell_closed {
           save_config
           project_dir.selected_child&.write_dirty_content
@@ -211,7 +228,13 @@ module Glimmer
           save_config
         }
         on_shell_deactivated {
-          @current_text_editor&.file&.write_dirty_content
+          project_dir.selected_child&.write_dirty_content
+        }
+
+        display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
+          save_config
+          project_dir.selected_child&.write_dirty_content
+          exit(0)
         }
 
         menu_bar {
@@ -243,13 +266,13 @@ module Glimmer
               menu_item(:radio) {
                 text '&Horizontal'
                 selection bind(self, :split_orientation,
-                                      on_read: ->(o) { split_pane? && o == swt(:horizontal)},
+                                      on_read: ->(o) { split_pane? && o == swt(:horizontal) },
                                       on_write: ->(b) { b ? swt(:horizontal) : swt(:vertical) })
               }
               menu_item(:radio) {
                 text '&Vertical'
                 selection bind(self, :split_orientation,
-                                      on_read: ->(o) { split_pane? && o == swt(:vertical)},
+                                      on_read: ->(o) { split_pane? && o == swt(:vertical) },
                                       on_write: ->(b) { b ? swt(:vertical) : swt(:horizontal) })
               }
             }
@@ -273,6 +296,15 @@ module Glimmer
               text '&Ruby'
               on_widget_selected {
                 project_dir.selected_child.run
+              }
+            }
+          }
+          menu {
+            text '&Help'
+            menu_item {
+              text '&About'
+              on_widget_selected {
+                display_about_dialog
               }
             }
           }
@@ -714,7 +746,7 @@ module Glimmer
               minimum_height 576
             }
             sash_width 10
-            orientation bind(self, :split_orientation)
+            orientation bind(self, :split_orientation) {|value| async_exec { body_root.pack_same_size}; value}
             @current_tab_folder = tab_folder {
               drag_source(DND::DROP_COPY) {
                 transfer [TextTransfer.getInstance].to_java(Transfer)
@@ -875,8 +907,8 @@ module Glimmer
         @current_tab_item = @current_tab_folder.swt_widget.getData('selected_tab_item')
         @current_text_editor = @current_tab_item.swt_tab_item.getData('text_editor')
         project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
-
-        body_root.pack_same_size
+        
+        async_exec { body_root.pack_same_size }
       end
     end
 
@@ -1044,20 +1076,48 @@ module Glimmer
       }
     end
     
+    def display_about_dialog
+      dialog {
+        grid_layout(2, false) {
+          margin_width 15
+          margin_height 15
+        }
+        
+        image ICON
+        text 'About'
+        background :white
+        
+        label {
+          layout_data :center, :center, false, false
+          image ICON, height: 260
+        }
+        label {
+          layout_data :fill, :fill, true, true
+          text "Gladiator v#{VERSION}\n\n#{LICENSE}\n\nGladiator icon made by Freepik from www.flaticon.com"
+          background :white
+        }
+      }.open
+    end
+    
     def handle_display_shortcut(key_event)
       if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
-        @navigation_expand_item.swt_expand_item.set_expanded true
-        @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
-        async_exec {
-          body_root.pack_same_size
-        }
-        async_exec {
+        find_action = lambda do
           if current_text_editor&.text_widget&.getSelectionText && current_text_editor&.text_widget&.getSelectionText&.size.to_i > 0
             find_text.swt_widget.setText current_text_editor.text_widget.getSelectionText
           end
           find_text.swt_widget.selectAll
           find_text.swt_widget.setFocus
-        }
+        end
+        if @navigation_expand_item.swt_expand_item.get_expanded
+          find_action.call
+        else
+          @navigation_expand_item.swt_expand_item.set_expanded true
+          @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
+          async_exec {
+            body_root.pack_same_size
+          }
+          async_exec(&find_action)
+        end
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
         Clipboard.copy(project_dir.selected_child.path)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'

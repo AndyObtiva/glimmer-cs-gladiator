@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.6.3
+
+- Display Gladiator version in window title
+- Set Gladiator icon on window
+- Fix issue with wording getting reversed when typing at the end of the file
+- Fix issue with not being able to add new lines at the end of the file
+- Fix issue with moving lines down at the end of the file making selection go out of wack
+- Fix issue with Find keyboard shortcut causing a delay before landing in the Find text field
+- Fix transient issue of find_next not jumping properly after replacing a term near the end of the line
+- Fix issue with layout upon split
+- Fix issue with layout upon opening a new tab
+- Fix issue with splitting a file showing in both panes and then unsplitting afterwards detaching data-binding
+- Fix issue with losing changes on exit if I do not focus out on a file
+
 ## 0.6.2
 
 - Speed up startup time by not truly opening all files beyond showing their tab (till navigated to)

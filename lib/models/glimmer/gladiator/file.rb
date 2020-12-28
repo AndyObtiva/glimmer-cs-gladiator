@@ -519,13 +519,18 @@ module Glimmer
             write_dirty_content
             load path
           end
-        rescue SyntaxError, StandardError => e
+        rescue LoadError, SyntaxError, StandardError => e
+          # TODO consider showing a message dialog or error message console in the future
           puts e.full_message
         end
       end
 
       def lines
-        dirty_content.split("\n")
+        need_padding = dirty_content.to_s.end_with?("\n")
+        splittable_content = need_padding ? "#{dirty_content} " : dirty_content
+        the_lines = splittable_content.split("\n")
+        the_lines[-1] = the_lines[-1].strip if need_padding
+        the_lines
       end
 
       def line_for_caret_position(caret_position)

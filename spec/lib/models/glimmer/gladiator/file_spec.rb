@@ -370,19 +370,25 @@ describe Glimmer::Gladiator::File do
     context 'in a one line file' do
       let(:file) { one_line_file }
 
-      it 'does not move line down' do
+      it 'can move down one line only' do
         subject.line_number = 1
   
         expect(subject.caret_position).to eq(0)
   
         subject.move_down!
   
-        expect(subject.caret_position).to eq(0)
-        expect(subject.line_number).to eq(1)
+        expect(subject.caret_position).to eq(1)
+        expect(subject.line_number).to eq(2)
+
+        subject.move_down! # does not cause changes
+  
+        expect(subject.caret_position).to eq(1)
+        expect(subject.line_number).to eq(2)
 
         subject.format_dirty_content_for_writing!
   
         expect(subject.dirty_content).to eq(<<~MULTI
+          
           one Hello, World! and Hello, World! and Hello, World!
         MULTI
         )
