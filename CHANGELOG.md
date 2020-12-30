@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.6.4
+
+- Ensured Gladiator logo in the about menu has a white background
+- Fixed issue on failing to configure Mac Quit menu item on Windows (restricted code to Mac only)
+
 ## 0.6.3
 
 - Display Gladiator version in window title

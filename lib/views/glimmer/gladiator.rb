@@ -231,11 +231,13 @@ module Glimmer
           project_dir.selected_child&.write_dirty_content
         }
 
-        display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
-          save_config
-          project_dir.selected_child&.write_dirty_content
-          exit(0)
-        }
+        if OS.mac?
+          display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
+            save_config
+            project_dir.selected_child&.write_dirty_content
+            exit(0)
+          }
+        end
 
         menu_bar {
           menu {
@@ -1083,18 +1085,19 @@ module Glimmer
           margin_height 15
         }
         
+        background :white
         image ICON
         text 'About'
-        background :white
         
         label {
           layout_data :center, :center, false, false
+          background :white
           image ICON, height: 260
         }
         label {
           layout_data :fill, :fill, true, true
-          text "Gladiator v#{VERSION}\n\n#{LICENSE}\n\nGladiator icon made by Freepik from www.flaticon.com"
           background :white
+          text "Gladiator v#{VERSION}\n\n#{LICENSE}\n\nGladiator icon made by Freepik from www.flaticon.com"
         }
       }.open
     end
