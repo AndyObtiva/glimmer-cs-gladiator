@@ -70,9 +70,9 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Pre-requisites
 
-- [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Framework): '>= 4.17.2.0', '< 5.0.0.0' (dependency included in Ruby gem).
-- [JRuby](https://www.jruby.org/download): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
 - [JDK](https://www.oracle.com/java/technologies/javase-downloads.html): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
+- [JRuby](https://www.jruby.org/download): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
+- [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Framework): '>= 4.17.2.0', '< 5.0.0.0' (dependency included in Ruby gem).
 
 ## Setup Instructions
 

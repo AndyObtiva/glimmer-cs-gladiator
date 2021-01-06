@@ -2,7 +2,12 @@
 
 ## Up Next
 
+- Maximize Editor Keyboard Shortcut / Menu Item
+- Restore Editor Keyboard Shortcut / Menu Item
+- Maximize Split Pane Size Keyboard Shortcut / Menu Item
+- Restore Split Pane Keyboard Shortcut / Menu Item
 - Upgrade to glimmer-dsl-swt v4.18.0.0
+
 - Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
 - Fix issue with find highlighting of already selected word and hitting enter causing word to get deleted first time done in a just open file
 - Fix issue with creating a new directory in a different project from the main one open

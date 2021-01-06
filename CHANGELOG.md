@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.7.0
+
+- Implement sash form for separator between file area and editing area to make resizable
+
 ## 0.6.4
 
 - Ensured Gladiator logo in the about menu has a white background
