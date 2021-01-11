@@ -3,7 +3,6 @@
 ## Up Next
 
 - Make a Gladiator video gif showing maximization/run-ruby
-- Document new changes
 
 - Merge File Lookup with File Explorer
 - Fix issue where typing does not bring caret_position to screen to make the word edited visible

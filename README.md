@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.6.4 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.7.0 - [Ugliest Text Editor Ever](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -12,6 +12,8 @@ I leave building truly professional text editors to software tooling experts who
 ## Features
 
 Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux)
+
+![Gladiator Demo](images/glimmer-gladiator.gif)
 
 ### Text Editor
 
@@ -47,8 +49,18 @@ Gladiator currently supports the following text editing features (including keyb
 
 ### Menus
 
-- File Menu to Open Project (CMD+SHIFT+P) and open Scratchpad for running arbitrary Ruby/Glimmer code without saving to disk (CMD+SHIFT+S)
-- View Menu to Split Pane & Change Split Orientation to Horizontal/Vertical (CMD+SHIFT+O)
+- File Menu:
+  - Open Project (CMD+O)
+  - Quit Project (CMD+ALT+Q)
+  - New Scratchpad for running arbitrary Ruby/Glimmer code without saving to disk (CMD+SHIFT+S)
+- View Menu
+  - Split Pane
+    - Orientation change to Horizontal/Vertical (CMD+SHIFT+O)
+    - Maximize Pane: maximizes current pane in split pane to take entire area (CMD+SHIFT+M)
+    - Reset Panes: resets pane sizes if split width/height was adjusted (CMD+SHIFT+P)
+    - Unsplit: closes the second pane (CMD+SHIFT+U)
+  - Maximize Editor: maximizes editor area to hide file lookup list and file explorer tree (CMD+CTRL+M)
+  - Reset All: resizes sizes of all areas in the editor (CMD+CTRL+R)
 - Run Menu to run Ruby code (CMD+SHIFT+R)
 
 ### Watch External Changes
@@ -138,7 +150,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '>= 0.6.4'
+gem 'glimmer-cs-gladiator', '>= 0.7.0'
 ```
 
 Run:

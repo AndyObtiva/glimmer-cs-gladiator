@@ -42,7 +42,7 @@ module Glimmer
     def split_orientation=(value)
       @split_orientation = value
       save_config
-      if @loaded_config && !split_pane?
+      if @loaded_config && !split_pane? && !value.nil?
         Gladiator.drag = true
         child_path = project_dir.selected_child_path
         project_dir.selected_child = nil
@@ -318,7 +318,8 @@ module Glimmer
                 on_widget_selected {
                   if tab_folder2
                     self.maximized_pane = false
-                    close_all_tabs(tab_folder2) unless tab_folder2.nil?
+                    navigate_to_next_tab_folder if current_tab_folder != tab_folder2
+                    close_all_tabs(tab_folder2)
                     self.split_orientation = nil
                     body_root.pack_same_size
                   end
@@ -958,6 +959,36 @@ module Glimmer
     rescue => e
       puts e.full_message
     end
+    
+    def navigate_to_next_tab_folder
+      if tab_folder2
+        self.maximized_pane = false
+        if current_tab_folder == tab_folder1
+          self.current_tab_folder = tab_folder2
+        else
+          self.current_tab_folder = tab_folder1
+        end
+        self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
+        self.project_dir.selected_child = current_tab_item&.swt_tab_item&.getData('file')
+        self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
+        current_tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
+      end
+    end
+
+    def navigate_to_previous_tab_folder
+     if tab_folder2
+        self.maximized_pane = false
+        if current_tab_folder == tab_folder2
+          self.current_tab_folder = tab_folder1
+        else
+          self.current_tab_folder = tab_folder2
+        end
+        self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
+        self.project_dir.selected_child = current_tab_item&.swt_tab_item&.getData('file')
+        self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
+        current_tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
+      end
+    end
 
     def close_all_tabs(closing_tab_folder = nil)
       closing_tab_folder ||= current_tab_folder
@@ -1254,31 +1285,9 @@ module Glimmer
         current_tab_folder.swt_widget.setSelection((current_tab_folder.swt_widget.getSelectionIndex() - 1) % current_tab_folder.swt_widget.getItemCount) if current_tab_folder.swt_widget.getItemCount > 0
         current_text_editor&.text_widget&.setFocus
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == ']'
-        if tab_folder2
-          self.maximized_pane = false
-          if current_tab_folder == tab_folder1
-            self.current_tab_folder = tab_folder2
-          else
-            self.current_tab_folder = tab_folder1
-          end
-          self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
-          self.project_dir.selected_child = current_tab_item&.swt_tab_item&.getData('file')
-          self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
-          current_tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
-        end
+        navigate_to_next_tab_folder
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '['
-        if tab_folder2
-          self.maximized_pane = false
-          if current_tab_folder == tab_folder2
-            self.current_tab_folder = tab_folder1
-          else
-            self.current_tab_folder = tab_folder2
-          end
-          self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
-          self.project_dir.selected_child = current_tab_item&.swt_tab_item&.getData('file')
-          self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
-          current_tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
-        end
+        navigate_to_previous_tab_folder
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
         current_tab_folder.swt_widget.setSelection(0) if current_tab_folder.swt_widget.getItemCount >= 1
         current_text_editor&.text_widget&.setFocus
