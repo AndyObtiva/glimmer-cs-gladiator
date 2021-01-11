@@ -252,19 +252,26 @@ module Glimmer
 
             menu_item {
               text 'New &Scratchpad'
+              accelerator COMMAND_KEY, :shift, :s
               on_widget_selected {
-                begin
-                  project_dir.selected_child_path = ''
-                rescue => e
-                  puts e.full_message
-                end
+                project_dir.selected_child_path = ''
+              }
+            }
+            menu_item {
+              text 'Open &Project...'
+              accelerator COMMAND_KEY, :o
+              on_widget_selected {
+                open_project
               }
             }
             menu_item(:separator)
             menu_item {
-              text 'Open &Project...'
+              text 'E&xit'
+              accelerator COMMAND_KEY, :q
               on_widget_selected {
-                open_project
+                save_config
+                project_dir.selected_child&.write_dirty_content
+                exit(0)
               }
             }
           }
@@ -294,9 +301,9 @@ module Glimmer
                 selection bind(self, :maximized_pane)
               }
               menu_item {
-                text '&Reset Sizes'
+                text 'Reset Split &Pane'
                 enabled bind(self, :tab_folder2)
-                accelerator COMMAND_KEY, :shift, :r
+                accelerator COMMAND_KEY, :shift, :p
                 on_widget_selected {
                   if tab_folder2
                     self.maximized_pane = false
@@ -324,7 +331,7 @@ module Glimmer
               selection bind(self, :maximized_editor)
             }
             menu_item {
-              text '&Reset All'
+              text '&Reset All Sizes'
               accelerator COMMAND_KEY, :ctrl, :r
               on_widget_selected {
                 self.maximized_editor = false
@@ -349,8 +356,18 @@ module Glimmer
 #             }
             menu_item {
               text '&Ruby'
+              accelerator COMMAND_KEY, :shift, :r
               on_widget_selected {
-                project_dir.selected_child.run
+                begin
+                  project_dir.selected_child.run
+                rescue Exception => e
+                  dialog {
+                    text 'Run - Ruby - Error Encountered!'
+                    label {
+                      text e.full_message
+                    }
+                  }.open
+                end
               }
             }
           }
@@ -358,6 +375,7 @@ module Glimmer
             text '&Help'
             menu_item {
               text '&About'
+              accelerator COMMAND_KEY, :shift, :a
               on_widget_selected {
                 display_about_dialog
               }
@@ -1204,13 +1222,9 @@ module Glimmer
         Clipboard.copy(project_dir.selected_child.path)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
         project_dir.selected_child.find_previous
-      elsif key_event.stateMask == COMMAND_KEY && extract_char(key_event) == 'o'
-        open_project
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'o'
         self.maximized_pane = false
         self.split_orientation = split_pane? && split_orientation == swt(:horizontal) ? swt(:vertical) : swt(:horizontal)
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 's'
-        project_dir.selected_child_path = '' # scratchpad
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
         close_all_tabs
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :alt) && extract_char(key_event) == 'w'
@@ -1308,6 +1322,7 @@ module Glimmer
           line_number_text.swt_widget.setFocus
         end
       elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'r'
+        self.maximized_editor = false
         unless @file_lookup_expand_item.swt_expand_item.get_expanded
           @file_lookup_expand_item.swt_expand_item.set_expanded true
           @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_item_height if @file_lookup_expand_item_height
@@ -1316,6 +1331,7 @@ module Glimmer
         filter_text.swt_widget.selectAll
         filter_text.swt_widget.setFocus
       elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 't'
+        self.maximized_editor = false
         unless @file_explorer_expand_item.swt_expand_item.get_expanded
           @file_explorer_expand_item.swt_expand_item.set_expanded true
           @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height

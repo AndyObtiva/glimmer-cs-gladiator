@@ -512,16 +512,11 @@ module Glimmer
       end
       
       def run
-        begin
-          if scratchpad?
-            eval content
-          else
-            write_dirty_content
-            load path
-          end
-        rescue LoadError, SyntaxError, StandardError => e
-          # TODO consider showing a message dialog or error message console in the future
-          puts e.full_message
+        if scratchpad?
+          eval content
+        else
+          write_dirty_content
+          load path
         end
       end
 

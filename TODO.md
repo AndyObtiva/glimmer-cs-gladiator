@@ -2,10 +2,9 @@
 
 ## Up Next
 
-- Make CMD R and CMD T shortcuts show the file lookup/file explorer if collapsed (just like CMD + F shows navigation area)
-- Display Accelerators (keyboard shortcuts) on Mac Menu Items
 - Fix issue with creating a new directory in a different project from the main one open
 - Make a Gladiator video gif showing maximization/run-ruby
+- Document new changes
 
 - Merge File Lookup with File Explorer
 - Fix issue where typing does not bring caret_position to screen to make the word edited visible

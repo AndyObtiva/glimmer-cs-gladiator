@@ -7,9 +7,12 @@
 - Change shortcut for open project from CMD+SHIFT+P to CMD+O
 - Unsplit pane Menu Item / Keyboard Shortcut (CMD+SHIFT+U)
 - Maximize Split Pane Size Menu Item / Keyboard Shortcut (CMD+SHIFT+M)
-- Reset Split Pane Menu Item / Keyboard Shortcut (CMD+SHIFT+M again while maximized or CMD+SHIFT+R to reset split widths)
-- Maximize Editor Menu Item / Keyboard Shortcut (CMD+SHIFT+E)
-- Reset Editor Menu Item / Keyboard Shortcut (CMD+SHIFT+E again while maximized)
+- Reset Split Pane Menu Item / Keyboard Shortcut (CMD+SHIFT+M again while maximized or CMD+SHIFT+P to reset split widths)
+- Maximize Editor Menu Item / Keyboard Shortcut (CMD+CTRL+M)
+- Reset Editor Menu Item / Keyboard Shortcut (CMD+CTRL+M again while maximized or CMD+CTRL+R to reset all sizes)
+- Make CMD R and CMD T shortcuts show the file lookup/file explorer if collapsed (just like CMD + F shows navigation area)
+- Display Accelerators (keyboard shortcuts) on Mac Menu Items
+- Show exception dialog on error when invoking Run -> Ruby
 
 ## 0.6.4
 

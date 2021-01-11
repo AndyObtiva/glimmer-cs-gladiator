@@ -108,8 +108,6 @@ module Glimmer
           on_verify_key { |key_event|
             if (Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'z') || (key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'y')
               key_event.doit = !Command.redo(file)
-            elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'r'
-              project_dir.selected_child.run
             elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'z'
               key_event.doit = !Command.undo(file)
             elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'a'
