@@ -2,19 +2,18 @@
 
 ## Up Next
 
-- Maximize Editor Keyboard Shortcut / Menu Item
-- Restore Editor Keyboard Shortcut / Menu Item
-- Maximize Split Pane Size Keyboard Shortcut / Menu Item
-- Restore Split Pane Keyboard Shortcut / Menu Item
-- Upgrade to glimmer-dsl-swt v4.18.0.0
-
-- Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
-- Fix issue with find highlighting of already selected word and hitting enter causing word to get deleted first time done in a just open file
+- Make CMD R and CMD T shortcuts show the file lookup/file explorer if collapsed (just like CMD + F shows navigation area)
+- Display Accelerators (keyboard shortcuts) on Mac Menu Items
 - Fix issue with creating a new directory in a different project from the main one open
-- Have Find and Line number shortcuts show Navigation section if hidden
+- Make a Gladiator video gif showing maximization/run-ruby
+
+- Merge File Lookup with File Explorer
+- Fix issue where typing does not bring caret_position to screen to make the word edited visible
+- Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
+- Have Navigation section when hidden on Windows shrink in size (it currently keeps occupying the same height)
 - Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
-- Fix issue where typing does not bring caret_position to screen to make visible anymore
 - Make paste an undoable command separate from change_content!
+- Make the same file split on both sides have different scroll positions on both sides
 
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere

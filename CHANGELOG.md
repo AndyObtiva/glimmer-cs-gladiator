@@ -2,7 +2,14 @@
 
 ## 0.7.0
 
+- Upgrade to glimmer-dsl-swt v4.18.0.0
 - Implement sash form for separator between file area and editing area to make resizable
+- Change shortcut for open project from CMD+SHIFT+P to CMD+O
+- Unsplit pane Menu Item / Keyboard Shortcut (CMD+SHIFT+U)
+- Maximize Split Pane Size Menu Item / Keyboard Shortcut (CMD+SHIFT+M)
+- Reset Split Pane Menu Item / Keyboard Shortcut (CMD+SHIFT+M again while maximized or CMD+SHIFT+R to reset split widths)
+- Maximize Editor Menu Item / Keyboard Shortcut (CMD+SHIFT+E)
+- Reset Editor Menu Item / Keyboard Shortcut (CMD+SHIFT+E again while maximized)
 
 ## 0.6.4
 

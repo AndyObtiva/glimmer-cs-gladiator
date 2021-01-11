@@ -56,9 +56,11 @@ module Glimmer
       pane_count = @tab_folder_sash_form&.children&.size
       pane_count && pane_count > 1
     end
-
-    attr_reader :find_text, :tab_folder1, :tab_folder2, :filter_text, :rename_in_progress, :line_number_text, :file_tree, :split_orientation
-    attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor
+    
+    attr_reader :find_text, :filter_text, :rename_in_progress, :line_number_text, :file_tree, :split_orientation
+    attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor, :tab_folder1, :tab_folder2, :maximized_pane, :maximized_editor
+    alias maximized_pane? maximized_pane
+    alias maximized_editor? maximized_editor
 
     ## Uncomment before_body block to pre-initialize variables to use in body
     #
@@ -105,12 +107,12 @@ module Glimmer
       observe(project_dir, 'selected_child') do |selected_file|
         if selected_file
           if Gladiator.drag && !@tab_folder2
-            @tab_folder1 = @current_tab_folder
-            async_exec { body_root.pack_same_size}
+            self.tab_folder1 = current_tab_folder
             @tab_folder_sash_form.content {
-              @current_tab_folder = @tab_folder2 = tab_folder
+              self.current_tab_folder = self.tab_folder2 = tab_folder {}
               @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
             }
+            body_root.pack_same_size
           end
           select_tree_item unless @rename_in_progress || Gladiator.startup
           found_tab_item = selected_tab_item
@@ -136,7 +138,7 @@ module Glimmer
                   @current_text_editor.text_proxy.content {
                     on_focus_gained {
                       tab_folder = the_text_editor.swt_widget.getParent.getParent
-                      @current_tab_folder = tab_folder.getData('proxy')
+                      self.current_tab_folder = tab_folder.getData('proxy')
                       @current_tab_item = the_tab_item
                       @current_text_editor = the_text_editor
                       @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
@@ -149,13 +151,11 @@ module Glimmer
                 on_swt_show {
                   @current_tab_item = the_tab_item
                   @current_text_editor = the_text_editor
-                  @current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
+                  self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
                   @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
                   @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
                   project_dir.selected_child = selected_file
-                  async_exec {
-                    @current_text_editor&.text_widget&.setFocus
-                  }
+                  @current_text_editor&.text_widget&.setFocus
                 }
                 on_widget_disposed {
                   project_dir.selected_child&.write_dirty_content
@@ -168,12 +168,20 @@ module Glimmer
               @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
             }
             @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-            
             body_root.pack_same_size
-            async_exec { body_root.pack_same_size}
           end
           @current_text_editor&.text_widget&.setFocus
         end
+      end
+      observe(self, 'maximized_pane') do
+        if tab_folder2
+          @tab_folder_sash_form.maximized_control = (current_tab_folder.swt_widget if maximized_pane?)
+        end
+      end
+      observe(self, 'maximized_editor') do
+        @file_area_and_editor_area_sash_form.maximized_control = (@editor_area_composite.swt_widget if maximized_editor?)
+        @navigation_expand_item.swt_expand_item.set_expanded !maximized_editor?
+        body_root.pack_same_size
       end
       observe(project_dir, 'selected_child') do
         save_config
@@ -263,18 +271,64 @@ module Glimmer
           menu {
             text '&View'
             menu {
-              text '&Split'
-              menu_item(:radio) {
-                text '&Horizontal'
-                selection bind(self, :split_orientation,
-                                      on_read: ->(o) { split_pane? && o == swt(:horizontal) },
-                                      on_write: ->(b) { b ? swt(:horizontal) : swt(:vertical) })
+              text '&Split Pane'
+              menu { |menu_proxy|
+                text '&Orientation'
+                menu_item(:radio) {
+                  text '&Horizontal'
+                  selection bind(self, :split_orientation,
+                                        on_read: ->(o) { split_pane? && o == swt(:horizontal) },
+                                        on_write: ->(b) { b.nil? ? nil : (b ? swt(:horizontal) : swt(:vertical)) })
+                }
+                menu_item(:radio) {
+                  text '&Vertical'
+                  selection bind(self, :split_orientation,
+                                        on_read: ->(o) { split_pane? && o == swt(:vertical) },
+                                        on_write: ->(b) { b.nil? ? nil : (b ? swt(:vertical) : swt(:horizontal)) })
+                }
               }
-              menu_item(:radio) {
-                text '&Vertical'
-                selection bind(self, :split_orientation,
-                                      on_read: ->(o) { split_pane? && o == swt(:vertical) },
-                                      on_write: ->(b) { b ? swt(:vertical) : swt(:horizontal) })
+              menu_item(:check) {
+                text '&Maximize Current'
+                enabled bind(self, :tab_folder2)
+                accelerator COMMAND_KEY, :shift, :m
+                selection bind(self, :maximized_pane)
+              }
+              menu_item {
+                text '&Reset Sizes'
+                enabled bind(self, :tab_folder2)
+                accelerator COMMAND_KEY, :shift, :r
+                on_widget_selected {
+                  if tab_folder2
+                    self.maximized_pane = false
+                    @tab_folder_sash_form.weights = [1, 1]
+                  end
+                }
+              }
+              menu_item {
+                text '&Unsplit'
+                enabled bind(self, :tab_folder2)
+                accelerator COMMAND_KEY, :shift, :u
+                on_widget_selected {
+                  if tab_folder2
+                    self.maximized_pane = false
+                    close_all_tabs(tab_folder2) unless tab_folder2.nil?
+                    self.split_orientation = nil
+                    body_root.pack_same_size
+                  end
+                }
+              }
+            }
+            menu_item(:check) {
+              text '&Maximize Editor'
+              accelerator COMMAND_KEY, :ctrl, :m
+              selection bind(self, :maximized_editor)
+            }
+            menu_item {
+              text '&Reset All'
+              accelerator COMMAND_KEY, :ctrl, :r
+              on_widget_selected {
+                self.maximized_editor = false
+                @file_area_and_editor_area_sash_form.weights = [1, 5]
               }
             }
           }
@@ -311,7 +365,7 @@ module Glimmer
           }
         }
         
-        sash_form(:horizontal) {
+        @file_area_and_editor_area_sash_form = sash_form(:horizontal) {
           weights 1, 5
 
           composite {
@@ -531,7 +585,7 @@ module Glimmer
   
           }
           
-          composite {
+          @editor_area_composite = composite {
             grid_layout(1, false) {
               margin_width 0
               margin_height 0
@@ -722,18 +776,11 @@ module Glimmer
               }
               
               on_item_collapsed {
-                @navigation_expand_item_height = @navigation_expand_item.swt_expand_item.height if @navigation_expand_item.swt_expand_item.height > 0
-                @navigation_expand_item.swt_expand_item.height = 0
-                async_exec {
-                  body_root.pack_same_size
-                }
+                collapse_navigation_expand_bar_height
               }
             
               on_item_expanded {
-                @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
-                async_exec {
-                  body_root.pack_same_size
-                }
+                expand_navigation_expand_bar
               }
             
             }
@@ -746,7 +793,7 @@ module Glimmer
                 minimum_height 576
               }
               orientation bind(self, :split_orientation) {|value| async_exec { body_root.pack_same_size}; value}
-              @current_tab_folder = tab_folder {
+              self.current_tab_folder = self.tab_folder1 = tab_folder {
                 drag_source(DND::DROP_COPY) {
                   transfer [TextTransfer.getInstance].to_java(Transfer)
                   event_data = nil
@@ -790,7 +837,7 @@ module Glimmer
         project_dir.ignore_paths ||= ['packages', 'tmp']
         open_file_paths1 = @config[:open_file_paths1] || @config[:open_file_paths]
         open_file_paths2 = @config[:open_file_paths2]
-        self.split_orientation = swt(@config[:split_orientation] || :horizontal) rescue swt(:horizontal)
+        self.split_orientation = (swt(@config[:split_orientation]) rescue swt(:horizontal)) if @config[:split_orientation]
         if @progress_bar_shell.nil?
           @progress_bar_shell = shell(body_root, :title) {
             text 'Gladiator'
@@ -874,9 +921,10 @@ module Glimmer
       tab_folder2 = @tab_folder2
       open_file_paths1 = tab_folder1&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
       open_file_paths2 = tab_folder2&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
+      split_orientation_value = split_orientation == swt(:horizontal) ? 'horizontal' : (split_orientation == swt(:vertical) ? 'vertical' : nil)
       @config = {
         selected_child_path: child.path,
-        split_orientation: split_orientation == swt(:horizontal) ? 'horizontal' : 'vertical',
+        split_orientation: split_orientation_value,
         caret_position: child.caret_position,
         top_pixel: child.top_pixel,
         shell_width: swt_widget&.getBounds&.width,
@@ -893,22 +941,39 @@ module Glimmer
       puts e.full_message
     end
 
-    def close_tab_folder
+    def close_all_tabs(closing_tab_folder = nil)
+      closing_tab_folder ||= current_tab_folder
+      closing_tab_folder.swt_widget.getItems.each do |tab_item|
+        project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
+        tab_item.getData('proxy')&.dispose
+      end
+      close_tab_folder(closing_tab_folder)
+      if self.current_tab_item.nil?
+        filter_text.swt_widget.selectAll
+        filter_text.swt_widget.setFocus
+      end
+    end
+    
+    def close_tab_folder(closing_tab_folder = nil)
+      closing_tab_folder ||= current_tab_folder
       if @tab_folder2 && !selected_tab_item
-        if @current_tab_folder == @tab_folder2
+        if closing_tab_folder == @tab_folder2
           @tab_folder2.swt_widget.dispose
-          @current_tab_folder = @tab_folder1
+          self.current_tab_folder = @tab_folder1
         else
           @tab_folder1.swt_widget.dispose
-          @current_tab_folder = @tab_folder1 = @tab_folder2
+          self.current_tab_folder = self.tab_folder1 = @tab_folder2
         end
-        @tab_folder2 = nil
+        self.tab_folder2 = nil
+        body_root.pack_same_size
 
-        @current_tab_item = @current_tab_folder.swt_widget.getData('selected_tab_item')
+        @current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
         @current_text_editor = @current_tab_item.swt_tab_item.getData('text_editor')
         project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
-        
-        async_exec { body_root.pack_same_size }
+        @current_text_editor&.text_widget&.setFocus
+        async_exec { @current_text_editor&.text_widget&.setFocus }
+      else
+        self.current_tab_item = self.current_text_editor = project_dir.selected_child = nil
       end
     end
 
@@ -922,6 +987,23 @@ module Glimmer
 
     def other_tab_items
       @current_tab_folder.swt_widget.getItems.reject { |ti| ti.getData('file_path') == project_dir.selected_child&.path }
+    end
+    
+    def collapse_navigation_expand_bar_height
+      @navigation_expand_item_height = @navigation_expand_item.swt_expand_item.height if @navigation_expand_item.swt_expand_item.height > 0
+      @navigation_expand_item.swt_expand_item.height = 0
+      body_root.pack_same_size
+      async_exec {
+        body_root.pack_same_size
+      }
+    end
+
+    def expand_navigation_expand_bar_height
+      @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
+      body_root.pack_same_size
+      async_exec {
+        body_root.pack_same_size
+      }
     end
 
     def extract_tree_item_path(tree_item)
@@ -1113,29 +1195,24 @@ module Glimmer
           find_action.call
         else
           @navigation_expand_item.swt_expand_item.set_expanded true
-          @navigation_expand_item.swt_expand_item.height = @navigation_expand_item_height if @navigation_expand_item_height
           async_exec {
             body_root.pack_same_size
+            find_action.call
           }
-          async_exec(&find_action)
         end
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
         Clipboard.copy(project_dir.selected_child.path)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'
         project_dir.selected_child.find_previous
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'p'
+      elsif key_event.stateMask == COMMAND_KEY && extract_char(key_event) == 'o'
         open_project
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'o'
+        self.maximized_pane = false
+        self.split_orientation = split_pane? && split_orientation == swt(:horizontal) ? swt(:vertical) : swt(:horizontal)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 's'
         project_dir.selected_child_path = '' # scratchpad
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'w'
-        current_tab_folder.swt_widget.getItems.each do |tab_item|
-          project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
-          tab_item.getData('proxy')&.dispose
-        end
-        close_tab_folder
-        self.current_tab_item = self.current_text_editor = project_dir.selected_child = nil
-        filter_text.swt_widget.selectAll
-        filter_text.swt_widget.setFocus
+        close_all_tabs
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :alt) && extract_char(key_event) == 'w'
         other_tab_items.each do |tab_item|
           project_dir.selected_child_path_history.delete(tab_item.getData('file_path'))
@@ -1154,8 +1231,6 @@ module Glimmer
             current_text_editor&.text_widget&.setFocus
           end
         end
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'o'
-        self.split_orientation = split_pane? && split_orientation == swt(:horizontal) ? swt(:vertical) : swt(:horizontal)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
         current_tab_folder.swt_widget.setSelection((current_tab_folder.swt_widget.getSelectionIndex() + 1) % current_tab_folder.swt_widget.getItemCount) if current_tab_folder.swt_widget.getItemCount > 0
         current_text_editor&.text_widget&.setFocus
@@ -1164,6 +1239,7 @@ module Glimmer
         current_text_editor&.text_widget&.setFocus
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == ']'
         if tab_folder2
+          self.maximized_pane = false
           if current_tab_folder == tab_folder1
             self.current_tab_folder = tab_folder2
           else
@@ -1171,10 +1247,12 @@ module Glimmer
           end
           self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
           self.project_dir.selected_child = current_tab_item&.swt_tab_item&.getData('file')
+          self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
           current_tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
         end
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '['
         if tab_folder2
+          self.maximized_pane = false
           if current_tab_folder == tab_folder2
             self.current_tab_folder = tab_folder1
           else
@@ -1182,6 +1260,7 @@ module Glimmer
           end
           self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
           self.project_dir.selected_child = current_tab_item&.swt_tab_item&.getData('file')
+          self.current_tab_item = current_tab_folder.swt_widget.getData('selected_tab_item')
           current_tab_item&.swt_tab_item&.getData('text_editor')&.text_widget&.setFocus
         end
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'

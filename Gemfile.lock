@@ -131,7 +131,7 @@ PLATFORMS
 DEPENDENCIES
   clipboard (~> 1.3.5)
   filewatcher (~> 1.1.1)
-  glimmer-dsl-swt (>= 4.17.10.3, < 5.0.0.0)
+  glimmer-dsl-swt (>= 4.18.0.0, < 5.0.0.0)
   jeweler (= 2.3.9)
   rspec (~> 3.5.0)
   simplecov
