@@ -36,7 +36,7 @@ module Glimmer
         end
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
-        @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor']
+        @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg']
         self.filtered_path_options = []
       end
       

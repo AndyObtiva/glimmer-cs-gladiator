@@ -2,8 +2,7 @@
 
 ## Up Next
 
-- Make a Gladiator video gif showing maximization/run-ruby
-
+- Refactor Gladiator Custom Shell to extract more Glimmer Custom Widgets from it like FileLookupList and FileExplorerTree
 - Merge File Lookup with File Explorer
 - Fix issue where typing does not bring caret_position to screen to make the word edited visible
 - Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
@@ -11,6 +10,7 @@
 - Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
 - Make paste an undoable command separate from change_content!
 - Make the same file split on both sides have different scroll positions on both sides
+- Make short gif videos of all features
 
 - Package gladidator as a DMG/MSI
 - Add gladiator-setup to make gladiator executable available everywhere

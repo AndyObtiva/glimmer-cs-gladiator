@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.7.1
+
+- Update View -> Reset All to also reset the File Lookup/File Explorer Sash Width and the Navigation Bar (expanding it)
+- Fix issue with split, reset split, unsplit, and then split again forgetting the reset for the sash width
+- Ensure closing a single tab moves user back to the previous tab
+- Add pkg to ignore paths
+- Update Reset All menu item to reset splits too
+
 ## 0.7.0
 
 - Upgrade to glimmer-dsl-swt v4.18.0.0
