@@ -2,7 +2,6 @@
 
 ## Up Next
 
-- Fix issue with creating a new directory in a different project from the main one open
 - Make a Gladiator video gif showing maximization/run-ruby
 - Document new changes
 

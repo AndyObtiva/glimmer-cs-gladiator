@@ -60,7 +60,7 @@ module Glimmer
       def name=(the_name)
         self.display_path = display_path.sub(/#{Regexp.escape(@name)}$/, the_name)
         @name = the_name
-        new_path = ::File.expand_path(display_path)
+        new_path = @project_dir.nil? ? ::File.expand_path(display_path) : ::File.join(project_dir.path, display_path)
         FileUtils.mv(path, new_path)
         self.path = display_path
       end

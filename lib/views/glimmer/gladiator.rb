@@ -242,7 +242,7 @@ module Glimmer
           display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
             save_config
             project_dir.selected_child&.write_dirty_content
-            exit(0)
+            display.swt_display.shells.each(&:close)
           }
         end
 
@@ -266,12 +266,12 @@ module Glimmer
             }
             menu_item(:separator)
             menu_item {
-              text 'E&xit'
-              accelerator COMMAND_KEY, :q
+              text '&Quit Project'
+              accelerator COMMAND_KEY, :alt, :q
               on_widget_selected {
                 save_config
                 project_dir.selected_child&.write_dirty_content
-                exit(0)
+                body_root.close
               }
             }
           }
@@ -295,13 +295,13 @@ module Glimmer
                 }
               }
               menu_item(:check) {
-                text '&Maximize Current'
+                text '&Maximize Pane'
                 enabled bind(self, :tab_folder2)
                 accelerator COMMAND_KEY, :shift, :m
                 selection bind(self, :maximized_pane)
               }
               menu_item {
-                text 'Reset Split &Pane'
+                text 'Reset &Panes'
                 enabled bind(self, :tab_folder2)
                 accelerator COMMAND_KEY, :shift, :p
                 on_widget_selected {
@@ -331,7 +331,7 @@ module Glimmer
               selection bind(self, :maximized_editor)
             }
             menu_item {
-              text '&Reset All Sizes'
+              text '&Reset All'
               accelerator COMMAND_KEY, :ctrl, :r
               on_widget_selected {
                 self.maximized_editor = false
@@ -932,7 +932,7 @@ module Glimmer
     end
 
     def save_config
-      return unless @loaded_config
+      return if !@loaded_config || body_root.disposed?
       child = project_dir.selected_child
       return if child.nil?
       tab_folder1 = @tab_folder1 || @current_tab_folder
@@ -1116,22 +1116,24 @@ module Glimmer
           file = edited_tree_item.getData
           file_path = file.path
           file.name
-          if new_file
-            project_dir.selected_child_path = file_path
-          else
-            found_text_editor&.file = file
-            found_tab_item&.setData('file', file)
-            found_tab_item&.setData('file_path', file.path)
-            found_tab_item&.setText(file.name)
-            body_root.pack_same_size
-            if current_file
+          if ::File.file?(file_path)
+            if new_file
               project_dir.selected_child_path = file_path
             else
-              selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
+              found_text_editor&.file = file
+              found_tab_item&.setData('file', file)
+              found_tab_item&.setData('file_path', file.path)
+              found_tab_item&.setText(file.name)
+              body_root.pack_same_size
+              if current_file
+                project_dir.selected_child_path = file_path
+              else
+                selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
+              end
+              async_exec {
+                @file_tree.swt_widget.showItem(edited_tree_item)
+              }
             end
-            async_exec {
-              @file_tree.swt_widget.showItem(edited_tree_item)
-            }
           end
           project_dir.resume_refresh
         },

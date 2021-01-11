@@ -13,6 +13,8 @@
 - Make CMD R and CMD T shortcuts show the file lookup/file explorer if collapsed (just like CMD + F shows navigation area)
 - Display Accelerators (keyboard shortcuts) on Mac Menu Items
 - Show exception dialog on error when invoking Run -> Ruby
+- Fix issue with creating a new directory in a different project from the main one open
+- Fix issue with quitting gladiator when multiple projects are open requiring multiple presses of CMD+Q
 
 ## 0.6.4
 
