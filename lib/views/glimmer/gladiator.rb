@@ -1,3 +1,24 @@
+# Copyright (c) 2020-2021 Andy Maleh
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 require 'fileutils'
 require 'os'
 
@@ -6,6 +27,8 @@ require 'models/glimmer/gladiator/file'
 require 'models/glimmer/gladiator/command'
 
 require 'views/glimmer/gladiator/text_editor'
+require 'views/glimmer/gladiator/file_lookup_list'
+require 'views/glimmer/gladiator/file_explorer_tree'
 
 Clipboard.implementation = Clipboard::Java
 Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use
@@ -57,7 +80,7 @@ module Glimmer
       pane_count && pane_count > 1
     end
     
-    attr_reader :find_text, :filter_text, :rename_in_progress, :line_number_text, :file_tree, :split_orientation
+    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation
     attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor, :tab_folder1, :tab_folder2, :maximized_pane, :maximized_editor
     alias maximized_pane? maximized_pane
     alias maximized_editor? maximized_editor
@@ -102,7 +125,7 @@ module Glimmer
     #
     after_body {
       observe(project_dir, 'children') do
-        select_tree_item unless @rename_in_progress || Gladiator.startup
+        @file_explorer_tree.select_tree_item unless Gladiator.startup
       end
       observe(project_dir, 'selected_child') do |selected_file|
         if selected_file
@@ -114,7 +137,7 @@ module Glimmer
             }
             body_root.pack_same_size
           end
-          select_tree_item unless @rename_in_progress || Gladiator.startup
+          @file_explorer_tree.select_tree_item unless Gladiator.startup
           found_tab_item = selected_tab_item
           if found_tab_item
             @current_tab_folder.swt_widget.setSelection(found_tab_item)
@@ -442,28 +465,8 @@ module Glimmer
                     }
                   }
                 
-                  @file_lookup_list = list(:border, :h_scroll, :v_scroll) {
+                  @file_lookup_list = file_lookup_list(gladiator: self, foreground_color: @default_foreground) {
                     layout_data :fill, :fill, true, true
-                    #visible bind(self, 'project_dir.filter') {|f| !!f}
-                    selection bind(project_dir, :filtered_path)
-                    foreground @default_foreground
-                    on_mouse_up {
-                      project_dir.selected_child_path = @file_lookup_list.swt_widget.getSelection.first
-                    }
-                    on_key_pressed { |key_event|
-                      if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
-                        project_dir.selected_child_path = @file_lookup_list.swt_widget.getSelection.first
-                        @current_text_editor&.text_widget&.setFocus
-                      end
-                    }
-                    drag_source(DND::DROP_COPY) {
-                      transfer [TextTransfer.getInstance].to_java(Transfer)
-                      on_drag_set_data { |event|
-                        Gladiator.drag = true
-                        list = event.widget.getControl
-                        event.data = list.getSelection.first
-                      }
-                    }
                   }
                 }
                 
@@ -503,84 +506,8 @@ module Glimmer
                   text 'File Explorer'
                   height display.bounds.height
                   
-                  @file_tree = tree(:virtual, :border, :h_scroll, :v_scroll) {
+                  @file_explorer_tree = file_explorer_tree(gladiator: self, foreground_color: @default_foreground) {
                     layout_data :fill, :fill, true, true
-                    #visible bind(self, 'project_dir.filter') {|f| !f}
-                    items bind(self, :project_dir), tree_properties(children: :children, text: :name)
-                    foreground @default_foreground
-                    drag_source(DND::DROP_COPY) {
-                      transfer [TextTransfer.getInstance].to_java(Transfer)
-                      on_drag_set_data { |event|
-                        Gladiator.drag = true
-                        tree = event.widget.getControl
-                        tree_item = tree.getSelection.first
-                        event.data = tree_item.getData.path
-                      }
-                    }
-                    menu {
-                      @open_menu_item = menu_item {
-                        text 'Open'
-                        on_widget_selected {
-                          project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection.first)
-                        }
-                      }
-                      menu_item(:separator)
-                      menu_item {
-                        text 'Delete'
-                        on_widget_selected {
-                          tree_item = @file_tree.swt_widget.getSelection.first
-                          delete_tree_item(tree_item)
-                        }
-                      }
-                      menu_item {
-                        text 'Refresh'
-                        on_widget_selected {
-                          project_dir.refresh
-                        }
-                      }
-                      menu_item {
-                        text 'Rename'
-                        on_widget_selected {
-                          rename_selected_tree_item
-                        }
-                      }
-                      menu_item {
-                        text 'New Directory'
-                        on_widget_selected {
-                          add_new_directory_to_selected_tree_item
-                        }
-                      }
-                      menu_item {
-                        text 'New File'
-                        on_widget_selected {
-                          add_new_file_to_selected_tree_item
-                        }
-                      }
-                    }
-                    on_swt_menudetect { |event|
-                      path = extract_tree_item_path(@file_tree.swt_widget.getSelection.first)
-                      @open_menu_item.swt_widget.setEnabled(!::Dir.exist?(path)) if path
-                    }
-                    on_mouse_up {
-                      if Gladiator.drag_and_drop
-                        Gladiator.drag_and_drop = false
-                      else
-                        project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection&.first)
-                        @current_text_editor&.text_widget&.setFocus
-                      end
-                    }
-                    on_key_pressed { |key_event|
-                      if Glimmer::SWT::SWTProxy.include?(key_event.keyCode, :cr)
-                        project_dir.selected_child_path = extract_tree_item_path(@file_tree.swt_widget.getSelection&.first)
-                        @current_text_editor&.text_widget&.setFocus
-                      end
-                    }
-                    on_paint_control {
-                      root_item = @file_tree.swt_widget.getItems.first
-                      if root_item && !root_item.getExpanded
-                        root_item.setExpanded(true)
-                      end
-                    }
                   }
                 }
                 
@@ -602,13 +529,7 @@ module Glimmer
               }
   
             }
-  
-            # TODO see if you could replace some of this with Glimmer DSL/API syntax
-            @file_tree_editor = TreeEditor.new(@file_tree.swt_widget);
-            @file_tree_editor.horizontalAlignment = swt(:left);
-            @file_tree_editor.grabHorizontal = true;
-            @file_tree_editor.minimumHeight = 20;
-  
+    
           }
           
           @editor_area_composite = composite {
@@ -1058,125 +979,6 @@ module Glimmer
       async_exec { body_root.pack_same_size }
     end
 
-    def extract_tree_item_path(tree_item)
-      return if tree_item.nil?
-      if tree_item.getParentItem
-        ::File.join(extract_tree_item_path(tree_item.getParentItem), tree_item.getText)
-      else
-        project_dir.path
-      end
-    end
-
-    def select_tree_item
-      return unless project_dir.selected_child&.name
-      tree_items_to_select = @file_tree.depth_first_search { |ti| ti.getData.path == project_dir.selected_child.path }
-      @file_tree.swt_widget.setSelection(tree_items_to_select)
-    end
-
-    def delete_tree_item(tree_item)
-      return if tree_item.nil?
-      file = tree_item.getData
-      parent_path = ::File.dirname(file.path)
-      if file.is_a?(Gladiator::Dir)
-        file_paths = file.all_children.select {|f| f.is_a?(Gladiator::File)}.map(&:path)
-        file.remove_all_observers
-      else
-        file_paths = [file.path]
-      end
-      file_paths.each do |file_path|
-        found_tab_item = find_tab_item(file_path)
-        if found_tab_item
-          project_dir.selected_child_path_history.delete(found_tab_item.getData('file_path'))
-          found_tab_item.getData('proxy')&.dispose
-        end
-      end
-      file.delete! # TODO consider supporting command undo/redo
-      project_dir.refresh(async: false)
-      parent_tree_item = @file_tree.depth_first_search {|ti| ti.getData.path == parent_path}.first
-      @file_tree.swt_widget.showItem(parent_tree_item)
-      parent_tree_item.setExpanded(true)
-    rescue => e
-      puts e.full_message
-    end
-
-    def add_new_directory_to_selected_tree_item
-      project_dir.pause_refresh
-      tree_item = @file_tree.swt_widget.getSelection.first
-      directory_path = extract_tree_item_path(tree_item)
-      return if directory_path.nil?
-      if !::Dir.exist?(directory_path)
-        tree_item = tree_item.getParentItem
-        directory_path = ::File.dirname(directory_path)
-      end
-      new_directory_path = ::File.expand_path(::File.join(directory_path, 'new_directory'))
-      FileUtils.mkdir_p(new_directory_path)
-      project_dir.refresh(async: false, force: true)
-      new_tree_item = @file_tree.depth_first_search {|ti| ti.getData.path == new_directory_path}.first
-      @file_tree.swt_widget.showItem(new_tree_item)
-      rename_tree_item(new_tree_item)
-    end
-
-    def add_new_file_to_selected_tree_item
-      project_dir.pause_refresh
-      tree_item = @file_tree.swt_widget.getSelection.first
-      directory_path = extract_tree_item_path(tree_item)
-      if !::Dir.exist?(directory_path)
-        tree_item = tree_item.getParentItem
-        directory_path = ::File.dirname(directory_path)
-      end
-      new_file_path = ::File.expand_path(::File.join(directory_path, 'new_file'))
-      FileUtils.touch(new_file_path)
-      # TODO look into refreshing only the parent directory to avoid slowdown
-      project_dir.refresh(async: false, force: true)
-      new_tree_item = @file_tree.depth_first_search {|ti| ti.getData.path == new_file_path}.first
-      @file_tree.swt_widget.showItem(new_tree_item)
-      rename_tree_item(new_tree_item, true)
-    end
-
-    def rename_selected_tree_item
-      project_dir.pause_refresh
-      tree_item = @file_tree.swt_widget.getSelection.first
-      rename_tree_item(tree_item)
-    end
-
-    def rename_tree_item(tree_item, new_file = false)
-      original_file = tree_item.getData
-      current_file = project_dir.selected_child_path == original_file.path
-      found_tab_item = find_tab_item(original_file.path)
-      found_text_editor = found_tab_item&.getData('text_editor')
-      @file_tree.edit_tree_item(
-        tree_item,
-        after_write: -> (edited_tree_item) {
-          file = edited_tree_item.getData
-          file_path = file.path
-          file.name
-          if ::File.file?(file_path)
-            if new_file
-              project_dir.selected_child_path = file_path
-            else
-              found_text_editor&.file = file
-              found_tab_item&.setData('file', file)
-              found_tab_item&.setData('file_path', file.path)
-              found_tab_item&.setText(file.name)
-              body_root.pack_same_size
-              if current_file
-                project_dir.selected_child_path = file_path
-              else
-                selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
-              end
-              async_exec {
-                @file_tree.swt_widget.showItem(edited_tree_item)
-              }
-            end
-          end
-          project_dir.resume_refresh
-        },
-        after_cancel: -> {
-          project_dir.resume_refresh
-        }
-      )
-    end
-
     def extract_char(event)
       event.keyCode.chr
     rescue => e
@@ -1360,8 +1162,8 @@ module Glimmer
           @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height
           @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
         end
-        select_tree_item unless rename_in_progress
-        file_tree.swt_widget.setFocus
+        @file_explorer_tree.select_tree_item
+        @file_explorer_tree.swt_widget.setFocus
       elsif key_event.keyCode == swt(:esc)
         if current_text_editor
           project_dir.selected_child_path = current_text_editor.file.path

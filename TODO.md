@@ -2,7 +2,9 @@
 
 ## Up Next
 
-- Refactor Gladiator Custom Shell to extract more Glimmer Custom Widgets from it like FileLookupList and FileExplorerTree
+- Extract gladiator_menu_bar custom widget
+- Consider extracting tab_folder with all its dynamic logic/observers
+- Consider pushing observer related logic for tree into tree
 - Merge File Lookup with File Explorer
 - Fix issue where typing does not bring caret_position to screen to make the word edited visible
 - Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)

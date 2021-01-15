@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.7.2
+
+- Refactor Gladiator Custom Shell to extract more Glimmer Custom Widgets from it like FileLookupList and FileExplorerTree
+
 ## 0.7.1
 
 - Update View -> Reset All to also reset the File Lookup/File Explorer Sash Width and the Navigation Bar (expanding it)
