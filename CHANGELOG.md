@@ -2,7 +2,9 @@
 
 ## 0.7.2
 
+- Fallback font ("Courier") for text editor when "Consolas" is not available
 - Refactor Gladiator Custom Shell to extract more Glimmer Custom Widgets from it like FileLookupList and FileExplorerTree
+- Upgrade to glimmer-dsl-swt v4.18.0.2
 
 ## 0.7.1
 

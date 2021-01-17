@@ -28,6 +28,10 @@ module Glimmer
 
       attr_reader :text_proxy
       
+      before_body {
+        @font_name = display.get_font_list(nil, true).map(&:name).include?('Consolas') ? 'Consolas' : 'Courier'
+      }
+      
       after_body {
         load_content
       }
@@ -39,7 +43,7 @@ module Glimmer
           @line_numbers_text = styled_text(:multi, :border) {
             layout_data(:right, :fill, false, true)
             text ' '*4
-            font name: 'Consolas', height: OS.mac? ? 15 : 12
+            font name: @font_name, height: OS.mac? ? 15 : 12
             background color(:widget_background)
             foreground :dark_blue
             top_margin 5
@@ -60,7 +64,7 @@ module Glimmer
           
           @text_proxy = send(text_widget_keyword) { |the_text|
             layout_data :fill, :fill, true, true
-            font name: 'Consolas', height: OS.mac? ? 15 : 12
+            font name: @font_name, height: OS.mac? ? 15 : 12
             foreground rgb(75, 75, 75)
             focus true
             top_margin 5
