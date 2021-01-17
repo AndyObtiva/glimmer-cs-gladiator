@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.7.3
+
+- Fix issue with disposed? error in save_config
+
 ## 0.7.2
 
 - Fallback font ("Courier") for text editor when "Consolas" is not available

@@ -135,7 +135,6 @@ PLATFORMS
   java
   ruby
   universal-java-1.8
-  universal-java-15
 
 DEPENDENCIES
   clipboard (~> 1.3.5)

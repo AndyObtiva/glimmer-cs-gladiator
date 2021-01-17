@@ -861,7 +861,7 @@ module Glimmer
     end
 
     def save_config
-      return if !@loaded_config || body_root.disposed?
+      return if !@loaded_config || body_root&.disposed?
       child = project_dir.selected_child
       return if child.nil?
       tab_folder1 = @tab_folder1 || @current_tab_folder

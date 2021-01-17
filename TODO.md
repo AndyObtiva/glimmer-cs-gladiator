@@ -2,6 +2,12 @@
 
 ## Up Next
 
+- Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find 
+- Add extra indentation on new line if after a method declaration, class/module declaration, or block declaration
+- Add gladiator-setup to make gladiator executable available everywhere
+- Add menu bar menu items for file lockup and file explorer go to file
+- Add menu bar menu items for file explorer right click menu on currently selected file
+- Fix issue with not being able to jump to File Lookup via CMD+R shortcut when opening gladiator for the first time in a project with no files open for editing
 - Extract gladiator_menu_bar custom widget
 - Consider extracting tab_folder with all its dynamic logic/observers
 - Consider pushing observer related logic for tree into tree
@@ -104,3 +110,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Text Column selection (StyledText setBlockSelection)
 - Enhance File Explorer Tree with directory/file icons
 - Enhance Tabs with file type icons
+- Support feature extensions via Ruby
