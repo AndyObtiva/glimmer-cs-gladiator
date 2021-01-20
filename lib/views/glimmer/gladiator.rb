@@ -95,6 +95,7 @@ module Glimmer
         project_dir.selected_child&.write_raw_dirty_content
       end
       Display.setAppName('Gladiator')
+      Display.setAppVersion(VERSION)
       # make sure the display events are only hooked once if multiple gladiators are created
       unless defined?(@@display)
         @@display = display {
@@ -228,538 +229,587 @@ module Glimmer
     ## Top-most widget must be a shell or another custom shell
     #
     body {
-      shell {
-        text "Gladiator - #{::File.expand_path(project_dir.path)}"
-        minimum_size 520, 250
-        size 1440, 900
-        image ICON
-        
-        on_swt_show {
-          swt_widget.setSize(@config[:shell_width], @config[:shell_height]) if @config[:shell_width] && @config[:shell_height]
-          swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
-          @loaded_config = true
+      if !::Dir.glob(::File.join(project_dir_path, 'glimmer-cs-gladiator.jar')).empty?
+        open_project
+        shell(:no_trim, :no_background) {
+          menu_bar {
+            menu {
+              text 'File'
+            }
+            menu {
+              text 'View'
+            }
+            menu {
+              text 'Run'
+            }
+            menu {
+              text 'Help'
+            }
+          }
         }
-        
-        on_shell_closed {
-          save_config
-          project_dir.selected_child&.write_dirty_content
-          if @tab_folder2
+      else
+        shell {
+          text "Gladiator - #{::File.expand_path(project_dir.path)}"
+          minimum_size 590, 250
+          image ICON
+          
+          on_swt_show {
+            unless @shell_visible
+              if @config[:shell_width] && @config[:shell_height]
+                swt_widget.set_size(@config[:shell_width], @config[:shell_height])
+              else
+                swt_widget.set_size(display.bounds.width, display.bounds.height)
+              end
+            end
+            swt_widget.setLocation(@config[:shell_x], @config[:shell_y]) if @config[:shell_x] && @config[:shell_y]
+            @loaded_config = true
+            @shell_visible = true
+          }
+          
+          on_shell_closed {
+            save_config
+            project_dir.selected_child&.write_dirty_content
+            if @tab_folder2
+              current_tab_folder.swt_widget.getItems.each do |tab_item|
+                tab_item.getData('proxy')&.dispose
+              end
+              close_tab_folder
+            end
             current_tab_folder.swt_widget.getItems.each do |tab_item|
               tab_item.getData('proxy')&.dispose
             end
-            close_tab_folder
-          end
-          current_tab_folder.swt_widget.getItems.each do |tab_item|
-            tab_item.getData('proxy')&.dispose
-          end
-          body_root.close unless current_tab_folder.swt_widget.getItems.empty?
-        }
-        on_widget_disposed {
-          project_dir.selected_child&.write_dirty_content
-        }
-        on_control_resized {
-          save_config
-        }
-        on_control_moved {
-          save_config
-        }
-        on_shell_deactivated {
-          project_dir.selected_child&.write_dirty_content
-        }
-
-        if OS.mac?
-          display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
-            save_config
+            body_root.close unless current_tab_folder.swt_widget.getItems.empty?
+          }
+          on_widget_disposed {
             project_dir.selected_child&.write_dirty_content
-            display.swt_display.shells.each(&:close)
           }
-        end
-
-        menu_bar {
-          menu {
-            text '&File'
-
-            menu_item {
-              text 'New &Scratchpad'
-              accelerator COMMAND_KEY, :shift, :s
-              on_widget_selected {
-                project_dir.selected_child_path = ''
-              }
-            }
-            menu_item {
-              text 'Open &Project...'
-              accelerator COMMAND_KEY, :o
-              on_widget_selected {
-                open_project
-              }
-            }
-            menu_item(:separator)
-            menu_item {
-              text '&Quit Project'
-              accelerator COMMAND_KEY, :alt, :q
-              on_widget_selected {
-                save_config
-                project_dir.selected_child&.write_dirty_content
-                body_root.close
-              }
-            }
+          on_control_resized {
+            save_config
           }
-          menu {
-            text '&View'
+          on_control_moved {
+            save_config
+          }
+          on_shell_deactivated {
+            project_dir.selected_child&.write_dirty_content
+          }
+  
+          if OS.mac?
+            display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
+              save_config
+              project_dir.selected_child&.write_dirty_content
+              display.swt_display.shells.each(&:close)
+            }
+          end
+  
+          menu_bar {
             menu {
-              text '&Split Pane'
-              menu { |menu_proxy|
-                text '&Orientation'
-                menu_item(:radio) {
-                  text '&Horizontal'
-                  selection bind(self, :split_orientation,
-                                        on_read: ->(o) { split_pane? && o == swt(:horizontal) },
-                                        on_write: ->(b) { b.nil? ? nil : (b ? swt(:horizontal) : swt(:vertical)) })
+              text '&File'
+  
+              menu_item {
+                text 'New &Scratchpad'
+                accelerator COMMAND_KEY, :shift, :s
+                on_widget_selected {
+                  project_dir.selected_child_path = ''
                 }
-                menu_item(:radio) {
-                  text '&Vertical'
-                  selection bind(self, :split_orientation,
-                                        on_read: ->(o) { split_pane? && o == swt(:vertical) },
-                                        on_write: ->(b) { b.nil? ? nil : (b ? swt(:vertical) : swt(:horizontal)) })
+              }
+              menu_item {
+                text 'Open &Project...'
+                accelerator COMMAND_KEY, :o
+                on_widget_selected {
+                  open_project
+                }
+              }
+              menu_item(:separator)
+              menu_item {
+                text '&Quit Project'
+                accelerator COMMAND_KEY, :alt, :q
+                on_widget_selected {
+                  save_config
+                  project_dir.selected_child&.write_dirty_content
+                  body_root.close
+                }
+              }
+            }
+            menu {
+              text '&View'
+              menu {
+                text '&Split Pane'
+                menu { |menu_proxy|
+                  text '&Orientation'
+                  menu_item(:radio) {
+                    text '&Horizontal'
+                    selection bind(self, :split_orientation,
+                                          on_read: ->(o) { split_pane? && o == swt(:horizontal) },
+                                          on_write: ->(b) { b.nil? ? nil : (b ? swt(:horizontal) : swt(:vertical)) })
+                  }
+                  menu_item(:radio) {
+                    text '&Vertical'
+                    selection bind(self, :split_orientation,
+                                          on_read: ->(o) { split_pane? && o == swt(:vertical) },
+                                          on_write: ->(b) { b.nil? ? nil : (b ? swt(:vertical) : swt(:horizontal)) })
+                  }
+                }
+                menu_item(:check) {
+                  text '&Maximize Pane'
+                  enabled bind(self, :tab_folder2)
+                  accelerator COMMAND_KEY, :shift, :m
+                  selection bind(self, :maximized_pane)
+                }
+                menu_item {
+                  text 'Reset &Panes'
+                  enabled bind(self, :tab_folder2)
+                  accelerator COMMAND_KEY, :shift, :p
+                  on_widget_selected {
+                    if tab_folder2
+                      self.maximized_pane = false
+                      @tab_folder_sash_form.weights = [1, 1]
+                    end
+                  }
+                }
+                menu_item {
+                  text '&Unsplit'
+                  enabled bind(self, :tab_folder2)
+                  accelerator COMMAND_KEY, :shift, :u
+                  on_widget_selected {
+                    if tab_folder2
+                      self.maximized_pane = false
+                      navigate_to_next_tab_folder if current_tab_folder != tab_folder2
+                      close_all_tabs(tab_folder2)
+                      self.split_orientation = nil
+                      body_root.pack_same_size
+                    end
+                  }
                 }
               }
               menu_item(:check) {
-                text '&Maximize Pane'
-                enabled bind(self, :tab_folder2)
-                accelerator COMMAND_KEY, :shift, :m
-                selection bind(self, :maximized_pane)
+                text '&Maximize Editor'
+                accelerator COMMAND_KEY, :ctrl, :m
+                selection bind(self, :maximized_editor)
               }
               menu_item {
-                text 'Reset &Panes'
-                enabled bind(self, :tab_folder2)
-                accelerator COMMAND_KEY, :shift, :p
+                text '&Reset All'
+                accelerator COMMAND_KEY, :ctrl, :r
                 on_widget_selected {
-                  if tab_folder2
-                    self.maximized_pane = false
-                    @tab_folder_sash_form.weights = [1, 1]
-                  end
+                  self.maximized_editor = false
+                  @file_area_and_editor_area_sash_form.weights = [1, 5]
+                  @side_bar_sash_form.weights = [1, 1]
                 }
               }
+            }
+            menu {
+              text '&Run'
+  #             menu_item {
+  #               text 'Launch Glimmer &App'
+  #               on_widget_selected {
+  #                 parent_path = project_dir.path
+  ##                 current_directory_name = ::File.basename(parent_path)
+  ##                 assumed_shell_script = ::File.join(parent_path, 'bin', current_directory_name)
+  ##                 assumed_shell_script = ::Dir.glob(::File.join(parent_path, 'bin', '*')).detect {|f| ::File.file?(f) && !::File.read(f).include?('#!/usr/bin/env')} if !::File.exist?(assumed_shell_script)
+  ##                 load assumed_shell_script
+  #                 FileUtils.cd(parent_path) do
+  #                   system 'glimmer run'
+  #                 end
+  #               }
+  #             }
               menu_item {
-                text '&Unsplit'
-                enabled bind(self, :tab_folder2)
-                accelerator COMMAND_KEY, :shift, :u
+                text '&Ruby'
+                accelerator COMMAND_KEY, :shift, :r
                 on_widget_selected {
-                  if tab_folder2
-                    self.maximized_pane = false
-                    navigate_to_next_tab_folder if current_tab_folder != tab_folder2
-                    close_all_tabs(tab_folder2)
-                    self.split_orientation = nil
-                    body_root.pack_same_size
+                  begin
+                    project_dir.selected_child.run
+                  rescue Exception => e
+                    dialog {
+                      text 'Run - Ruby - Error Encountered!'
+                      label {
+                        text e.full_message
+                      }
+                    }.open
                   end
                 }
               }
             }
-            menu_item(:check) {
-              text '&Maximize Editor'
-              accelerator COMMAND_KEY, :ctrl, :m
-              selection bind(self, :maximized_editor)
-            }
-            menu_item {
-              text '&Reset All'
-              accelerator COMMAND_KEY, :ctrl, :r
-              on_widget_selected {
-                self.maximized_editor = false
-                @file_area_and_editor_area_sash_form.weights = [1, 5]
-                @side_bar_sash_form.weights = [1, 1]
+            menu {
+              text '&Help'
+              menu_item {
+                text '&About'
+                accelerator COMMAND_KEY, :shift, :a
+                on_widget_selected {
+                  display_about_dialog
+                }
               }
             }
-          }
-          menu {
-            text '&Run'
-#             menu_item {
-#               text 'Launch Glimmer &App'
-#               on_widget_selected {
-#                 parent_path = project_dir.path
-##                 current_directory_name = ::File.basename(parent_path)
-##                 assumed_shell_script = ::File.join(parent_path, 'bin', current_directory_name)
-##                 assumed_shell_script = ::Dir.glob(::File.join(parent_path, 'bin', '*')).detect {|f| ::File.file?(f) && !::File.read(f).include?('#!/usr/bin/env')} if !::File.exist?(assumed_shell_script)
-##                 load assumed_shell_script
-#                 FileUtils.cd(parent_path) do
-#                   system 'glimmer run'
-#                 end
-#               }
-#             }
-            menu_item {
-              text '&Ruby'
-              accelerator COMMAND_KEY, :shift, :r
-              on_widget_selected {
-                begin
-                  project_dir.selected_child.run
-                rescue Exception => e
-                  dialog {
-                    text 'Run - Ruby - Error Encountered!'
-                    label {
-                      text e.full_message
-                    }
-                  }.open
-                end
-              }
-            }
-          }
-          menu {
-            text '&Help'
-            menu_item {
-              text '&About'
-              accelerator COMMAND_KEY, :shift, :a
-              on_widget_selected {
-                display_about_dialog
-              }
-            }
-          }
-        }
-        
-        @file_area_and_editor_area_sash_form = sash_form(:horizontal) {
-          weights 1, 5
-
-          composite {
-            grid_layout(1, false) {
-              margin_width 0
-              margin_height 0
-            }
-            
-            @side_bar_sash_form = sash_form(:vertical) {
-              layout_data(:fill, :fill, true, true)
-              sash_width 4
-              
-              resize_expand_items = lambda { |event=nil|
-                @file_lookup_expand_item&.swt_expand_item&.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
-                @file_explorer_expand_item&.swt_expand_item&.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
-              }
-              
-              @file_lookup_expand_bar = expand_bar {
-                layout_data :fill, :fill, true, true
-                font height: 17, style: :bold
-                foreground @default_foreground
-                
-                on_swt_show {
-                  @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
-                }
-                
-                on_swt_Resize(&resize_expand_items)
-                
-                @file_lookup_expand_item = expand_item {
-                  grid_layout {
-                    margin_width 0
-                    margin_height 0
-                  }
-                  text 'File Lookup'
-                  height display.bounds.height
-                  
-                  @filter_text = text {
-                    layout_data :fill, :center, true, false
-                    text bind(project_dir, 'filter')
-                    on_key_pressed { |key_event|
-                      if key_event.keyCode == swt(:tab) ||
-                          key_event.keyCode == swt(:cr) ||
-                          key_event.keyCode == swt(:arrow_up) ||
-                          key_event.keyCode == swt(:arrow_down)
-                        @file_lookup_list.swt_widget.select(0) if @file_lookup_list.swt_widget.getSelectionIndex() == -1
-                        @file_lookup_list.swt_widget.setFocus
-                      end
-                    }
-                  }
-                
-                  @file_lookup_list = file_lookup_list(gladiator: self, foreground_color: @default_foreground) {
-                    layout_data :fill, :fill, true, true
-                  }
-                }
-                
-                on_item_collapsed { |event|
-                  if @file_explorer_expand_item.swt_expand_item.get_expanded
-                    @file_lookup_expand_item_height = @file_lookup_expand_item.swt_expand_item.height
-                    @file_lookup_expand_item.swt_expand_item.height = 0
-                    @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
-                    @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
-                    @side_bar_sash_form.weights = [@file_lookup_expand_item.swt_expand_item.header_height, @file_lookup_expand_bar_height + @file_explorer_expand_bar_height - @file_lookup_expand_item.swt_expand_item.header_height]
-                  end
-                }
-              
-                on_item_expanded {
-                  @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_item_height if @file_lookup_expand_item_height
-                  @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
-                }
-                
-              }
-              
-              @file_explorer_expand_bar = expand_bar {
-                layout_data :fill, :fill, true, true
-                font height: 17, style: :bold
-                foreground @default_foreground
-                
-                on_swt_show {
-                  @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
-                }
-                
-                on_swt_Resize(&resize_expand_items)
-                            
-                @file_explorer_expand_item = expand_item {
-                  grid_layout {
-                    margin_width 0
-                    margin_height 0
-                  }
-                  text 'File Explorer'
-                  height display.bounds.height
-                  
-                  @file_explorer_tree = file_explorer_tree(gladiator: self, foreground_color: @default_foreground) {
-                    layout_data :fill, :fill, true, true
-                  }
-                }
-                
-                on_item_collapsed { |event|
-                  if @file_lookup_expand_item.swt_expand_item.get_expanded
-                    @file_explorer_expand_item_height = @file_explorer_expand_item.swt_expand_item.height
-                    @file_explorer_expand_item.swt_expand_item.height = 0
-                    @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
-                    @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
-                    @side_bar_sash_form.weights = [@file_explorer_expand_bar_height + @file_explorer_expand_bar_height - @file_explorer_expand_item.swt_expand_item.header_height, @file_explorer_expand_item.swt_expand_item.header_height]
-                  end
-                }
-              
-                on_item_expanded {
-                  @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height
-                  @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
-                }
-                
-              }
-  
-            }
-    
           }
           
-          @editor_area_composite = composite {
-            grid_layout(1, false) {
-              margin_width 0
-              margin_height 0
+          @file_area_and_editor_area_sash_form = sash_form(:horizontal) {
+            weights 1, 5
+  
+            composite {
+              grid_layout(1, false) {
+                margin_width 0
+                margin_height 0
+              }
+              
+              @side_bar_sash_form = sash_form(:vertical) {
+                layout_data(:fill, :fill, true, true)
+                sash_width 4
+                
+                resize_expand_items = lambda { |event=nil|
+                  @file_lookup_expand_item&.swt_expand_item&.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
+                  @file_explorer_expand_item&.swt_expand_item&.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
+                }
+                
+                @file_lookup_expand_bar = expand_bar {
+                  layout_data :fill, :fill, true, true
+                  font height: 17, style: :bold
+                  foreground @default_foreground
+                  
+                  on_swt_show {
+                    @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_bar.size.y - @file_lookup_expand_item.swt_expand_item.header_height
+                  }
+                  
+                  on_swt_Resize(&resize_expand_items)
+                  
+                  @file_lookup_expand_item = expand_item {
+                    grid_layout {
+                      margin_width 0
+                      margin_height 0
+                    }
+                    text 'File Lookup'
+                    height display.bounds.height
+                    
+                    @filter_text = text {
+                      layout_data :fill, :center, true, false
+                      text bind(project_dir, 'filter')
+                      on_key_pressed { |key_event|
+                        if key_event.keyCode == swt(:tab) ||
+                            key_event.keyCode == swt(:cr) ||
+                            key_event.keyCode == swt(:arrow_up) ||
+                            key_event.keyCode == swt(:arrow_down)
+                          @file_lookup_list.swt_widget.select(0) if @file_lookup_list.swt_widget.getSelectionIndex() == -1
+                          @file_lookup_list.swt_widget.setFocus
+                        end
+                      }
+                    }
+                  
+                    @file_lookup_list = file_lookup_list(gladiator: self, foreground_color: @default_foreground) {
+                      layout_data :fill, :fill, true, true
+                    }
+                  }
+                  
+                  on_item_collapsed { |event|
+                    if @file_explorer_expand_item.swt_expand_item.get_expanded
+                      @file_lookup_expand_item_height = @file_lookup_expand_item.swt_expand_item.height
+                      @file_lookup_expand_item.swt_expand_item.height = 0
+                      @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
+                      @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
+                      @side_bar_sash_form.weights = [@file_lookup_expand_item.swt_expand_item.header_height, @file_lookup_expand_bar_height + @file_explorer_expand_bar_height - @file_lookup_expand_item.swt_expand_item.header_height]
+                    end
+                  }
+                
+                  on_item_expanded {
+                    @file_lookup_expand_item.swt_expand_item.height = @file_lookup_expand_item_height if @file_lookup_expand_item_height
+                    @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
+                  }
+                  
+                }
+                
+                @file_explorer_expand_bar = expand_bar {
+                  layout_data :fill, :fill, true, true
+                  font height: 17, style: :bold
+                  foreground @default_foreground
+                  
+                  on_swt_show {
+                    @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_bar.size.y - @file_explorer_expand_item.swt_expand_item.header_height
+                  }
+                  
+                  on_swt_Resize(&resize_expand_items)
+                              
+                  @file_explorer_expand_item = expand_item {
+                    grid_layout {
+                      margin_width 0
+                      margin_height 0
+                    }
+                    text 'File Explorer'
+                    height display.bounds.height
+                    
+                    @file_explorer_tree = file_explorer_tree(gladiator: self, foreground_color: @default_foreground) {
+                      layout_data :fill, :fill, true, true
+                    }
+                  }
+                  
+                  on_item_collapsed { |event|
+                    if @file_lookup_expand_item.swt_expand_item.get_expanded
+                      @file_explorer_expand_item_height = @file_explorer_expand_item.swt_expand_item.height
+                      @file_explorer_expand_item.swt_expand_item.height = 0
+                      @file_explorer_expand_bar_height = @file_explorer_expand_bar.swt_widget.size.y
+                      @file_lookup_expand_bar_height = @file_lookup_expand_bar.swt_widget.size.y
+                      @side_bar_sash_form.weights = [@file_explorer_expand_bar_height + @file_explorer_expand_bar_height - @file_explorer_expand_item.swt_expand_item.header_height, @file_explorer_expand_item.swt_expand_item.header_height]
+                    end
+                  }
+                
+                  on_item_expanded {
+                    @file_explorer_expand_item.swt_expand_item.height = @file_explorer_expand_item_height if @file_explorer_expand_item_height
+                    @side_bar_sash_form.weights = [@file_lookup_expand_bar_height, @file_explorer_expand_bar_height]
+                  }
+                  
+                }
+    
+              }
+      
             }
             
-            @navigation_expand_bar = expand_bar {
-              layout_data :fill, :top, true, false
-              font height: 17, style: :bold
-              foreground @default_foreground
+            @editor_area_composite = composite {
+              grid_layout(1, false) {
+                margin_width 0
+                margin_height 0
+              }
               
-              @navigation_expand_item = expand_item {
-                text 'Navigation'
-                height 115
-  
-                grid_layout(5, false) {
-                  margin_right 5
+              @navigation_expand_bar = expand_bar {
+                layout_data(:fill, :top, true, false) {
+                  minimum_width 480
                 }
+                font height: 17, style: :bold
+                foreground @default_foreground
                 
-                stat_font = {name: 'Consolas', height: OS.mac? ? 15 : 12}
+                @navigation_expand_item = expand_item {
+                  text 'Navigation'
+                  height 115
     
-                # row 1
-    
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'File:'
-                  foreground @default_foreground
-                }
-    
-                @file_path_label = styled_text(:none) {
-                  layout_data(:fill, :center, true, false) {
-                    horizontal_span 2
+                  grid_layout(5, false) {
+                    margin_right 5
                   }
-                  background color(:widget_background)
-                  foreground @default_foreground
-                  editable false
-                  caret nil
-                  text bind(project_dir, 'selected_child.path')
-                  on_mouse_up {
-                    @file_path_label.swt_widget.selectAll
+                  
+                  stat_font = {name: 'Consolas', height: OS.mac? ? 15 : 12}
+      
+                  # row 1
+      
+                  label {
+                    layout_data(:left, :center, false, false)
+                    text 'File:'
+                    foreground @default_foreground
                   }
-                  on_focus_lost {
-                    @file_path_label.swt_widget.setSelection(0, 0)
+      
+                  @file_path_label = styled_text(:none) {
+                    layout_data(:fill, :center, true, false) {
+                      horizontal_span 2
+                    }
+                    background color(:widget_background)
+                    foreground @default_foreground
+                    editable false
+                    caret nil
+                    text bind(project_dir, 'selected_child.path')
+                    on_mouse_up {
+                      @file_path_label.swt_widget.selectAll
+                    }
+                    on_focus_lost {
+                      @file_path_label.swt_widget.setSelection(0, 0)
+                    }
                   }
-                }
-                            
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Caret Position:'
-                  foreground @default_foreground
-                }
-                label(:right) {
-                  layout_data(:fill, :center, true, false)
-                  text bind(project_dir, 'selected_child.caret_position')
-                  foreground @default_foreground
-                  font stat_font
-                }
-                
-                # row 2
-    
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Line:'
-                  foreground @default_foreground
-                }
-                @line_number_text = text {
-                  layout_data(:fill, :center, true, false) {
-                    minimum_width 400
+                              
+                  label {
+                    layout_data(:left, :center, false, false) {
+                      minimum_width 100
+                    }
+                    text 'Caret Position:'
+                    foreground @default_foreground
                   }
-                  text bind(project_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
-                  foreground @default_foreground
-                  font stat_font
-                  on_key_pressed { |key_event|
-                    if key_event.keyCode == swt(:cr)
-                      @current_text_editor&.text_widget&.setFocus
-                    end
+                  label(:right) {
+                    layout_data(:fill, :center, true, false) {
+                      minimum_width 50
+                    }
+                    text bind(project_dir, 'selected_child.caret_position')
+                    foreground @default_foreground
+                    font stat_font
                   }
-                  on_verify_text { |event|
-                    event.doit = !event.text.match(/^\d*$/).to_a.empty?
+                  
+                  # row 2
+      
+                  label {
+                    layout_data(:left, :center, false, false)
+                    text 'Line:'
+                    foreground @default_foreground
                   }
-                }
-                label # filler
-    
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Line Position:'
-                  foreground @default_foreground
-                }
-                label(:right) {
-                  layout_data(:fill, :center, true, false)
-                  text bind(project_dir, 'selected_child.line_position')
-                  foreground @default_foreground
-                  font stat_font
-                }
-    
-                # row 3
-    
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Find:'
-                  foreground @default_foreground
-                }
-                @find_text = text {
-                  layout_data(:fill, :center, true, false) {
-                    minimum_width 400
-                  }
-                  text bind(project_dir, 'selected_child.find_text')
-                  foreground @default_foreground
-                  font stat_font
-                  on_key_pressed { |key_event|
-                    if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
-                      project_dir.selected_child.case_sensitive = !project_dir.selected_child.case_sensitive
-                      project_dir.selected_child&.find_next
-                    end
-                    if key_event.keyCode == swt(:cr)
-                      project_dir.selected_child&.find_next
-                    end
-                  }
-                }
-                composite {
-                  layout_data(:left, :center, true, false)
-                  row_layout {
-                    margin_width 0
-                    margin_height 0
-                  }
-                  button(:check) {
-                    selection bind(project_dir, 'selected_child.case_sensitive')
+                  @line_number_text = text {
+                    layout_data(:fill, :center, true, false) {
+                      width_hint 400
+                      minimum_width 100
+                    }
+                    text bind(project_dir, 'selected_child.line_number', on_read: :to_s, on_write: :to_i)
+                    foreground @default_foreground
+                    font stat_font
                     on_key_pressed { |key_event|
+                      if key_event.keyCode == swt(:cr)
+                        @current_text_editor&.text_widget&.setFocus
+                      end
+                    }
+                    on_verify_text { |event|
+                      event.doit = !event.text.match(/^\d*$/).to_a.empty?
+                    }
+                  }
+                  label # filler
+      
+                  label {
+                    layout_data(:left, :center, false, false) {
+                      minimum_width 100
+                    }
+                    text 'Line Position:'
+                    foreground @default_foreground
+                  }
+                  label(:right) {
+                    layout_data(:fill, :center, true, false) {
+                      minimum_width 50
+                    }
+                    text bind(project_dir, 'selected_child.line_position')
+                    foreground @default_foreground
+                    font stat_font
+                  }
+      
+                  # row 3
+      
+                  label {
+                    layout_data(:left, :center, false, false)
+                    text 'Find:'
+                    foreground @default_foreground
+                  }
+                  @find_text = text {
+                    layout_data(:fill, :center, true, false) {
+                      width_hint 400
+                      minimum_width 100
+                    }
+                    text bind(project_dir, 'selected_child.find_text')
+                    foreground @default_foreground
+                    font stat_font
+                    on_key_pressed { |key_event|
+                      if key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:cr)
+                        project_dir.selected_child.case_sensitive = !project_dir.selected_child.case_sensitive
+                        project_dir.selected_child&.find_next
+                      end
                       if key_event.keyCode == swt(:cr)
                         project_dir.selected_child&.find_next
                       end
                     }
                   }
+                  composite {
+                    layout_data(:left, :center, true, false) {
+                      minimum_width 120
+                    }
+                    row_layout {
+                      margin_width 0
+                      margin_height 0
+                    }
+                    button(:check) {
+                      selection bind(project_dir, 'selected_child.case_sensitive')
+                      on_key_pressed { |key_event|
+                        if key_event.keyCode == swt(:cr)
+                          project_dir.selected_child&.find_next
+                        end
+                      }
+                    }
+                    label {
+                      text 'Case-sensitive'
+                      foreground @default_foreground
+                    }
+                  }
+                  
                   label {
-                    text 'Case-sensitive'
+                    layout_data(:left, :center, false, false) {
+                      minimum_width 100
+                    }
+                    text 'Selection Count:'
                     foreground @default_foreground
                   }
-                }
-                
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Selection Count:'
-                  foreground @default_foreground
-                }
-                label(:right) {
-                  layout_data(:fill, :center, true, false)
-                  text bind(project_dir, 'selected_child.selection_count')
-                  foreground @default_foreground
-                  font stat_font
-                }
-                
-                # row 4
-    
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Replace:'
-                  foreground @default_foreground
-                }
-                @replace_text = text {
-                  layout_data(:fill, :center, true, false) {
-                    minimum_width 400
+                  label(:right) {
+                    layout_data(:fill, :center, true, false) {
+                      minimum_width 50
+                    }
+                    text bind(project_dir, 'selected_child.selection_count')
+                    foreground @default_foreground
+                    font stat_font
                   }
-                  text bind(project_dir, 'selected_child.replace_text')
-                  foreground @default_foreground
-                  font stat_font
-                  on_focus_gained {
-                    project_dir.selected_child&.ensure_find_next
+                  
+                  # row 4
+      
+                  label {
+                    layout_data(:left, :center, false, false)
+                    text 'Replace:'
+                    foreground @default_foreground
                   }
-                  on_key_pressed { |key_event|
-                    if key_event.keyCode == swt(:cr)
-                      if project_dir.selected_child
-                        Command.do(project_dir.selected_child, :replace_next!)
+                  @replace_text = text {
+                    layout_data(:fill, :center, true, false) {
+                      width_hint 400
+                      minimum_width 100
+                    }
+                    text bind(project_dir, 'selected_child.replace_text')
+                    foreground @default_foreground
+                    font stat_font
+                    on_focus_gained {
+                      project_dir.selected_child&.ensure_find_next
+                    }
+                    on_key_pressed { |key_event|
+                      if key_event.keyCode == swt(:cr)
+                        if project_dir.selected_child
+                          Command.do(project_dir.selected_child, :replace_next!)
+                        end
                       end
-                    end
+                    }
+                  }
+                  label # filler
+                  label {
+                    layout_data(:left, :center, false, false) {
+                      minimum_width 100
+                    }
+                    text 'Top Pixel:'
+                    foreground @default_foreground
+                  }
+                  label(:right) {
+                    layout_data(:fill, :center, true, false) {
+                      minimum_width 50
+                    }
+                    text bind(project_dir, 'selected_child.top_pixel')
+                    foreground @default_foreground
+                    font stat_font
                   }
                 }
-                label # filler
-                label {
-                  layout_data(:left, :center, false, false)
-                  text 'Top Pixel:'
-                  foreground @default_foreground
+                
+                on_item_collapsed {
+                  collapse_navigation_expand_bar_height
                 }
-                label(:right) {
-                  layout_data(:fill, :center, true, false)
-                  text bind(project_dir, 'selected_child.top_pixel')
-                  foreground @default_foreground
-                  font stat_font
+              
+                on_item_expanded {
+                  expand_navigation_expand_bar_height
                 }
+              
               }
               
-              on_item_collapsed {
-                collapse_navigation_expand_bar_height
-              }
-            
-              on_item_expanded {
-                expand_navigation_expand_bar_height
-              }
-            
-            }
-            
-            @tab_folder_sash_form = sash_form {
-              layout_data(:fill, :fill, true, true) {
-                width_hint 768
-                height_hint 576
-                minimum_width 768
-                minimum_height 576
-              }
-              orientation bind(self, :split_orientation) {|value| async_exec { body_root.pack_same_size}; value}
-              self.current_tab_folder = self.tab_folder1 = tab_folder {
-                drag_source(DND::DROP_COPY) {
-                  transfer [TextTransfer.getInstance].to_java(Transfer)
-                  event_data = nil
-                  on_drag_start {|event|
-                    Gladiator.drag = true
-                    tab_folder = event.widget.getControl
-                    tab_item = tab_folder.getItem(Point.new(event.x, event.y))
-                    event_data = tab_item.getData('file_path')
-                  }
-                  on_drag_set_data { |event|
-                    event.data = event_data
+              @tab_folder_sash_form = sash_form {
+                layout_data(:fill, :fill, true, true) {
+                  width_hint 768
+                  height_hint 576
+                  minimum_width 168
+                  minimum_height 176
+                }
+                orientation bind(self, :split_orientation) {|value| async_exec { body_root.pack_same_size}; value}
+                self.current_tab_folder = self.tab_folder1 = tab_folder {
+                  drag_source(DND::DROP_COPY) {
+                    transfer [TextTransfer.getInstance].to_java(Transfer)
+                    event_data = nil
+                    on_drag_start {|event|
+                      Gladiator.drag = true
+                      tab_folder = event.widget.getControl
+                      tab_item = tab_folder.getItem(Point.new(event.x, event.y))
+                      event_data = tab_item.getData('file_path')
+                    }
+                    on_drag_set_data { |event|
+                      event.data = event_data
+                    }
                   }
                 }
+                @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
               }
-              @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
             }
-          }
-        } # end of sash form
-      }
+          } # end of sash form
+        }
+      end
     }
     
     def load_config_ignore_paths

@@ -4,7 +4,12 @@
 
 - Add gladiator-setup to make gladiator executable available everywhere
 - Package Gladiator as Mac DMG file
+- Shrink minimum height for editor area (too large for putting side by side with another window)
+- Change initial default size of Gladiator window to the entire screen size
+- Made layout more resilient to shrinkage so that the Navigation area widgets don't get jumbled up
+- Show open project dialog when run as Gladiator app (e.g. Mac app) instead of opening the local directory of the app
 - Fix issue with disposed? error in save_config
+- Fix issue with first open of a file with an empty brand new gladiator session not showing file content until resizing
 
 ## 0.7.2
 

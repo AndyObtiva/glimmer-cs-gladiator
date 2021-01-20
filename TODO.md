@@ -2,11 +2,9 @@
 
 ## Up Next
 
-
-- Remember last open project when run from Mac app instead of opening the local directory as with gladiator command
-- Fix issue with first open of a file with an empty brand new gladiator session not showing file content until resizing
+- Extract gladiator_menu_bar custom widget and reuse in open_project shell (to use in app version)
 - Support opening another existing project quickly in Gladiator if open already (via druby or dumping a file somewhere monitored)
-
+- Document changes in README (especially gladiator-setup)
 
 - Package Gladiator as Win MSI file
 - Fix reset view making sure it expands left expand bars
@@ -19,7 +17,6 @@
 - Add menu bar menu items for file explorer right click menu on currently selected file
 - Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
 - Support zoom-font-in and zoom-font-out (CMD - & CMD + & CMD 0 for reset)
-- Extract gladiator_menu_bar custom widget
 - Consider extracting tab_folder with all its dynamic logic/observers
 - Consider pushing observer related logic for tree into tree
 - Merge File Lookup with File Explorer
@@ -60,6 +57,7 @@
 - Have the closing curly brace or "end" keyword light up the opening curly brace or "do" keyword when landing on it
 - Make a text editor fit the screen (from the left or right) from the sash form (add keyboard shortcuts and menu items for that)
 - Recent Projects menu item
+- Reopen last open projects when run as Gladiator app (e.g. Mac app) instead of the command
 - Add rubocop like warnings while using Gladiator like when a file is too large or a method is too long, showing a special color somewhere live.
 - Ability to right-click tabs and close them with the mouse
 - Menu bar items for rake tasks and keyboard shortcut to bring them up
