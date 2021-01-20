@@ -54,6 +54,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
       s.add_development_dependency(%q<rspec>.freeze, ["~> 3.5.0"])
       s.add_development_dependency(%q<jeweler>.freeze, ["= 2.3.9"])
+      s.add_development_dependency(%q<warbler>.freeze, ["= 2.0.5"])
       s.add_development_dependency(%q<simplecov>.freeze, [">= 0"])
     else
       s.add_dependency(%q<glimmer-dsl-swt>.freeze, [">= 4.18.0.2", "< 5.0.0.0"])
@@ -61,6 +62,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
       s.add_dependency(%q<rspec>.freeze, ["~> 3.5.0"])
       s.add_dependency(%q<jeweler>.freeze, ["= 2.3.9"])
+      s.add_dependency(%q<warbler>.freeze, ["= 2.0.5"])
       s.add_dependency(%q<simplecov>.freeze, [">= 0"])
     end
   else
@@ -69,6 +71,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
     s.add_dependency(%q<rspec>.freeze, ["~> 3.5.0"])
     s.add_dependency(%q<jeweler>.freeze, ["= 2.3.9"])
+    s.add_dependency(%q<warbler>.freeze, ["= 2.0.5"])
     s.add_dependency(%q<simplecov>.freeze, [">= 0"])
   end
 end

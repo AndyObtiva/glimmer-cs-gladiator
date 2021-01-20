@@ -3,10 +3,12 @@
 ## Up Next
 
 
+- Remember last open project when run from Mac app instead of opening the local directory as with gladiator command
+- Fix issue with first open of a file with an empty brand new gladiator session not showing file content until resizing
 - Support opening another existing project quickly in Gladiator if open already (via druby or dumping a file somewhere monitored)
-- Package Gladiator as Mac DMG file
 
 
+- Package Gladiator as Win MSI file
 - Fix reset view making sure it expands left expand bars
 - Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find
 - Fix issue with losing all remembered tabs sometimes except one

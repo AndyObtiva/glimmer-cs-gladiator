@@ -3,6 +3,7 @@
 ## 0.7.3
 
 - Add gladiator-setup to make gladiator executable available everywhere
+- Package Gladiator as Mac DMG file
 - Fix issue with disposed? error in save_config
 
 ## 0.7.2

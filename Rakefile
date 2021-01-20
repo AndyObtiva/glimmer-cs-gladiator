@@ -61,3 +61,15 @@ end
 Rake::Task["build"].enhance [:no_puts_debuggerer, :spec]
 
 require 'glimmer/rake_task'
+
+Glimmer::RakeTask::Package.javapackager_extra_args =
+  " -name 'Gladiator'" +
+  " -title 'Gladiator'" +
+  " -Bwin.menuGroup='Gladiator'" +
+  " -Bmac.CFBundleName='Gladiator'" +
+  " -Bmac.CFBundleIdentifier='org.glimmer.application.Gladiator'" +
+  " -BappVersion=1.0.0 " + # TODO drop this once app crosses v1.0.0 (currently is below and cannot packaged, so must set 1)
+  " -Bmac.CFBundleVersion=1.0.0 " # TODO drop this once app crosses v1.0.0 (currently is below and cannot packaged, so must set 1)
+  # " -BlicenseType=" +
+  # " -Bmac.category=" +
+  # " -Bmac.signing-key-developer-id-app="

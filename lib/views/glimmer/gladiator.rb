@@ -1033,7 +1033,7 @@ module Glimmer
         label {
           layout_data :fill, :fill, true, true
           background :white
-          text "Gladiator v#{VERSION}\n\n#{LICENSE}\n\nGladiator icon made by Freepik from www.flaticon.com"
+          text "Gladiator v#{VERSION} (Beta)\n\n#{LICENSE}\n\nGladiator icon made by Freepik from www.flaticon.com"
         }
       }.open
     end
