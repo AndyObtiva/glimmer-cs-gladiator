@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.7.2 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.7.3 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -86,6 +86,12 @@ Gladiator currently supports the following text editing features (including keyb
 - [JRuby](https://www.jruby.org/download): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
 - [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Framework): '>= 4.17.2.0', '< 5.0.0.0' (dependency included in Ruby gem).
 
+## Download
+
+You may download a [packaged version of the Gladiator app](https://www.dropbox.com/s/kcr20unx7obs6z2/Gladiator-0.7.3.dmg?dl=1) on the Mac.
+
+Otherwise, if you prefer a command line version, then follow the Setup Instructions below.
+
 ## Setup Instructions
 
 Note: if you encounter any issues, check if they are documented in [TODO.md](TODO.md), [issues](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues), or [pull requests](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls) as they might be on my radar to fix. Otherwise, please report as an [issue](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues) or better yet fix and submit a [pull request](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls).
@@ -109,6 +115,20 @@ Run (`jruby -S bundle` or `bundle` directly if you have [RVM](https://rvm.io/)):
 ```
 jruby -S bundle
 ```
+
+Afterwards, to ensure system wide availablility of the `gladiator` command, run this command in an environment that has JRuby:
+
+```
+gladiator-setup
+```
+
+Finally, start a new terminal session or source .gladiator_source:
+
+```
+source ~/.gladiator_source
+```
+
+You should be able to run `gladiator` from anywhere now, even cross-rubies in [RVM](https://rvm.io).
 
 ## Usage
 
@@ -138,19 +158,13 @@ gladiator relative-or-absolute-path/to/project
 
 Note: If you cloned this project and bundle installed, you may invoke via `bin/gladiator` instead.
 
-If your project is not a JRuby project, then you cannot install [glimmer-cs-gladiator](https://rubygems.org/gems/glimmer-cs-gladiator), so you must install in a separate JRuby environment and invoke by passing the project path as per command above. Alternatively, you may clone this project, and invoke gladiator via `bin/gladiator` (that's how I use Gladiator for most of my projects):
-
-```
-bin/gladiator relative-or-absolute-path/to/project
-```
-
 ### Glimmer Custom Shell Reuse
 
 To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application, add the
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '>= 0.7.2'
+gem 'glimmer-cs-gladiator', '>= 0.7.3'
 ```
 
 Run:

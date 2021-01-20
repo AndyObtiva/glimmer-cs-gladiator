@@ -37,6 +37,8 @@ Gem::Specification.new do |s|
     "lib/views/glimmer/gladiator.rb",
     "lib/views/glimmer/gladiator/file_explorer_tree.rb",
     "lib/views/glimmer/gladiator/file_lookup_list.rb",
+    "lib/views/glimmer/gladiator/gladiator_menu_bar.rb",
+    "lib/views/glimmer/gladiator/progress_shell.rb",
     "lib/views/glimmer/gladiator/text_editor.rb"
   ]
   s.homepage = "http://github.com/AndyObtiva/glimmer-cs-gladiator".freeze

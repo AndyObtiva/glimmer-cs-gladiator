@@ -29,6 +29,8 @@ require 'models/glimmer/gladiator/command'
 require 'views/glimmer/gladiator/text_editor'
 require 'views/glimmer/gladiator/file_lookup_list'
 require 'views/glimmer/gladiator/file_explorer_tree'
+require 'views/glimmer/gladiator/gladiator_menu_bar'
+require 'views/glimmer/gladiator/progress_shell'
 
 Clipboard.implementation = Clipboard::Java
 Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use
@@ -80,7 +82,7 @@ module Glimmer
       pane_count && pane_count > 1
     end
     
-    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation
+    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation, :tab_folder_sash_form, :side_bar_sash_form, :file_area_and_editor_area_sash_form
     attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor, :tab_folder1, :tab_folder2, :maximized_pane, :maximized_editor
     alias maximized_pane? maximized_pane
     alias maximized_editor? maximized_editor
@@ -230,21 +232,11 @@ module Glimmer
     #
     body {
       if !::Dir.glob(::File.join(project_dir_path, 'glimmer-cs-gladiator.jar')).empty?
-        open_project
         shell(:no_trim, :no_background) {
-          menu_bar {
-            menu {
-              text 'File'
-            }
-            menu {
-              text 'View'
-            }
-            menu {
-              text 'Run'
-            }
-            menu {
-              text 'Help'
-            }
+          gladiator_menu_bar(gladiator: self, editing: false)
+          
+          on_swt_show {
+            open_project
           }
         }
       else
@@ -301,144 +293,8 @@ module Glimmer
             }
           end
   
-          menu_bar {
-            menu {
-              text '&File'
-  
-              menu_item {
-                text 'New &Scratchpad'
-                accelerator COMMAND_KEY, :shift, :s
-                on_widget_selected {
-                  project_dir.selected_child_path = ''
-                }
-              }
-              menu_item {
-                text 'Open &Project...'
-                accelerator COMMAND_KEY, :o
-                on_widget_selected {
-                  open_project
-                }
-              }
-              menu_item(:separator)
-              menu_item {
-                text '&Quit Project'
-                accelerator COMMAND_KEY, :alt, :q
-                on_widget_selected {
-                  save_config
-                  project_dir.selected_child&.write_dirty_content
-                  body_root.close
-                }
-              }
-            }
-            menu {
-              text '&View'
-              menu {
-                text '&Split Pane'
-                menu { |menu_proxy|
-                  text '&Orientation'
-                  menu_item(:radio) {
-                    text '&Horizontal'
-                    selection bind(self, :split_orientation,
-                                          on_read: ->(o) { split_pane? && o == swt(:horizontal) },
-                                          on_write: ->(b) { b.nil? ? nil : (b ? swt(:horizontal) : swt(:vertical)) })
-                  }
-                  menu_item(:radio) {
-                    text '&Vertical'
-                    selection bind(self, :split_orientation,
-                                          on_read: ->(o) { split_pane? && o == swt(:vertical) },
-                                          on_write: ->(b) { b.nil? ? nil : (b ? swt(:vertical) : swt(:horizontal)) })
-                  }
-                }
-                menu_item(:check) {
-                  text '&Maximize Pane'
-                  enabled bind(self, :tab_folder2)
-                  accelerator COMMAND_KEY, :shift, :m
-                  selection bind(self, :maximized_pane)
-                }
-                menu_item {
-                  text 'Reset &Panes'
-                  enabled bind(self, :tab_folder2)
-                  accelerator COMMAND_KEY, :shift, :p
-                  on_widget_selected {
-                    if tab_folder2
-                      self.maximized_pane = false
-                      @tab_folder_sash_form.weights = [1, 1]
-                    end
-                  }
-                }
-                menu_item {
-                  text '&Unsplit'
-                  enabled bind(self, :tab_folder2)
-                  accelerator COMMAND_KEY, :shift, :u
-                  on_widget_selected {
-                    if tab_folder2
-                      self.maximized_pane = false
-                      navigate_to_next_tab_folder if current_tab_folder != tab_folder2
-                      close_all_tabs(tab_folder2)
-                      self.split_orientation = nil
-                      body_root.pack_same_size
-                    end
-                  }
-                }
-              }
-              menu_item(:check) {
-                text '&Maximize Editor'
-                accelerator COMMAND_KEY, :ctrl, :m
-                selection bind(self, :maximized_editor)
-              }
-              menu_item {
-                text '&Reset All'
-                accelerator COMMAND_KEY, :ctrl, :r
-                on_widget_selected {
-                  self.maximized_editor = false
-                  @file_area_and_editor_area_sash_form.weights = [1, 5]
-                  @side_bar_sash_form.weights = [1, 1]
-                }
-              }
-            }
-            menu {
-              text '&Run'
-  #             menu_item {
-  #               text 'Launch Glimmer &App'
-  #               on_widget_selected {
-  #                 parent_path = project_dir.path
-  ##                 current_directory_name = ::File.basename(parent_path)
-  ##                 assumed_shell_script = ::File.join(parent_path, 'bin', current_directory_name)
-  ##                 assumed_shell_script = ::Dir.glob(::File.join(parent_path, 'bin', '*')).detect {|f| ::File.file?(f) && !::File.read(f).include?('#!/usr/bin/env')} if !::File.exist?(assumed_shell_script)
-  ##                 load assumed_shell_script
-  #                 FileUtils.cd(parent_path) do
-  #                   system 'glimmer run'
-  #                 end
-  #               }
-  #             }
-              menu_item {
-                text '&Ruby'
-                accelerator COMMAND_KEY, :shift, :r
-                on_widget_selected {
-                  begin
-                    project_dir.selected_child.run
-                  rescue Exception => e
-                    dialog {
-                      text 'Run - Ruby - Error Encountered!'
-                      label {
-                        text e.full_message
-                      }
-                    }.open
-                  end
-                }
-              }
-            }
-            menu {
-              text '&Help'
-              menu_item {
-                text '&About'
-                accelerator COMMAND_KEY, :shift, :a
-                on_widget_selected {
-                  display_about_dialog
-                }
-              }
-            }
-          }
+          # Menu Bar
+          gladiator_menu_bar(gladiator: self, editing: true)
           
           @file_area_and_editor_area_sash_form = sash_form(:horizontal) {
             weights 1, 5
@@ -835,22 +691,10 @@ module Glimmer
         open_file_paths1 = @config[:open_file_paths1] || @config[:open_file_paths]
         open_file_paths2 = @config[:open_file_paths2]
         self.split_orientation = (swt(@config[:split_orientation]) rescue swt(:horizontal)) if @config[:split_orientation]
-        if @progress_bar_shell.nil?
-          @progress_bar_shell = shell(body_root, :title) {
-            text 'Gladiator'
-            fill_layout(:vertical) {
-              margin_width 15
-              margin_height 15
-              spacing 5
-            }
-            label(:center) {
-              text "Opening Last Open Files"
-              font height: 20
-            }
-    #         @progress_bar = progress_bar(:horizontal, :indeterminate)
-          }
+        if @progress_shell.nil?
+          @progress_shell = progress_shell(gladiator: self, progress_text: 'Opening Last Open Files')
           async_exec {
-            @progress_bar_shell.open
+            @progress_shell.open
           }
         end
         open_file_paths1.to_a.each do |file_path|
@@ -892,8 +736,8 @@ module Glimmer
           }
           async_exec {
             Gladiator.drag = false
-            @progress_bar_shell&.close
-            @progress_bar_shell = nil
+            @progress_shell&.close
+            @progress_shell = nil
             @loaded_config = true
           }
         }
@@ -1038,27 +882,15 @@ module Glimmer
     def open_project
       selected_directory = directory_dialog.open
       return if selected_directory.nil?
-      @progress_bar_shell = shell(body_root, :title) {
-        text 'Gladiator'
-        fill_layout(:vertical) {
-          margin_width 15
-          margin_height 15
-          spacing 5
-        }
-        label(:center) {
-          text "Opening Project: #{::File.basename(selected_directory)}"
-          font height: 20
-        }
-#         @progress_bar = progress_bar(:horizontal, :indeterminate)
-      }
+      @progress_shell = progress_shell(gladiator: self, progress_text: "Opening Project: #{::File.basename(selected_directory)}")
       async_exec {
-        @progress_bar_shell.open
+        @progress_shell.open
       }
       async_exec {
         gladiator(project_dir_path: selected_directory) {
           on_swt_show {
-            @progress_bar_shell.close
-            @progress_bar_shell = nil
+            @progress_shell.close
+            @progress_shell = nil
           }
         }.open if selected_directory
       }
