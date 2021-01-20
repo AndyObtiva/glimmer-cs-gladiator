@@ -2,12 +2,21 @@
 
 ## Up Next
 
-- Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find 
+
+- Support opening another existing project quickly in Gladiator if open already (via druby or dumping a file somewhere monitored)
+- Package Gladiator as Mac DMG file
+
+
+- Fix reset view making sure it expands left expand bars
+- Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find
+- Fix issue with losing all remembered tabs sometimes except one
+- avoid issue in Run -> Run with eval not allowing 'include Glimmer' by evaling in the right context
+- Build a console for showing feedback in running Ruby code
 - Add extra indentation on new line if after a method declaration, class/module declaration, or block declaration
-- Add gladiator-setup to make gladiator executable available everywhere
 - Add menu bar menu items for file lockup and file explorer go to file
 - Add menu bar menu items for file explorer right click menu on currently selected file
-- Fix issue with not being able to jump to File Lookup via CMD+R shortcut when opening gladiator for the first time in a project with no files open for editing
+- Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
+- Support zoom-font-in and zoom-font-out (CMD - & CMD + & CMD 0 for reset)
 - Extract gladiator_menu_bar custom widget
 - Consider extracting tab_folder with all its dynamic logic/observers
 - Consider pushing observer related logic for tree into tree
@@ -36,7 +45,6 @@
 - Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
 - Add Coolbar/Toolbar with edit menu operations
 
-- Support instrumenting Gladiator with DRuby to start on a new project quickly if open already
 - Support simultaneous multiple workspaces/projects
 - Support opening a single file
 - Fix issue with creating empty dir followed by empty file inside it does not work
@@ -111,3 +119,5 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Enhance File Explorer Tree with directory/file icons
 - Enhance Tabs with file type icons
 - Support feature extensions via Ruby
+- Support feature of "repeat last operation" similar to that of VIM with .
+- Implement a feature showing beginning of a block when landing on a line that has end or }

@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 # Copyright (c) 2020-2021 Andy Maleh
 #
 # Permission is hereby granted, free of charge, to any person obtaining
@@ -21,14 +19,4 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require 'glimmer/launcher'
-
-gladiator_runner = File.expand_path('../glimmer-cs-gladiator', __FILE__)
-launcher = Glimmer::Launcher.new([gladiator_runner, '-J-Xrs'] + ARGV)
-launcher.application_paths.to_a.each do |file|
-  if file != gladiator_runner
-    launcher.application_paths.delete(file)
-    ENV['LOCAL_DIR'] ||= file
-  end
-end
-launcher.launch
+require_relative '../lib/glimmer-cs-gladiator/launch'

@@ -2,6 +2,7 @@
 
 ## 0.7.3
 
+- Add gladiator-setup to make gladiator executable available everywhere
 - Fix issue with disposed? error in save_config
 
 ## 0.7.2

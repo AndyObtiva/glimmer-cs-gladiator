@@ -20,10 +20,11 @@ Jeweler::Tasks.new do |gem|
   gem.license = "MIT"
   gem.summary = %Q{Gladiator (Glimmer Editor) - Glimmer Custom Shell - Text Editor Built in Ruby}
   gem.description = %Q{Gladiator (short for Glimmer Editor) is a Glimmer sample project under on-going development. It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using Glimmer to build a text editor. Gladiator is also a personal tool for shaping an editor exactly the way I like. I leave building truly professional text editors to software tooling experts who would hopefully use Glimmer one day.}
+  gem.post_install_message = "\nTo make the gladiator command available system-wide (especially with RVM), make sure you run this command with jruby in path: gladiator-setup\n\n"
   gem.email = "andy.am@gmail.com"
   gem.authors = ["Andy Maleh"]
   gem.files = Dir['README.md', 'VERSION', 'CHANGELOG.md', 'LICENSE.txt', 'glimmer-cs-gladiator.gemspec', 'images/glimmer-cs-gladiator-logo.png', 'lib/**/*.rb', 'bin/**/*']
-  gem.executables = ['gladiator']
+  gem.executables = ['glimmer-cs-gladiator', 'gladiator', 'gladiator-setup']
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new

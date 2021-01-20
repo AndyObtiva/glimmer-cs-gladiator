@@ -1,0 +1,80 @@
+#!/usr/bin/env ruby
+
+# Copyright (c) 2020-2021 Andy Maleh
+#
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+# LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+# OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+# WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+version = File.read(File.expand_path('../VERSION', __dir__))
+puts "== Gladiator (Glimmer Editor) Version #{version.strip} =="
+
+ruby = `which jruby`.to_s.strip
+if ruby.empty?
+  return puts('jruby is not available. Make sure you have jruby installed and available in path environment (or selected if using RVM)')
+end
+
+rvm_command = `which rvm`
+if rvm_command.to_s.strip.empty?
+  command = "#{ruby} #{File.expand_path('../gladiator', __FILE__)}"
+else
+  rvm = `rvm current`.strip
+  command = "rvm #{rvm} do #{ruby} #{File.expand_path('../gladiator', __FILE__)}"
+end
+
+gladiator_script = <<~SHELL_SCRIPT
+  function gladiator()
+  {
+    #{command}
+  }
+SHELL_SCRIPT
+
+
+require 'fileutils'
+home_dir = `echo ~`.strip
+FileUtils.mkdir_p("#{home_dir}/bin")
+gladiator_script_file = "#{home_dir}/.gladiator_source"
+gladiator_script_file_bash = "$HOME/.gladiator_source"
+File.write(gladiator_script_file, gladiator_script)
+
+[
+  ['.bash_profile', '.bashrc'],
+  ['.zprofile', '.zshrc']
+].each do |profile_and_fallback|
+  shell_profile_file_name = profile_and_fallback.first
+  shell_profile_file_name = profile_and_fallback.last if !File.exist?("#{home_dir}/#{shell_profile_file_name}")
+  shell_profile_file = "#{home_dir}/#{shell_profile_file_name}"
+  FileUtils.touch(shell_profile_file)
+  shell_profile = File.read(shell_profile_file)
+  gladiator_source_statement = "source \"#{gladiator_script_file_bash}\""
+  unless shell_profile.split("\n").detect {|line| line.include?(gladiator_source_statement) }
+    File.write(shell_profile_file, "#{shell_profile}\n#{gladiator_source_statement}")
+  end
+  puts "~/#{shell_profile_file_name} has been modified to source the `gladiator` function from ~/.gladiator_source"
+end
+
+puts <<~OUTPUT
+  
+  Before using `gladiator`, start a new shell session (open a new terminal tab) or run:
+  
+  source ~/.gladiator_source
+  
+  Afterwards, you may run the following command from anywhere to start Gladiator (Glimmer Editor):
+  
+  gladiator
+OUTPUT
