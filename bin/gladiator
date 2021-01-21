@@ -21,6 +21,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+ENV['GLADIATOR_COMMAND_MODE'] ||= 'true'
+
 require 'glimmer/launcher'
 
 gladiator_runner = File.expand_path('../glimmer-cs-gladiator', __FILE__)

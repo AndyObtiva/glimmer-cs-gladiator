@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.7.4
+
+- Upgrade to glimmer-dsl-swt v4.18.2.1
+- Add splash screen to app mode (not command mode, which stays splash free by design)
+
 ## 0.7.3
 
 - Add gladiator-setup to make gladiator executable available everywhere

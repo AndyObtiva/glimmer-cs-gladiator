@@ -60,3 +60,4 @@ dist
 packages      
 Jars.lock
 vendor/jars
+.mvn

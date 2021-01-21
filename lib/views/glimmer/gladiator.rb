@@ -33,7 +33,6 @@ require 'views/glimmer/gladiator/gladiator_menu_bar'
 require 'views/glimmer/gladiator/progress_shell'
 
 Clipboard.implementation = Clipboard::Java
-Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use
 
 module Glimmer
   # Gladiator (Glimmer Editor)
@@ -91,6 +90,7 @@ module Glimmer
     #
     #
     before_body {
+      Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use
       # TODO consider doing loading project files after displaying the GUI instead of holding it up before
       project_dir #pre-initialize directory
       TOPLEVEL_BINDING.receiver.send(:at_exit) do
