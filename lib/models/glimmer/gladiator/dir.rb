@@ -5,6 +5,8 @@ module Glimmer
     class Dir
       include Glimmer
       include Glimmer::DataBinding::ObservableModel
+      
+      IGNORE_PATHS = ['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist']
 
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
       attr_reader :name, :parent, :path
@@ -36,7 +38,7 @@ module Glimmer
         end
         self.path = ::File.expand_path(path)
         @name = ::File.basename(::File.expand_path(path))
-        @ignore_paths = ['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg']
+        @ignore_paths = IGNORE_PATHS
         self.filtered_path_options = []
       end
       
@@ -72,8 +74,10 @@ module Glimmer
       def retrieve_children
         @children = ::Dir.glob(::File.join(@path, '*')).reject do |p|
           # TODO make sure to configure ignore_paths in a preferences dialog
-          project_dir.ignore_paths.reduce(false) do |result, ignore_path|
-            result || p.include?(ignore_path)
+          if project_dir == self
+            project_dir.ignore_paths.any? do |ignore_path|
+              p.include?(ignore_path)
+            end
           end
         end.map do |p|
           ::File.file?(p) ? File.new(p, project_dir) : Dir.new(p, project_dir)
@@ -93,7 +97,7 @@ module Glimmer
       def depth_first_search_file(dir, file_path)
         dir.children.each do |child|
           if child.is_a?(File)
-            return child if child.path.include?(file_path)
+            return child if child.path.include?(file_path.to_s)
           else
             result = depth_first_search_file(child, file_path)
             return result unless result.nil?

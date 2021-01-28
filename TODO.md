@@ -2,13 +2,18 @@
 
 ## Up Next
 
+- Add a Gladiator log feature for when running in app mode
+- Fix issue with startup via app mode leaving an extra shell after opening first project (look into closing first shell if a new one replaces it)
+- Fix issue with rename directory (and perhaps file) not renaming in tab file path, thus losing file changes
 - Add a startup splash screen for app mode
 - Support opening another existing project quickly in Gladiator if open already (via druby or dumping a file somewhere monitored)
+- Support jumping up to dots only in code method invocation expressions (e.g. object.methods.anothermethod) using ALT+LEFT / ALT+RIGHT
 - Package Gladiator as Win MSI file
 - Fix reset view making sure it expands left expand bars
 - Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find
 - Fix issue with losing all remembered tabs sometimes except one
 - Fix issue with split and reopen file originally showing on the left side, opens again on the right side (shouldn't)
+- Copy file or entire directory (into the OS)
 - avoid issue in Run -> Run with eval not allowing 'include Glimmer' by evaling in the right context
 - Build a console for showing feedback in running Ruby code
 - Add extra indentation on new line if after a method declaration, class/module declaration, or block declaration
@@ -26,10 +31,12 @@
 - Make paste an undoable command separate from change_content!
 - Make the same file split on both sides have different scroll positions on both sides
 - Make short gif videos of all features
+- Add support for themes (perhaps a view menu quick theme switcher in addition to preferences)
 
-- Package gladidator as a DMG/MSI
+- Package gladidator as a MSI
 - Add gladiator-setup to make gladiator executable available everywhere
 
+- Make file external change events undoable commands
 - Display File:  as Scratchpad in Navigation for Scratchpad
 - Edit Menu with all possible keyboard shortcut actions into the menu and denote their shorcuts
 - Add Menu for Rake Tasks

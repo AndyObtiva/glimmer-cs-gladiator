@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.7.3 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.8.0 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -9,6 +9,8 @@ It is not intended to be a full-fledged editor by any means, yet mostly a fun ed
 Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
 
+You may now [download](#download) a packaged version on the Mac.
+
 ## Features
 
 Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux)
@@ -17,7 +19,7 @@ Gladiator currently supports the following text editing features (including keyb
 
 ### Text Editor
 
-- Text Editor with Colored Ruby Syntax Highlighting
+- Text Editor with Colored Syntax Highlighting for [Multiple Languages](#multiple-language-syntax-highlighting)
 - Show Line Numbers
 - Multi-tab support (CMD+SHIFT+[ & CMD+SHIFT+] for tab navigation. CMD+1-9 to jump to a specific tab)
 - Drag and drop split pane (drag a file from File Tree or File Lookup List, and it splits the pane)
@@ -74,6 +76,34 @@ Gladiator currently supports the following text editing features (including keyb
 - Remember opened tabs, caret position, top pixel, window size, and window location
 - [Default](#configuration) "ignore paths" to avoid bogging down editor with irrelevant directory files
 
+### Multiple Language Syntax Highlighting
+
+- Ruby
+- Markdown
+- JavaScript
+- JSON
+- Yaml
+- HTML
+- C
+- Haskell
+- Gradle
+- C++
+- CSS
+- Java
+- JSP
+- plist
+- Haml
+- XML
+- INI
+- Perl
+- Tcl
+- SASS
+- SCSS
+- SQL
+- Shell (Bash / Zsh)
+- Vue
+- Plain Text
+
 ## Platforms
 
 - Mac: Gladiator works best on the Mac. This is the platform it is most used on and receives the most maintenance for.
@@ -84,11 +114,11 @@ Gladiator currently supports the following text editing features (including keyb
 
 - [JDK](https://www.oracle.com/java/technologies/javase-downloads.html): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
 - [JRuby](https://www.jruby.org/download): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
-- [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Framework): '>= 4.17.2.0', '< 5.0.0.0' (dependency included in Ruby gem).
+- [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Framework) (dependency included in Ruby gem).
 
 ## Download
 
-You may download a [packaged version of the Gladiator app](https://www.dropbox.com/s/kcr20unx7obs6z2/Gladiator-0.7.3.dmg?dl=1) on the Mac.
+You may [download a packaged version of the Gladiator app](https://www.dropbox.com/s/pzkvm6uh14ngrr2/Gladiator-0.8.0.dmg?dl=1) on the Mac.
 
 Otherwise, if you prefer a command line version, then follow the Setup Instructions below.
 
@@ -164,7 +194,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '>= 0.7.3'
+gem 'glimmer-cs-gladiator', '>= 0.8.0'
 ```
 
 Run:
@@ -195,7 +225,7 @@ Gladiator automatically saves configuration data in a `.gladiator` file at the d
 It currently remembers:
 - Last opened files (in both split panes if split)
 - Window size and position
-- Ignore Paths (default: '.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor')
+- Ignore Paths under `Glimmer::Gladiator::Dir::IGNORE_PATHS` (default: `['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist']`)
 
 ## Gotcha
 

@@ -20,6 +20,69 @@ module Glimmer
         @init = nil
       end
       
+      def language
+        # TODO consider using Rouge::Lexer.guess_by_filename instead and perhaps guess_by_source when it fails
+        extension = path.split('.').last if path.to_s.include?('.')
+        return 'ruby' if scratchpad?
+        return 'ruby' if path.to_s.end_with?('Gemfile') || path.to_s.end_with?('Rakefile')
+        return 'ruby' if dirty_content.start_with?('#!/usr/bin/env ruby') || dirty_content.start_with?('#!/usr/bin/env jruby')
+        return 'yaml' if path.to_s.end_with?('Gemfile.lock')
+        return 'shell' if extension.nil? && path.to_s.include?('/bin/')
+        case extension
+        # TODO extract case statement to an external config file
+        when 'rb'
+          'ruby'
+        when 'md', 'markdown'
+          'markdown'
+        when 'js', 'es6'
+          'javascript'
+        when 'json'
+          'json'
+        when 'yaml'
+          'yaml'
+        when 'html'
+          'html'
+        when 'h', 'c'
+          'c'
+        when 'hs'
+          'haskell'
+        when 'gradle'
+          'gradle'
+        when 'cpp'
+          'cpp'
+        when 'css'
+          'css'
+        when 'java'
+          'java'
+        when 'jsp'
+          'jsp'
+        when 'plist'
+          'plist'
+        when 'haml'
+          'haml'
+        when 'xml'
+          'xml'
+        when 'ini'
+          'ini'
+        when 'pl'
+          'perl'
+        when 'tcl'
+          'tcl'
+        when 'sass'
+          'sass'
+        when 'scss'
+          'scss'
+        when 'sql'
+          'sql'
+        when 'sh'
+          'shell'
+        when 'vue'
+          'vue'
+        when 'txt', nil
+          'plain_text'
+        end
+      end
+      
       def init_content
         unless @init
           @init = true

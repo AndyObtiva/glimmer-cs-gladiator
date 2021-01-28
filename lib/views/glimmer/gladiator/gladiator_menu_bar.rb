@@ -118,9 +118,17 @@ module Glimmer
                 text '&Reset All'
                 accelerator COMMAND_KEY, :ctrl, :r
                 on_widget_selected {
-                  gladiator.tab_folder_sash_form.maximized_editor = false
-                  gladiator.tab_folder_sash_form.file_area_and_editor_area_sash_form.weights = [1, 5]
-                  gladiator.tab_folder_sash_form.side_bar_sash_form.weights = [1, 1]
+                  gladiator.maximized_editor = false
+                  gladiator.file_area_and_editor_area_sash_form.weights = [1, 5]
+                  gladiator.side_bar_sash_form.weights = [1, 1]
+                  unless gladiator.file_lookup_expand_item.swt_expand_item.get_expanded
+                    gladiator.file_lookup_expand_item.swt_expand_item.set_expanded true
+                    gladiator.file_lookup_expand_item.swt_expand_item.height = gladiator.file_lookup_expand_item_height if gladiator.file_lookup_expand_item_height
+                  end
+                  unless gladiator.file_explorer_expand_item.swt_expand_item.get_expanded
+                    gladiator.file_explorer_expand_item.swt_expand_item.set_expanded true
+                    gladiator.file_explorer_expand_item.swt_expand_item.height = gladiator.file_explorer_expand_item_height if gladiator.file_explorer_expand_item_height
+                  end
                 }
               }
             }

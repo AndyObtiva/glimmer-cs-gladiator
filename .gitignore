@@ -56,7 +56,8 @@ build-iPhoneSimulator/
 .gladiator
 
 # Glimmer
-dist
-packages      
+/dist/
+/packages/ 
 Jars.lock
-vendor/jars
+/vendor/jars/
+/.mvn/

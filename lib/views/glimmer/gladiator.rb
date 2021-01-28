@@ -82,7 +82,7 @@ module Glimmer
       pane_count && pane_count > 1
     end
     
-    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation, :tab_folder_sash_form, :side_bar_sash_form, :file_area_and_editor_area_sash_form
+    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation, :tab_folder_sash_form, :side_bar_sash_form, :file_area_and_editor_area_sash_form, :file_explorer_expand_item, :file_explorer_expand_item, :file_lookup_expand_item, :file_explorer_expand_item, :file_lookup_expand_item_height, :file_explorer_expand_item_height
     attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor, :tab_folder1, :tab_folder2, :maximized_pane, :maximized_editor
     alias maximized_pane? maximized_pane
     alias maximized_editor? maximized_editor
@@ -104,6 +104,11 @@ module Glimmer
           # TODO look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
           on_about {
             display_about_dialog
+          }
+          on_quit {
+            save_config
+            project_dir.selected_child&.write_dirty_content
+            display.swt_display.shells.each(&:close)
           }
           on_swt_keydown { |key_event|
             focused_gladiator = display.focus_control.shell&.get_data('custom_shell')
@@ -158,7 +163,9 @@ module Glimmer
                 tab_folder = nil
                 the_text_editor = nil
                 the_tab_item.content {
-                  @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file)
+                  @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file) {
+                    layout_data :fill, :fill, true, true
+                  }
                   @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
                   the_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
                   @current_text_editor.text_proxy.content {
@@ -284,14 +291,6 @@ module Glimmer
           on_shell_deactivated {
             project_dir.selected_child&.write_dirty_content
           }
-  
-          if OS.mac?
-            display.swt_display.system_menu.items.find {|mi| mi.id == swt(:id_quit)}.add_selection_listener {
-              save_config
-              project_dir.selected_child&.write_dirty_content
-              display.swt_display.shells.each(&:close)
-            }
-          end
   
           # Menu Bar
           gladiator_menu_bar(gladiator: self, editing: true)
@@ -922,22 +921,15 @@ module Glimmer
     
     def handle_display_shortcut(key_event)
       if key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'f'
-        find_action = lambda do
-          if current_text_editor&.text_widget&.getSelectionText && current_text_editor&.text_widget&.getSelectionText&.size.to_i > 0
-            find_text.swt_widget.setText current_text_editor.text_widget.getSelectionText
-          end
-          find_text.swt_widget.selectAll
-          find_text.swt_widget.setFocus
-        end
-        if @navigation_expand_item.swt_expand_item.get_expanded
-          find_action.call
-        else
+        if !@navigation_expand_item.swt_expand_item.get_expanded
+          expand_navigation_expand_bar_height
           @navigation_expand_item.swt_expand_item.set_expanded true
-          async_exec {
-            body_root.pack_same_size
-            find_action.call
-          }
         end
+        if current_text_editor&.text_widget&.getSelectionText && current_text_editor&.text_widget&.getSelectionText&.size.to_i > 0
+          find_text.swt_widget.setText current_text_editor.text_widget.getSelectionText
+        end
+        find_text.swt_widget.selectAll
+        find_text.swt_widget.setFocus
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'c'
         Clipboard.copy(project_dir.selected_child.path)
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == 'g'

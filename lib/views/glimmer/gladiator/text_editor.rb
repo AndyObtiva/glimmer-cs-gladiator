@@ -39,7 +39,7 @@ module Glimmer
       body {
         composite {
           grid_layout(2, false)
-          layout_data :fill, :fill, true, true
+          
           @line_numbers_text = styled_text(:multi, :border) {
             layout_data(:right, :fill, false, true)
             text ' '*4
@@ -62,7 +62,7 @@ module Glimmer
             }
           }
           
-          @text_proxy = send(text_widget_keyword) { |the_text|
+          @text_proxy = code_text(language: file.language) {
             layout_data :fill, :fill, true, true
             font name: @font_name, height: OS.mac? ? 15 : 12
             foreground rgb(75, 75, 75)
@@ -97,11 +97,6 @@ module Glimmer
         nil
       end
            
-      def text_widget_keyword
-        is_code_file = file.scratchpad? || file.path.end_with?('.rb')
-        is_code_file ? 'code_text' : 'styled_text'
-      end
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
       def text_widget
         @text_proxy.swt_widget
       end

@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.8.0
+
+- Upgrade to glimmer-dsl-swt v4.18.3.5
+- Multiple language syntax highlighting support (over 20 languages) via the new code_text language option in Glimmer DSL for SWT
+- Refactor code to use display on_quit event (instead of manual SWT code for quitting on the Mac)
+- Fix issue with Reset All not working
+- Fix issue with CMD+F not revealing Navigation Area when in Maximized Editor Mode
+
 ## 0.7.3
 
 - Add gladiator-setup to make gladiator executable available everywhere
