@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.8.1
+
+- Fix issue with HOME and END taking to beginning of file and end of file on Windows instead of beginning of line and end of line
+
 ## 0.8.0
 
 - Upgrade to glimmer-dsl-swt v4.18.3.5

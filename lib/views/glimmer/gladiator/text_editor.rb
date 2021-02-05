@@ -122,6 +122,7 @@ module Glimmer
           selection_count bind(self, 'file.selection_count')
           caret_position bind(self, 'file.caret_position')
           top_pixel bind(self, 'file.top_pixel')
+          # key_binding swt(:ctrl, :home), ST::TEXT_START
           on_focus_lost {
             file&.write_dirty_content
           }
@@ -132,11 +133,17 @@ module Glimmer
               key_event.doit = !Command.undo(file)
             elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == 'a'
               key_event.widget.selectAll
-            elsif !OS.windows? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'a'
-              Command.do(file, :start_of_line)
+            elsif (OS.mac? && key_event.keyCode == swt(:home)) || (!OS.mac? && Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:home))
+              file.home
               key_event.doit = false
-            elsif !OS.windows? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'e'
-              Command.do(file, :end_of_line)
+            elsif (OS.mac? && key_event.keyCode == swt(:home)) || (!OS.mac? && Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:end))
+              file.end
+              key_event.doit = false
+            elsif (OS.mac? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'a') || (!OS.mac? && key_event.keyCode == swt(:home))
+              file.start_of_line
+              key_event.doit = false
+            elsif (OS.mac? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'e') || (!OS.mac? && key_event.keyCode == swt(:end))
+              file.end_of_line
               key_event.doit = false
             elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '/'
               Command.do(file, :comment_line!)
@@ -164,12 +171,6 @@ module Glimmer
               key_event.doit = false
             elsif key_event.keyCode == swt(:page_down)
               file.page_down
-              key_event.doit = false
-            elsif key_event.keyCode == swt(:home)
-              file.home
-              key_event.doit = false
-            elsif key_event.keyCode == swt(:end)
-              file.end
               key_event.doit = false
             elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:arrow_up)
               Command.do(file, :move_up!)

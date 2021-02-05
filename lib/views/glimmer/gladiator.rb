@@ -115,7 +115,6 @@ module Glimmer
             focused_gladiator.handle_display_shortcut(key_event) if !focused_gladiator.nil? && key_event.widget.shell == focused_gladiator&.swt_widget
           }
           on_swt_Close {
-            save_config
             project_dir.selected_child&.write_dirty_content
           }
         }
@@ -188,13 +187,26 @@ module Glimmer
                   @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
                   @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
                   project_dir.selected_child = selected_file
+                  @current_text_editor&.load_content
                   @current_text_editor&.text_widget&.setFocus
+                  save_config
                 }
                 on_widget_disposed {
                   project_dir.selected_child&.write_dirty_content
                   tab_item_file = the_tab_item.swt_tab_item.get_data('file')
                   tab_item_file.close unless [@tab_folder1, @tab_folder2].compact.map(&:items).flatten(1).detect {|ti| ti.get_data('file') == tab_item_file}
                 }
+              }
+              on_widget_selected {
+                @current_tab_item = the_tab_item
+                @current_text_editor = the_text_editor
+                self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
+                @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                project_dir.selected_child = selected_file
+                @current_text_editor&.load_content
+                @current_text_editor&.text_widget&.setFocus
+                save_config
               }
               @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
               @current_tab_item.swt_tab_item.setData('file', selected_file)
@@ -266,7 +278,6 @@ module Glimmer
           }
           
           on_shell_closed {
-            save_config
             project_dir.selected_child&.write_dirty_content
             if @tab_folder2
               current_tab_folder.swt_widget.getItems.each do |tab_item|

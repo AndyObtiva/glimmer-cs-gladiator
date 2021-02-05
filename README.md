@@ -253,6 +253,7 @@ The signal TERM is in use by the JVM and will not work correctly on this platfor
 - Commit and push until you are happy with your contribution.
 - Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 - Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+- On windows, add this Git config: `git config core.autocrlf input` (or globally if you're working on multiple Glimmer projects)
 
 ## Copyright
 

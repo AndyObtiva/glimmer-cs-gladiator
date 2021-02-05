@@ -2,6 +2,16 @@
 
 ## Up Next
 
+- Add a right click menu on text editor area with undo | cut, copy, paste, delete | select all
+- Fix Windows issue with first tab not being loaded when Gladiator opens up remembering last tabs
+- Fix CMD+R shortcut on Windows via CTRL+R
+- Fix opening first tab on Windows (shows up as blank, but second tab shows up fine)
+- Fix minimization of Navigation area on Windows (closes but keeps size of expand bar)
+- Fix issue with losing focus on changing tabs on Windows via Windows default tab switching shortcuts of CTRL+PGUP & CTRL+PGDN
+- Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
+- Fix crazy flashing issue upon hitting CTRL+T on Windows to jump to the File Explorer (doesn't always happen, only the first time in a session)
+- Fix crazy cursor jumping on indent/outdent on Windows
+
 - Add a Gladiator log feature for when running in app mode
 - Fix issue with startup via app mode leaving an extra shell after opening first project (look into closing first shell if a new one replaces it)
 - Fix issue with rename directory (and perhaps file) not renaming in tab file path, thus losing file changes

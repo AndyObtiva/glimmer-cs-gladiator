@@ -60,6 +60,14 @@ end
 
 Rake::Task["build"].enhance [:no_puts_debuggerer, :spec]
 
+namespace :build do
+  desc 'Builds without running specs for quick testing, but not release'
+  task :prototype => :no_puts_debuggerer do
+    Rake::Task['build'].execute
+  end
+end
+
+
 require 'glimmer/rake_task'
 
 Glimmer::RakeTask::Package.javapackager_extra_args =
