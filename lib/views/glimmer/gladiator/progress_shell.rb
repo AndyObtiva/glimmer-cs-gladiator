@@ -16,8 +16,6 @@ module Glimmer
           
           text 'Gladiator'
           
-          gladiator_menu_bar(gladiator: gladiator, editing: true)
-          
           label(:center) {
             text progress_text
             font height: 20

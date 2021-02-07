@@ -7,13 +7,14 @@
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 
+- Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
+- Save a Scratchpad into a real file
 - Add a Gladiator log feature for when running in app mode
 - Fix issue with startup via app mode leaving an extra shell after opening first project (look into closing first shell if a new one replaces it)
 - Fix issue with rename directory (and perhaps file) not renaming in tab file path, thus losing file changes
 - Add a startup splash screen for app mode
 - Support opening another existing project quickly in Gladiator if open already (via druby or dumping a file somewhere monitored)
 - Support jumping up to dots only in code method invocation expressions (e.g. object.methods.anothermethod) using ALT+LEFT / ALT+RIGHT
-- Package Gladiator as Win MSI file
 - Fix reset view making sure it expands left expand bars
 - Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find
 - Fix issue with losing all remembered tabs sometimes except one

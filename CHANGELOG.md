@@ -1,7 +1,14 @@
 # Change Log
 
+## 0.8.2
+
+- In app mode, display an "Open Project..." button
+- In app mode, set gladiator icon on initial shell
+- Fix issue with display saving original file before changes when running in app mode, making changes to an open project, and then closing
+
 ## 0.8.1
 
+- Package Gladiator as a Windows MSI file
 - Fix issue with HOME and END taking to beginning of file and end of file on Windows instead of beginning of line and end of line
 - Fix opening first tab on Windows (shows up as blank, but second tab shows up fine)
 - Fix issue with losing focus on changing tabs on Windows via Windows default tab switching shortcuts of CTRL+PGUP & CTRL+PGDN

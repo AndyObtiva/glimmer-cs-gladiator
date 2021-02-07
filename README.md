@@ -121,6 +121,8 @@ Gladiator currently supports the following text editing features (including keyb
 
 [Download Gladiator Windows MSI Installer](https://www.dropbox.com/s/uuvo5h6golzmr82/Gladiator-0.8.1.msi?dl=1)
 
+The packaged version starts with a dialog asking you what project to open. Gladiator does not fully show up until you have selected a project directory.
+
 Otherwise, if you prefer a command line version, then follow the Setup Instructions below.
 
 ## Setup Instructions
@@ -147,19 +149,14 @@ Run (`jruby -S bundle` or `bundle` directly if you have [RVM](https://rvm.io/)):
 jruby -S bundle
 ```
 
-Afterwards, to ensure system wide availablility of the `gladiator` command, run this command in an environment that has JRuby:
+Afterwards, if you are using [RVM](https://rvm.io/) and want to ensure system wide availablility of the `gladiator` command across Ruby versions, run this command in an environment that has JRuby (not needed without [RVM](https://rvm.io/)):
 
 ```
 gladiator-setup
-```
-
-Finally, start a new terminal session or source .gladiator_source:
-
-```
 source ~/.gladiator_source
 ```
 
-You should be able to run `gladiator` from anywhere now, even cross-rubies in [RVM](https://rvm.io).
+You should be able to run `gladiator` from anywhere now.
 
 ## Usage
 

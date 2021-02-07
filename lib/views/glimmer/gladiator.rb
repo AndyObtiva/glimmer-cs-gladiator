@@ -61,6 +61,11 @@ module Glimmer
     # option :height, 240
     option :project_dir_path
     
+    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation, :tab_folder_sash_form, :side_bar_sash_form, :file_area_and_editor_area_sash_form, :file_explorer_expand_item, :file_explorer_expand_item, :file_lookup_expand_item, :file_explorer_expand_item, :file_lookup_expand_item_height, :file_explorer_expand_item_height
+    attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor, :tab_folder1, :tab_folder2, :maximized_pane, :maximized_editor
+    alias maximized_pane? maximized_pane
+    alias maximized_editor? maximized_editor
+
     def project_dir
       @project_dir ||= Dir.new(project_dir_path)
     end
@@ -83,10 +88,9 @@ module Glimmer
       pane_count && pane_count > 1
     end
     
-    attr_reader :find_text, :filter_text, :line_number_text, :split_orientation, :tab_folder_sash_form, :side_bar_sash_form, :file_area_and_editor_area_sash_form, :file_explorer_expand_item, :file_explorer_expand_item, :file_lookup_expand_item, :file_explorer_expand_item, :file_lookup_expand_item_height, :file_explorer_expand_item_height
-    attr_accessor :current_tab_item, :current_tab_folder, :current_text_editor, :tab_folder1, :tab_folder2, :maximized_pane, :maximized_editor
-    alias maximized_pane? maximized_pane
-    alias maximized_editor? maximized_editor
+    def app_mode?
+      project_dir_path == '.' && ENV['APP_MODE'].to_s == 'true' || !::Dir.glob(::File.join(project_dir_path, 'glimmer-cs-gladiator.jar')).empty?
+    end
 
     ## Uncomment before_body block to pre-initialize variables to use in body
     #
@@ -107,25 +111,26 @@ module Glimmer
             display_about_dialog
           }
           on_quit {
-            project_dir.selected_child&.write_dirty_content
-            display.swt_display.shells.each(&:close)
+            display.swt_display.shells.each { |shell|
+              gladiator = shell.get_data('custom_shell')
+              gladiator.project_dir.selected_child&.write_dirty_content
+              shell.close
+            }
           }
           on_swt_keydown { |key_event|
             focused_gladiator = display.focus_control.shell&.get_data('custom_shell')
             focused_gladiator.handle_display_shortcut(key_event) if !focused_gladiator.nil? && key_event.widget.shell == focused_gladiator&.swt_widget
-          }
-          on_swt_Close {
-            project_dir.selected_child&.write_dirty_content
           }
         }
       end
 
       @default_foreground = :dark_blue
       @split_orientation = swt(:horizontal)
-      @config_file_path = ::File.join(project_dir.path, '.gladiator')
-      @config = {}
-      load_config_ignore_paths
-#       project_dir.all_children # pre-caches children
+      unless app_mode?
+        @config_file_path = ::File.join(project_dir.path, '.gladiator')
+        @config = {}
+        load_config_ignore_paths
+      end
     }
 
     ## Uncomment after_body block to setup observers for widgets in body
@@ -204,7 +209,7 @@ module Glimmer
               @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
               body_root.pack_same_size
             rescue => e
-              puts e.full_message
+              Glimmer::Config.logger.error {e.full_message}
             end
           end
           @current_text_editor&.text_widget&.setFocus
@@ -235,19 +240,26 @@ module Glimmer
       observe(project_dir, 'selected_child.top_pixel') do
         save_config
       end
-      load_config
+      load_config unless app_mode?
     }
 
     ## Add widget content inside custom shell body
     ## Top-most widget must be a shell or another custom shell
     #
     body {
-      if !::Dir.glob(::File.join(project_dir_path, 'glimmer-cs-gladiator.jar')).empty?
-        shell(:no_trim, :no_background) {
+      if app_mode?
+        shell {
+          text 'Gladiator'
+          minimum_size 250, 250
+          image ICON
           gladiator_menu_bar(gladiator: self, editing: false)
           
-          on_swt_show {
-            open_project
+          button {
+            text 'Open Project...'
+            
+            on_widget_selected {
+              open_project
+            }
           }
         }
       else
@@ -694,8 +706,6 @@ module Glimmer
         @config = YAML.load(config_yaml)
         project_dir.ignore_paths = @config[:ignore_paths] if @config[:ignore_paths]
         project_dir.ignore_paths ||= ['packages', 'tmp']
-      else
-        @loaded_config = true
       end
     end
 
@@ -797,7 +807,7 @@ module Glimmer
       config_yaml = YAML.dump(@config)
       ::File.write(@config_file_path, config_yaml) unless config_yaml.to_s.empty?
     rescue => e
-      puts e.full_message
+      Glimmer::Config.logger.error {e.full_message}
     end
     
     def navigate_to_next_tab_folder
@@ -907,6 +917,7 @@ module Glimmer
       async_exec {
         gladiator(project_dir_path: selected_directory) {
           on_swt_show {
+            body_root.close if app_mode?
             @progress_shell.close
             @progress_shell = nil
           }
