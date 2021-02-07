@@ -139,7 +139,7 @@ module Glimmer
           if Gladiator.drag && !@tab_folder2
             self.tab_folder1 = current_tab_folder
             @tab_folder_sash_form.content {
-              self.current_tab_folder = self.tab_folder2 = tab_folder {}
+              self.current_tab_folder = self.tab_folder2 = text_editor_group_tab_folder
               @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
             }
             body_root.pack_same_size
@@ -151,69 +151,61 @@ module Glimmer
             @current_tab_item = found_tab_item.getData('proxy')
             @current_text_editor = found_tab_item.getData('text_editor') unless found_tab_item.getData('text_editor').nil?
             @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-          elsif selected_file
-            @current_tab_folder.content {
-              @current_tab_item = tab_item { |the_tab_item|
-                text selected_file.name
-                fill_layout(:horizontal) {
-                 margin_width 0
-                 margin_height 0
-                }
-                tab_folder = nil
-                the_text_editor = nil
-                the_tab_item.content {
-                  @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file) {
-                    layout_data :fill, :fill, true, true
+          else
+            begin
+              @current_tab_folder.content {
+                @current_tab_item = tab_item { |the_tab_item|
+                  text selected_file.name
+                  fill_layout(:horizontal) {
+                   margin_width 0
+                   margin_height 0
                   }
-                  @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                  the_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
-                  @current_text_editor.text_proxy.content {
-                    on_focus_gained {
-                      tab_folder = the_text_editor.swt_widget.getParent.getParent
-                      self.current_tab_folder = tab_folder.getData('proxy')
-                      @current_tab_item = the_tab_item
-                      @current_text_editor = the_text_editor
-                      @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                      @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-                      project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
+                  tab_folder = nil
+                  the_text_editor = nil
+                  the_tab_item.content {
+                    @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file) {
+                      layout_data :fill, :fill, true, true
+                    }
+                    @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                    the_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
+                    @current_text_editor.text_proxy.content {
+                      on_focus_gained {
+                        tab_folder = the_text_editor.swt_widget.getParent.getParent
+                        self.current_tab_folder = tab_folder.getData('proxy')
+                        @current_tab_item = the_tab_item
+                        @current_text_editor = the_text_editor
+                        @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                        @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                        project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
+                      }
                     }
                   }
+                  on_swt_show {
+                    @current_tab_item = the_tab_item
+                    @current_text_editor = the_text_editor
+                    self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
+                    @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                    @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                    project_dir.selected_child = selected_file
+                    @current_text_editor&.load_content
+                    @current_text_editor&.text_widget&.setFocus
+                    save_config unless selected_file.nil?
+                  }
+                  on_widget_disposed {
+                    project_dir.selected_child&.write_dirty_content
+                    tab_item_file = the_tab_item.swt_tab_item.get_data('file')
+                    tab_item_file.close unless [@tab_folder1, @tab_folder2].compact.map(&:items).flatten(1).detect {|ti| ti.get_data('file') == tab_item_file}
+                  }
                 }
-                
-                on_swt_show {
-                  @current_tab_item = the_tab_item
-                  @current_text_editor = the_text_editor
-                  self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
-                  @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                  @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-                  project_dir.selected_child = selected_file
-                  @current_text_editor&.load_content
-                  @current_text_editor&.text_widget&.setFocus
-                  save_config
-                }
-                on_widget_disposed {
-                  project_dir.selected_child&.write_dirty_content
-                  tab_item_file = the_tab_item.swt_tab_item.get_data('file')
-                  tab_item_file.close unless [@tab_folder1, @tab_folder2].compact.map(&:items).flatten(1).detect {|ti| ti.get_data('file') == tab_item_file}
-                }
+                @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
+                @current_tab_item.swt_tab_item.setData('file', selected_file)
+                @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
               }
-              on_widget_selected {
-                @current_tab_item = the_tab_item
-                @current_text_editor = the_text_editor
-                self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
-                @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-                project_dir.selected_child = selected_file
-                @current_text_editor&.load_content
-                @current_text_editor&.text_widget&.setFocus
-                save_config
-              }
-              @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
-              @current_tab_item.swt_tab_item.setData('file', selected_file)
-              @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
-            }
-            @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-            body_root.pack_same_size
+              @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+              body_root.pack_same_size
+            rescue => e
+              puts e.full_message
+            end
           end
           @current_text_editor&.text_widget&.setFocus
         end
@@ -655,28 +647,45 @@ module Glimmer
                   minimum_height 176
                 }
                 orientation bind(self, :split_orientation) {|value| async_exec { body_root.pack_same_size}; value}
-                self.current_tab_folder = self.tab_folder1 = tab_folder {
-                  drag_source(DND::DROP_COPY) {
-                    transfer [TextTransfer.getInstance].to_java(Transfer)
-                    event_data = nil
-                    on_drag_start {|event|
-                      Gladiator.drag = true
-                      tab_folder = event.widget.getControl
-                      tab_item = tab_folder.getItem(Point.new(event.x, event.y))
-                      event_data = tab_item.getData('file_path')
-                    }
-                    on_drag_set_data { |event|
-                      event.data = event_data
-                    }
-                  }
-                }
-                @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
+                self.current_tab_folder = self.tab_folder1 = text_editor_group_tab_folder
+                @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder) # TODO see if we could get rid of this as it seems redundant
               }
             }
           } # end of sash form
         }
       end
     }
+
+    def text_editor_group_tab_folder
+      tab_folder { |tab_folder_proxy|
+        on_widget_selected {
+          self.current_tab_folder = tab_folder_proxy
+          selected_file = @current_tab_item&.swt_tab_item&.getData('file')
+          if selected_file
+            project_dir.selected_child = selected_file
+            @current_tab_item = @current_tab_folder.swt_widget.getSelection.first
+            @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item) #TODO see if we can get rid of this as it seems redundant
+            @current_text_editor = @current_tab_item.swt_tab_item.getData('text_editor')
+            @current_text_editor&.load_content
+            @current_text_editor&.text_widget&.setFocus
+            save_config
+          end
+        }
+        drag_source(DND::DROP_COPY) {
+          transfer [TextTransfer.getInstance].to_java(Transfer)
+          event_data = nil
+          on_drag_start {|event|
+            Gladiator.drag = true
+            tab_folder = event.widget.getControl
+            tab_item = tab_folder.getItem(Point.new(event.x, event.y))
+            event_data = tab_item.getData('file_path')
+          }
+          on_drag_set_data { |event|
+            event.data = event_data
+          }
+        }
+      }
+    end
     
     def load_config_ignore_paths
       # TODO eliminate duplication with load_config
@@ -770,11 +779,11 @@ module Glimmer
       return if child.nil?
       tab_folder1 = @tab_folder1 || @current_tab_folder
       tab_folder2 = @tab_folder2
-      open_file_paths1 = tab_folder1&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
-      open_file_paths2 = tab_folder2&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}
+      open_file_paths1 = tab_folder1&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}.reject {|path| path.to_s.strip.empty?}
+      open_file_paths2 = tab_folder2&.swt_widget&.items.to_a.map {|i| i.get_data('file_path')}.reject {|path| path.to_s.strip.empty?}
       split_orientation_value = split_orientation == swt(:horizontal) ? 'horizontal' : (split_orientation == swt(:vertical) ? 'vertical' : nil)
       @config = {
-        selected_child_path: child.path,
+        selected_child_path: child.nil? ? open_file_paths1&.first&.path : child.path,
         split_orientation: split_orientation_value,
         caret_position: child.caret_position,
         top_pixel: child.top_pixel,
@@ -983,10 +992,12 @@ module Glimmer
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == '['
         current_tab_folder.swt_widget.setSelection((current_tab_folder.swt_widget.getSelectionIndex() - 1) % current_tab_folder.swt_widget.getItemCount) if current_tab_folder.swt_widget.getItemCount > 0
         current_text_editor&.text_widget&.setFocus
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == ']'
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == ']' || Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:page_down)
         navigate_to_next_tab_folder
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '['
+        key_event.doit = false
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '[' || Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:page_up)
         navigate_to_previous_tab_folder
+        key_event.doit = false
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
         current_tab_folder.swt_widget.setSelection(0) if current_tab_folder.swt_widget.getItemCount >= 1
         current_text_editor&.text_widget&.setFocus

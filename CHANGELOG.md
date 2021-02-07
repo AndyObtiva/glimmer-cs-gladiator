@@ -3,6 +3,9 @@
 ## 0.8.1
 
 - Fix issue with HOME and END taking to beginning of file and end of file on Windows instead of beginning of line and end of line
+- Fix opening first tab on Windows (shows up as blank, but second tab shows up fine)
+- Fix issue with losing focus on changing tabs on Windows via Windows default tab switching shortcuts of CTRL+PGUP & CTRL+PGDN
+- Fix crazy flashing issue upon hitting CTRL+T on Windows to jump to the File Explorer (doesn't always happen, only the first time in a session)
 
 ## 0.8.0
 
