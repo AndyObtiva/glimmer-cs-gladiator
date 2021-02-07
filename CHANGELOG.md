@@ -6,6 +6,9 @@
 - Fix opening first tab on Windows (shows up as blank, but second tab shows up fine)
 - Fix issue with losing focus on changing tabs on Windows via Windows default tab switching shortcuts of CTRL+PGUP & CTRL+PGDN
 - Fix crazy flashing issue upon hitting CTRL+T on Windows to jump to the File Explorer (doesn't always happen, only the first time in a session)
+- Fix CMD+R shortcut on Windows via CTRL+R
+- Fix minimization of Navigation area on Windows (closes but keeps size of expand bar)
+- Fix shortcuts for Windows/Linux by using ALT as alternative to CTRL when employing both COMMAND (CTRL on Windows/Linux) and CONTROL (ALT on Windows/Linux)
 
 ## 0.8.0
 

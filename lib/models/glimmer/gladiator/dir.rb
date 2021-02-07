@@ -174,7 +174,6 @@ module Glimmer
   
       def selected_child_path=(selected_path)
         return (project_dir.selected_child = nil) if selected_path.nil?
-        return if selected_path.strip.empty?
         # scratchpad scenario
         if selected_path.empty? # Scratchpad
           @selected_child&.write_dirty_content

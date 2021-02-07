@@ -122,7 +122,7 @@ module Glimmer
           selection_count bind(self, 'file.selection_count')
           caret_position bind(self, 'file.caret_position')
           top_pixel bind(self, 'file.top_pixel')
-          # key_binding swt(:ctrl, :home), ST::TEXT_START
+          # key_binding swt(:ctrl, :home), ST::TEXT_START # This seems to make the caret disappear on Windows so disabling for now and relying on key event instead
           on_focus_lost {
             file&.write_dirty_content
           }

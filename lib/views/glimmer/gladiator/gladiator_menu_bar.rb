@@ -111,12 +111,12 @@ module Glimmer
               }
               menu_item(:check) {
                 text '&Maximize Editor'
-                accelerator COMMAND_KEY, :ctrl, :m
+                accelerator COMMAND_KEY, CONTROL_KEY, :m
                 selection bind(gladiator, :maximized_editor)
               }
               menu_item {
                 text '&Reset All'
-                accelerator COMMAND_KEY, :ctrl, :r
+                accelerator COMMAND_KEY, CONTROL_KEY, :r
                 on_widget_selected {
                   gladiator.maximized_editor = false
                   gladiator.file_area_and_editor_area_sash_form.weights = [1, 5]

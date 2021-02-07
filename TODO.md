@@ -4,8 +4,6 @@
 
 - Fix full line selection on Windows (SHIFT+HOME or SHIFT+END)
 - Add a right click menu on text editor area with undo | cut, copy, paste, delete | select all
-- Fix CMD+R shortcut on Windows via CTRL+R
-- Fix minimization of Navigation area on Windows (closes but keeps size of expand bar)
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 
@@ -33,7 +31,6 @@
 - Merge File Lookup with File Explorer
 - Fix issue where typing does not bring caret_position to screen to make the word edited visible
 - Fix issue with about menu item / look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
-- Have Navigation section when hidden on Windows shrink in size (it currently keeps occupying the same height)
 - Fix issue with select-all not permitting file-wide operations like CMD+D afterwards (duplicates first line only despite file looking fully highlighted)
 - Make paste an undoable command separate from change_content!
 - Make the same file split on both sides have different scroll positions on both sides
@@ -48,7 +45,6 @@
 - Edit Menu with all possible keyboard shortcut actions into the menu and denote their shorcuts
 - Add Menu for Rake Tasks
 - Try optimizing by avoiding line style coloring if file content hasn't changed
-- Split via CMD+SHIFT+O shortcut
 - Add Launch Glimmer App menu item (load Gemfile of app directory with Bundler when launching Gladiator to enable instant launching withing same Ruby VM)
 
 - Show Progress Bar ticks while opening a new project
@@ -68,7 +64,6 @@
 - Consider replacing tab_folder with c_tab_folder to have tabs show up on the left if there is only one tab (not center like it currently is)
 - A new line on a comment produces a new comment
 - Have the closing curly brace or "end" keyword light up the opening curly brace or "do" keyword when landing on it
-- Make a text editor fit the screen (from the left or right) from the sash form (add keyboard shortcuts and menu items for that)
 - Recent Projects menu item
 - Reopen last open projects when run as Gladiator app (e.g. Mac app) instead of the command
 - Add rubocop like warnings while using Gladiator like when a file is too large or a method is too long, showing a special color somewhere live.

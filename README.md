@@ -13,7 +13,7 @@ You may now [download](#download) a packaged version on the Mac.
 
 ## Features
 
-Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL on Windows/Linux)
+Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL/CTRL=ALT on Windows/Linux)
 
 ![Gladiator Demo](images/glimmer-gladiator.gif)
 

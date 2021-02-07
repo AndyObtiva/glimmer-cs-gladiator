@@ -43,6 +43,7 @@ module Glimmer
     APP_ROOT = ::File.expand_path('../../../..', __FILE__)
     # TODO make sure COMMAND_KEY doesn't clash on Linux/Windows for CMD+CTRL shortcuts
     COMMAND_KEY = OS.mac? ? :command : :ctrl
+    CONTROL_KEY = OS.mac? ? :ctrl : :alt
     VERSION = ::File.read(::File.join(APP_ROOT, 'VERSION')).to_s.strip
     LICENSE = ::File.read(::File.join(APP_ROOT, 'LICENSE.txt')).to_s.strip
     ICON = ::File.expand_path(::File.join(APP_ROOT, 'images', 'glimmer-cs-gladiator-logo.png'))
@@ -106,7 +107,6 @@ module Glimmer
             display_about_dialog
           }
           on_quit {
-            save_config
             project_dir.selected_child&.write_dirty_content
             display.swt_display.shells.each(&:close)
           }
@@ -663,12 +663,11 @@ module Glimmer
           selected_file = @current_tab_item&.swt_tab_item&.getData('file')
           if selected_file
             project_dir.selected_child = selected_file
-            @current_tab_item = @current_tab_folder.swt_widget.getSelection.first
+            @current_tab_item = @current_tab_folder.swt_widget.getSelection.first.getData('proxy')
             @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item) #TODO see if we can get rid of this as it seems redundant
             @current_text_editor = @current_tab_item.swt_tab_item.getData('text_editor')
             @current_text_editor&.load_content
             @current_text_editor&.text_widget&.setFocus
-            save_config
           end
         }
         drag_source(DND::DROP_COPY) {
@@ -986,16 +985,16 @@ module Glimmer
 #             async_exec { current_text_editor&.text_widget&.setFocus }
           end
         end
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']'
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == ']' || Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:page_down)
         current_tab_folder.swt_widget.setSelection((current_tab_folder.swt_widget.getSelectionIndex() + 1) % current_tab_folder.swt_widget.getItemCount) if current_tab_folder.swt_widget.getItemCount > 0
         current_text_editor&.text_widget&.setFocus
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == '['
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :shift) && extract_char(key_event) == '[' || Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:page_up)
         current_tab_folder.swt_widget.setSelection((current_tab_folder.swt_widget.getSelectionIndex() - 1) % current_tab_folder.swt_widget.getItemCount) if current_tab_folder.swt_widget.getItemCount > 0
         current_text_editor&.text_widget&.setFocus
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == ']' || Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:page_down)
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, CONTROL_KEY) && extract_char(key_event) == ']'
         navigate_to_next_tab_folder
         key_event.doit = false
-      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, :ctrl) && extract_char(key_event) == '[' || Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:page_up)
+      elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY, CONTROL_KEY) && extract_char(key_event) == '['
         navigate_to_previous_tab_folder
         key_event.doit = false
       elsif Glimmer::SWT::SWTProxy.include?(key_event.stateMask, COMMAND_KEY) && extract_char(key_event) == '1'
