@@ -58,7 +58,7 @@ task :no_puts_debuggerer do
   ENV['puts_debuggerer'] = 'false'
 end
 
-Rake::Task["build"].enhance [:no_puts_debuggerer, :spec]
+Rake::Task["build"].enhance([:no_puts_debuggerer, :spec]) unless OS.windows? && ARGV.include?('release')
 
 namespace :build do
   desc 'Builds without running specs for quick testing, but not release'

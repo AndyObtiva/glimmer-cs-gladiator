@@ -9,7 +9,7 @@ It is not intended to be a full-fledged editor by any means, yet mostly a fun ed
 Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
 
-You may now [download](#download) a packaged version on the Mac.
+You may now [download](#download) a packaged version of Gladiator.
 
 ## Features
 
@@ -102,7 +102,6 @@ Gladiator currently supports the following text editing features (including keyb
 - SQL
 - Shell (Bash / Zsh)
 - Vue
-- Plain Text
 
 ## Platforms
 
@@ -118,7 +117,9 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Download
 
-You may [download a packaged version of the Gladiator app](https://www.dropbox.com/s/uklftb8q16czgo6/Gladiator-0.8.1.dmg?dl=1) on the Mac.
+[Download Gladiator Mac DMG Installer](https://www.dropbox.com/s/uklftb8q16czgo6/Gladiator-0.8.1.dmg?dl=1)
+
+[Download Gladiator Windows MSI Installer](https://www.dropbox.com/s/uuvo5h6golzmr82/Gladiator-0.8.1.msi?dl=1)
 
 Otherwise, if you prefer a command line version, then follow the Setup Instructions below.
 
