@@ -2,11 +2,11 @@
 
 ## Up Next
 
-- Fix full line selection on Windows (SHIFT+HOME or SHIFT+END)
-- Add a right click menu on text editor area with undo | cut, copy, paste, delete | select all
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 
+- Make Undo/Redo menu items disabled when operation is not valid (not undoable or redoable)
+- Fix issue with right-clicking a tree node in Windows getting defaulted back to selected node (thus unable to create a new file deep in the tree nesting when an outside file is selected)
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
 - Save a Scratchpad into a real file
 - Add a Gladiator log feature for when running in app mode

@@ -2,8 +2,12 @@
 
 ## 0.8.2
 
+- Add a right click menu on text editor area with undo redo | cut, copy, paste, delete | select all
+- Replaced error message_box with a more readable error dialog for running Ruby code
+- Update Ruby Run menu item command to run against the top level binding receiver (ensuring no weird errors when including Glimmer)
 - In app mode, display an "Open Project..." button
 - In app mode, set gladiator icon on initial shell
+- Fix full line selection on Windows (SHIFT+HOME or SHIFT+END)
 - Fix issue with display saving original file before changes when running in app mode, making changes to an open project, and then closing
 - Fix caret position after formatting dirty content (when pasting a string that has extra empty spaces for example)
 

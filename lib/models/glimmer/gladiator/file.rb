@@ -521,21 +521,70 @@ module Glimmer
       end
 
       def home
-        self.selection_count = 0
         self.line_number = 1
+        self.selection_count = 0
       end
 
       def end
-        self.selection_count = 0
         self.line_number = lines.size
+        self.selection_count = 0
       end
 
       def start_of_line
         self.caret_position = caret_position_for_line_index(self.line_number - 1)
+        self.selection_count = 0
       end
 
       def end_of_line
         self.caret_position = caret_position_for_line_index(self.line_number) - 1
+        self.selection_count = 0
+      end
+
+      def select_to_start_of_line
+        old_caret_position = caret_position
+        self.caret_position = caret_position_for_line_index(self.line_number - 1)
+        self.selection_count = old_caret_position - caret_position
+      end
+
+      def select_to_end_of_line
+        self.caret_position = selection_count == 0 ? caret_position : caret_position + selection_count
+        self.selection_count = (caret_position_for_line_index(self.line_number) - 1) - caret_position
+      end
+
+      def delete!
+        new_dirty_content = dirty_content
+        new_dirty_content[caret_position...(caret_position + selection_count)] = ''
+        old_caret_position = caret_position
+        self.dirty_content = new_dirty_content
+        self.caret_position = old_caret_position
+      end
+
+      def cut!
+        Clipboard.copy(selected_text)
+        delete!
+      end
+
+      def copy
+        Clipboard.copy(selected_text)
+      end
+
+      def paste!
+        new_dirty_content = dirty_content
+        pasted_text = Clipboard.paste
+        new_dirty_content[caret_position...(caret_position + selection_count)] = pasted_text
+        old_caret_position = caret_position
+        self.dirty_content = new_dirty_content
+        self.caret_position = old_caret_position + pasted_text.to_s.size
+        self.selection_count = 0
+      end
+
+      def select_all
+        self.caret_position = 0
+        self.selection_count = dirty_content.to_s.size
+      end
+
+      def selected_text
+        dirty_content.to_s[caret_position, selection_count]
       end
 
       def move_up!
@@ -578,7 +627,7 @@ module Glimmer
       
       def run
         if scratchpad?
-          eval content
+          TOPLEVEL_BINDING.receiver.send(:eval, content)
         else
           write_dirty_content
           load path

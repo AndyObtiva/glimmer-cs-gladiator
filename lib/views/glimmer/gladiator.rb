@@ -31,6 +31,7 @@ require 'views/glimmer/gladiator/file_lookup_list'
 require 'views/glimmer/gladiator/file_explorer_tree'
 require 'views/glimmer/gladiator/gladiator_menu_bar'
 require 'views/glimmer/gladiator/progress_shell'
+require 'views/glimmer/gladiator/file_edit_menu'
 
 Clipboard.implementation = Clipboard::Java
 Clipboard.copy(Clipboard.paste) # pre-initialize library to avoid slowdown during use

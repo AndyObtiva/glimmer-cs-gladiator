@@ -71,6 +71,9 @@ module Glimmer
             right_margin 5
             bottom_margin 5
             left_margin 5
+            
+            file_edit_menu(file: file)
+
             drop_target(DND::DROP_COPY) {
               transfer [TextTransfer.getInstance].to_java(Transfer)
               on_drag_enter { |event|
@@ -138,6 +141,12 @@ module Glimmer
               key_event.doit = false
             elsif (OS.mac? && key_event.keyCode == swt(:home)) || (!OS.mac? && Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :ctrl) && key_event.keyCode == swt(:end))
               file.end
+              key_event.doit = false
+            elsif !OS.mac? && Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :shift) && key_event.keyCode == swt(:home)
+              file.select_to_start_of_line
+              key_event.doit = false
+            elsif !OS.mac? && Glimmer::SWT::SWTProxy.include?(key_event.stateMask, :shift) && key_event.keyCode == swt(:end)
+              file.select_to_end_of_line
               key_event.doit = false
             elsif (OS.mac? && key_event.stateMask == swt(:ctrl) && extract_char(key_event) == 'a') || (!OS.mac? && key_event.keyCode == swt(:home))
               file.start_of_line

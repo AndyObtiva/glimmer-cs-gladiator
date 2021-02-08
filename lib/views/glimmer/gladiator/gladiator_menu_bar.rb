@@ -58,6 +58,7 @@ module Glimmer
             }
           }
           if editing
+            file_edit_menu(gladiator: gladiator)
             menu {
               text '&View'
               menu {
@@ -154,12 +155,8 @@ module Glimmer
                   begin
                     project_dir.selected_child.run
                   rescue Exception => e
-                    dialog {
-                      text 'Run - Ruby - Error Encountered!'
-                      label {
-                        text e.full_message
-                      }
-                    }.open
+                    Glimmer::Config.logger.error {e.full_message}
+                    error_dialog(message: e.full_message).open
                   end
                 }
               }
@@ -182,6 +179,36 @@ module Glimmer
         gladiator.project_dir
       end
       
+      # Method-based error_dialog custom widget
+      def error_dialog(message:)
+        return if message.nil?
+        dialog(gladiator) { |dialog_proxy|
+          row_layout(:vertical) {
+            center true
+          }
+          
+          text 'Error Launching'
+            
+          styled_text(:border, :h_scroll, :v_scroll) {
+            layout_data {
+              width body_root.bounds.width*0.75
+              height body_root.bounds.height*0.75
+            }
+            
+            text message
+            editable false
+            caret nil
+          }
+          
+          button {
+            text 'Close'
+            
+            on_widget_selected {
+              dialog_proxy.close
+            }
+          }
+        }
+      end
     end
     
   end

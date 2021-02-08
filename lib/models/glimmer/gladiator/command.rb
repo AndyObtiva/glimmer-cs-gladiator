@@ -23,7 +23,7 @@ module Glimmer
               command_history_for(file).last.next_command = command
             end
             command.do
-            command_history_for(file) << command unless command_history_for(file).last.method == :change_content! && method == :change_content!          
+            command_history_for(file) << command unless command_history_for(file).last.method == :change_content! && method == :change_content!
           else
             command_history_for(file) << command
           end
@@ -45,7 +45,7 @@ module Glimmer
         end
       end
     
-      attr_accessor :file, :method, :args, :previous_command, :next_command, 
+      attr_accessor :file, :method, :args, :previous_command, :next_command,
                     :file_dirty_content, :file_caret_position, :file_selection_count, :previous_file_dirty_content, :previous_file_caret_position, :previous_file_selection_count
     
       def initialize(file, method = nil, *args)
