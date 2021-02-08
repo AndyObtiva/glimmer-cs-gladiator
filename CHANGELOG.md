@@ -5,6 +5,7 @@
 - In app mode, display an "Open Project..." button
 - In app mode, set gladiator icon on initial shell
 - Fix issue with display saving original file before changes when running in app mode, making changes to an open project, and then closing
+- Fix caret position after formatting dirty content (when pasting a string that has extra empty spaces for example)
 
 ## 0.8.1
 

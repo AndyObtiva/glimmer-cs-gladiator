@@ -204,6 +204,7 @@ module Glimmer
       
       def change_content!(value)
         self.dirty_content = value
+        format_dirty_content_for_writing!(force: true) if value.to_s.include?("\r\n")
         update_line_number_from_caret_position(caret_position)
       end
 
@@ -261,14 +262,15 @@ module Glimmer
         puts e.full_message
       end
 
-      def format_dirty_content_for_writing!
-        return if @commmand_in_progress
-        # TODO  f ix c ar e t pos it ion after formatting dirty content (diff?)
+      def format_dirty_content_for_writing!(force: false)
+        return if !force && @commmand_in_progress
         new_dirty_content = dirty_content.to_s.split("\n").map {|line| line.strip.empty? ? line : line.rstrip }.join("\n")
         new_dirty_content = "#{new_dirty_content.gsub("\r\n", "\n").gsub("\r", "\n").sub(/\n+\z/, '')}\n"
         if new_dirty_content != self.dirty_content
           @formatting_dirty_content_for_writing = true
+          caret_position_diff = dirty_content.to_s.size - new_dirty_content.size
           self.dirty_content = new_dirty_content
+          self.caret_position = caret_position - caret_position_diff
           @formatting_dirty_content_for_writing = false
         end
       end
