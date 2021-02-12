@@ -6,7 +6,7 @@ module Glimmer
       include Glimmer
       include Glimmer::DataBinding::ObservableModel
       
-      IGNORE_PATHS = ['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist']
+      IGNORE_PATHS = ['.gladiator', '.gladiator-scratchpad', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist']
 
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
       attr_reader :name, :parent, :path
@@ -177,7 +177,8 @@ module Glimmer
         # scratchpad scenario
         if selected_path.empty? # Scratchpad
           @selected_child&.write_dirty_content
-          return (self.selected_child = File.new)
+          @scratchpad = (self.selected_child = File.new('', project_dir.path)) if @scratchpad.nil? || @scratchpad.closed?
+          return @scratchpad
         end
         full_selected_path = selected_path.include?(project_dir.path) ? selected_path : ::File.join(project_dir.path, selected_path)
         return if ::Dir.exist?(full_selected_path) ||

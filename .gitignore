@@ -54,6 +54,7 @@ build-iPhoneSimulator/
 
 # Gladiator (Glimmer Editor)
 .gladiator
+.gladiator-scratchpad
 
 # Glimmer
 /dist/

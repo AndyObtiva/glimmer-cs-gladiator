@@ -196,6 +196,8 @@ module Glimmer
               if file.selection_count.to_i == 0
                 verify_event.text += file.current_line_indentation
               end
+              # TODO implement this to borrowed line of code from Glimmer Meta-Sample
+#               verify_event.text += ' '*2 if line.strip.end_with?('{') || line.strip.match(/do[ ]+([|][^|]+[|])?$/) || line.start_with?('class') || line.start_with?('module') || line.strip.start_with?('def')
             when "\t"
               Command.do(file, :indent!)
               verify_event.doit = false

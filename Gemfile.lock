@@ -25,13 +25,12 @@ GEM
       hashie (>= 3.4)
       mime-types (>= 1.16, < 3.0)
       oauth2 (~> 1.0)
-    glimmer (1.1.1)
+    glimmer (1.1.2)
       array_include_methods (>= 1.0.4, < 2.0.0)
       concurrent-ruby (>= 1.1.7, < 2.0.0)
       facets (>= 3.1.0, < 4.0.0)
-    glimmer-dsl-swt (4.18.4.8)
-      git (= 1.8.1)
-      glimmer (~> 1.1.1)
+    glimmer-dsl-swt (4.18.6.3)
+      glimmer (~> 1.1.2)
       logging (>= 2.3.0, < 3.0.0)
       nested_inherited_jruby_include_package (>= 0.3.0, < 2.0.0)
       os (>= 1.0.0, < 2.0.0)
@@ -55,7 +54,7 @@ GEM
       rake
       rdoc
       semver2
-    jruby-jars (9.2.14.0)
+    jruby-jars (9.2.16.0)
     jruby-rack (1.1.21)
     jwt (2.2.2)
     little-plugger (1.1.4)
@@ -80,7 +79,7 @@ GEM
     os (1.1.1)
     pastel (0.8.0)
       tty-color (~> 0.5)
-    psych (3.3.0-java)
+    psych (3.3.1-java)
       jar-dependencies (>= 0.1.7)
     puts_debuggerer (0.11.0)
       awesome_print (~> 1.8.0)
@@ -147,4 +146,4 @@ DEPENDENCIES
   warbler (= 2.0.5)
 
 BUNDLED WITH
-   2.2.9
+   2.2.11

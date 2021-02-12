@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.3
+
+- Switch Scratchpad evaling to loading a temporary local file under `project_dir/.gladiator-scratchpad` for a more realistic Ruby running experience
+- Fix issue with detecting current gladiator window when handling keyboard shortcuts
+- Fix issue with Scratchpad opening twice when called twice instead of reusing the existing Scratchpad
+- Fix issue with closed tabs not closing their file streams/watchers, including the Scratchpad temporary file
+
 ## 0.8.2
 
 - Add a right click menu on text editor area with undo redo | cut, copy, paste, delete | select all

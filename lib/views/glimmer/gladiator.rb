@@ -120,7 +120,7 @@ module Glimmer
           }
           on_swt_keydown { |key_event|
             focused_gladiator = display.focus_control.shell&.get_data('custom_shell')
-            focused_gladiator.handle_display_shortcut(key_event) if !focused_gladiator.nil? && key_event.widget.shell == focused_gladiator&.swt_widget
+            focused_gladiator.handle_display_shortcut(key_event) if !focused_gladiator.nil? && focused_gladiator.is_a?(Glimmer::Gladiator) && key_event.widget.shell == focused_gladiator&.swt_widget
           }
         }
       end
@@ -200,7 +200,9 @@ module Glimmer
                   on_widget_disposed {
                     project_dir.selected_child&.write_dirty_content
                     tab_item_file = the_tab_item.swt_tab_item.get_data('file')
-                    tab_item_file.close unless [@tab_folder1, @tab_folder2].compact.map(&:items).flatten(1).detect {|ti| ti.get_data('file') == tab_item_file}
+                    if (@tab_folder1 != @current_tab_folder && !@tab_folder1&.items&.detect {|ti| ti.get_data('file') == tab_item_file}) || (@tab_folder2 != @current_tab_folder && !@tab_folder2&.items&.detect {|ti| ti.get_data('file') == tab_item_file})
+                      tab_item_file.close
+                    end
                   }
                 }
                 @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
@@ -690,7 +692,7 @@ module Glimmer
             Gladiator.drag = true
             tab_folder = event.widget.getControl
             tab_item = tab_folder.getItem(Point.new(event.x, event.y))
-            event_data = tab_item.getData('file_path')
+            event_data = tab_item&.getData('file_path')
           }
           on_drag_set_data { |event|
             event.data = event_data

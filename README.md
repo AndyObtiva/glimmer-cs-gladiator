@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.8.2 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.png' height=85 /> Gladiator 0.8.2 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -52,9 +52,9 @@ Gladiator currently supports the following text editing features (including keyb
 ### Menus
 
 - File Menu:
+  - Open Scratchpad for running arbitrary Ruby/Glimmer code (saves a temporary file to `project_dir/.gladiator-scratchpad`) (CMD+SHIFT+S)
   - Open Project (CMD+O)
   - Quit Project (CMD+ALT+Q)
-  - New Scratchpad for running arbitrary Ruby/Glimmer code without saving to disk (CMD+SHIFT+S)
 - View Menu
   - Split Pane
     - Orientation change to Horizontal/Vertical (CMD+SHIFT+O)
@@ -127,7 +127,7 @@ Otherwise, if you prefer a command line version, then follow the Setup Instructi
 
 ## Setup Instructions
 
-Note: if you encounter any issues, check if they are documented in [TODO.md](TODO.md), [issues](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues), or [pull requests](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls) as they might be on my radar to fix. Otherwise, please report as an [issue](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues) or better yet fix and submit a [pull request](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls).
+Note: if you encounter any issues, check if they are documented in [TODO.md](TODO.md), [issues](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues), or [pull requests](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls) as they might be on my radar to fix. Otherwise, please report as an [issue](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues) or better yet fix and submit a [pull request](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls). Also, try going back to a [previous version of the gem](https://rubygems.org/gems/glimmer-cs-gladiator/versions) until you find one that works. Keep in mind this is open-source software provided as is, so there are no guarantees of functionality. If you would like such guarantees, you are welcome to [hire me full-time](https://www.linkedin.com/in/andymaleh/).
 
 Install Gladiator gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
 
@@ -225,7 +225,9 @@ It currently remembers:
 - Window size and position
 - Ignore Paths under `Glimmer::Gladiator::Dir::IGNORE_PATHS` (default: `['.gladiator', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist']`)
 
-## Gotcha
+## Gotchas
+
+### Signaling Error
 
 Gladiator repetitively displays a signaling error that is harmless in practice:
 ```
@@ -233,6 +235,17 @@ The signal HUP is in use by the JVM and will not work correctly on this platform
 The signal INT is in use by the JVM and will not work correctly on this platform
 The signal TERM is in use by the JVM and will not work correctly on this platform
 ```
+
+### App Is Not Responding
+
+If you run the `gladiator` command from the root directory or some parent directory to many projects, it assumes that is
+the project directory and attempt to pre-load all files, taking a very long time and not responding for quite a while.
+
+To avoid this problem, always make sure you are running the `gladiator` command from a single project's directory.
+
+Also, if you encounter this issue with projects that contain a lot of extra files that you do not need to edit, you
+could later open the generate `.gladiator` file at the root of the project directory and add unnecessary subdirectories
+to the `ignore_paths` array.
 
 ## TODO
 

@@ -32,7 +32,7 @@ module Glimmer
             text '&File'
   
             menu_item {
-              text 'New &Scratchpad'
+              text 'Open &Scratchpad'
               accelerator COMMAND_KEY, :shift, :s
               enabled editing
               on_widget_selected {
@@ -191,8 +191,8 @@ module Glimmer
             
           styled_text(:border, :h_scroll, :v_scroll) {
             layout_data {
-              width body_root.bounds.width*0.75
-              height body_root.bounds.height*0.75
+              width gladiator.bounds.width*0.75
+              height gladiator.bounds.height*0.75
             }
             
             text message

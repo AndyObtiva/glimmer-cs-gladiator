@@ -145,7 +145,13 @@ module Glimmer
       end
       
       def scratchpad?
-        path.to_s.empty?
+        path.to_s.empty? # TODO consider updating to set the .gladiator-scratchpad path directly
+      end
+      
+      def scratchpad_file
+        scratchpad_file = ::File.join(project_dir.path, '.gladiator-scratchpad')
+        ::File.write(scratchpad_file, content)
+        scratchpad_file
       end
 
       def backup_properties
@@ -221,10 +227,15 @@ module Glimmer
       end
       
       def close
+        @closed = true
         stop_filewatcher
         remove_all_observers
         initialize(path, project_dir)
         Command.clear(self)
+      end
+      
+      def closed?
+        @closed
       end
       
       def read_dirty_content
@@ -627,13 +638,13 @@ module Glimmer
       
       def run
         if scratchpad?
-          TOPLEVEL_BINDING.receiver.send(:eval, content)
+          load scratchpad_file
         else
           write_dirty_content
           load path
         end
       end
-
+      
       def lines
         need_padding = dirty_content.to_s.end_with?("\n")
         splittable_content = need_padding ? "#{dirty_content} " : dirty_content

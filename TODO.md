@@ -2,9 +2,12 @@
 
 ## Up Next
 
+# TODO implement this to better indent verify_event.text += ' '*2 if verify_event.text.end_with?('{') || verify_event.text.end_with?('do')
+- Fix issue with general gladiator command from gladiator-setup not passing argument in
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 
+- Auto-close brackets/do-end blocks 
 - Make Undo/Redo menu items disabled when operation is not valid (not undoable or redoable)
 - Fix issue with right-clicking a tree node in Windows getting defaulted back to selected node (thus unable to create a new file deep in the tree nesting when an outside file is selected)
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
