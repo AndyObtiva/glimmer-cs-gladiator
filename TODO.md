@@ -2,12 +2,13 @@
 
 ## Up Next
 
-# TODO implement this to better indent verify_event.text += ' '*2 if verify_event.text.end_with?('{') || verify_event.text.end_with?('do')
+- Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
+
 - Fix issue with general gladiator command from gladiator-setup not passing argument in
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 
-- Auto-close brackets/do-end blocks 
+- Auto-close brackets/do-end blocks
 - Make Undo/Redo menu items disabled when operation is not valid (not undoable or redoable)
 - Fix issue with right-clicking a tree node in Windows getting defaulted back to selected node (thus unable to create a new file deep in the tree nesting when an outside file is selected)
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
@@ -28,7 +29,6 @@
 - Add extra indentation on new line if after a method declaration, class/module declaration, or block declaration
 - Add menu bar menu items for file lockup and file explorer go to file
 - Add menu bar menu items for file explorer right click menu on currently selected file
-- Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
 - Support zoom-font-in and zoom-font-out (CMD - & CMD + & CMD 0 for reset)
 - Consider extracting tab_folder with all its dynamic logic/observers
 - Consider pushing observer related logic for tree into tree

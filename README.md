@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.png' height=85 /> Gladiator 0.8.2 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.8.3 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -117,9 +117,9 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Download
 
-[Download Gladiator Mac DMG Installer](https://www.dropbox.com/s/jyaojy5z1lu5vnp/Gladiator-0.8.2.dmg?dl=1)
+[Download Gladiator 0.8.3 Mac DMG Installer](https://www.dropbox.com/s/suqvzceqj1fxj8o/Gladiator-0.8.3.dmg?dl=1)
 
-[Download Gladiator Windows MSI Installer](https://www.dropbox.com/s/edvbgsrjbdwc8v8/Gladiator-0.8.2.msi?dl=1)
+[Download Gladiator 0.8.3 Windows MSI Installer](https://www.dropbox.com/s/7kcrf7r5p6vxfm7/Gladiator-0.8.3.msi?dl=1)
 
 The packaged version starts with a dialog asking you what project to open. Gladiator does not fully show up until you have selected a project directory.
 
@@ -192,7 +192,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '>= 0.8.2'
+gem 'glimmer-cs-gladiator', '>= 0.8.3'
 ```
 
 Run:
