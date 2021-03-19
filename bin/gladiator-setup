@@ -70,7 +70,7 @@ end
 
 puts <<~OUTPUT
   
-  Before using `gladiator`, start a new shell session (open a new terminal tab) or run:
+  Before using `gladiator`, start a new shell session in the same directory (open a new terminal tab and go to the same directory) or run:
   
   source ~/.gladiator_source
   
