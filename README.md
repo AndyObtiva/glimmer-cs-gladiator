@@ -239,12 +239,12 @@ The signal TERM is in use by the JVM and will not work correctly on this platfor
 ### App Is Not Responding
 
 If you run the `gladiator` command from the root directory or some parent directory to many projects, it assumes that is
-the project directory and attempt to pre-load all files, taking a very long time and not responding for quite a while.
+the project directory and attempts to pre-load all files (just part of Gladiator's architectural design and assumptions for optimizing use per project), taking a very long time and not responding for quite a while.
 
 To avoid this problem, always make sure you are running the `gladiator` command from a single project's directory.
 
 Also, if you encounter this issue with projects that contain a lot of extra files that you do not need to edit, you
-could later open the generate `.gladiator` file at the root of the project directory and add unnecessary subdirectories
+could later open the generated `.gladiator` file at the root of the project directory and add unnecessary subdirectories
 to the `ignore_paths` array.
 
 ## TODO
