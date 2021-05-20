@@ -67,7 +67,9 @@ GEM
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nested_inherited_jruby_include_package (0.3.0)
-    nokogiri (1.11.1-java)
+    nokogiri (1.11.5-java)
+      racc (~> 1.4)
+    nokogiri (1.11.5-x86_64-linux)
       racc (~> 1.4)
     oauth2 (1.4.4)
       faraday (>= 0.8, < 2.0)
@@ -79,10 +81,12 @@ GEM
     os (1.1.1)
     pastel (0.8.0)
       tty-color (~> 0.5)
+    psych (3.3.1)
     psych (3.3.1-java)
       jar-dependencies (>= 0.1.7)
     puts_debuggerer (0.11.0)
       awesome_print (~> 1.8.0)
+    racc (1.5.2)
     racc (1.5.2-java)
     rack (2.2.3)
     rake (13.0.3)
@@ -115,6 +119,7 @@ GEM
     super_module (1.4.1)
       method_source (>= 0.8.2, < 1.1.0)
     text-table (1.2.4)
+    thread_safe (0.3.6)
     thread_safe (0.3.6-java)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
@@ -135,6 +140,7 @@ GEM
 
 PLATFORMS
   universal-java-1.8
+  x86_64-linux
 
 DEPENDENCIES
   clipboard (~> 1.3.5)
