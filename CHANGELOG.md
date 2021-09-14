@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.9.1
+
+- Upgrade to glimmer-dsl-swt 4.20.15.4
+- Fix issue with keyboard shortcuts not working in first tab (also fix scroll-jittering when performing CMD+] and CMD+[ in first tab)
+- Change Quit Project keyboard shortcut to ALT+F4
+
+## 0.9.0
+
+- Upgrade to glimmer-dsl-swt 4.19.0.0
+- Updated quit project accelerator (keyboard shortcut) to ALT+F4
+
 ## 0.8.3
 
 - Switch Scratchpad evaling to loading a temporary local file under `project_dir/.gladiator-scratchpad` for a more realistic Ruby running experience

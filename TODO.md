@@ -3,11 +3,14 @@
 ## Up Next
 
 - Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
-
+- Fix issue with losing some open files on close of Gladiator and openning again
 - Fix issue with general gladiator command from gladiator-setup not passing argument in
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 
+- Upgrade tabs to c_tab_folder to enable more tabs to fit
+- Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
+- Show saved scratch from last scratchpad session when opening scratchpad
 - Auto-close brackets/do-end blocks
 - Make Undo/Redo menu items disabled when operation is not valid (not undoable or redoable)
 - Fix issue with right-clicking a tree node in Windows getting defaulted back to selected node (thus unable to create a new file deep in the tree nesting when an outside file is selected)

@@ -49,7 +49,7 @@ module Glimmer
             menu_item(:separator)
             menu_item {
               text '&Quit Project'
-              accelerator COMMAND_KEY, :alt, :q
+              accelerator :alt, :f4
               on_widget_selected {
                 gladiator.save_config
                 project_dir.selected_child&.write_dirty_content

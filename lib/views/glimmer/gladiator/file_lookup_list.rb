@@ -29,7 +29,6 @@ module Glimmer
       body {
         list(:border, :h_scroll, :v_scroll) {
           selection bind(project_dir, :filtered_path)
-#           visible bind(project_dir, 'filter') {|f| pd swt_widget&.get_shell&.get_data('proxy'); swt_widget&.get_shell&.get_data('proxy')&.pack_same_size; !!f}
           foreground foreground_color
           on_mouse_up {
             project_dir.selected_child_path = swt_widget.getSelection.first

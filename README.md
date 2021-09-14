@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.8.3 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.9.1 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -45,7 +45,7 @@ Gladiator currently supports the following text editing features (including keyb
 ### Navigation Area
 
 - Show current text editor file name
-- Show file navigation stats (Caret Position / Line Position / Selection Count / Top Pixel)
+0- Show file navigation stats (Caret Position / Line Position / Selection Count / Top Pixel)
 - Jump to Line (CMD+L)
 - Find & Replace (CMD+F)
 
@@ -54,7 +54,7 @@ Gladiator currently supports the following text editing features (including keyb
 - File Menu:
   - Open Scratchpad for running arbitrary Ruby/Glimmer code (saves a temporary file to `project_dir/.gladiator-scratchpad`) (CMD+SHIFT+S)
   - Open Project (CMD+O)
-  - Quit Project (CMD+ALT+Q)
+  - Quit Project (ALT+F4)
 - View Menu
   - Split Pane
     - Orientation change to Horizontal/Vertical (CMD+SHIFT+O)
@@ -117,7 +117,7 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Download
 
-[Download Gladiator 0.8.3 Mac DMG Installer](https://www.dropbox.com/s/suqvzceqj1fxj8o/Gladiator-0.8.3.dmg?dl=1)
+[Download Gladiator 0.8.2 Mac DMG Installer](https://www.dropbox.com/s/jyaojy5z1lu5vnp/Gladiator-0.8.2.dmg?dl=1)
 
 [Download Gladiator 0.8.3 Windows MSI Installer](https://www.dropbox.com/s/7kcrf7r5p6vxfm7/Gladiator-0.8.3.msi?dl=1)
 
@@ -192,7 +192,7 @@ To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application,
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '>= 0.8.3'
+gem 'glimmer-cs-gladiator', '>= 0.9.1'
 ```
 
 Run:
