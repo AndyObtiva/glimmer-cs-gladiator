@@ -251,7 +251,7 @@ module Glimmer
     #
     body {
       if app_mode?
-        shell {
+        @@app_mode_shell = shell {
           text 'Gladiator'
           minimum_size 250, 250
           image ICON
@@ -286,6 +286,7 @@ module Glimmer
           
           on_shell_closed {
             project_dir.selected_child&.write_dirty_content
+            save_config
             if @tab_folder2
               current_tab_folder.swt_widget.getItems.each do |tab_item|
                 tab_item.getData('proxy')&.dispose
@@ -295,10 +296,9 @@ module Glimmer
             current_tab_folder.swt_widget.getItems.each do |tab_item|
               tab_item.getData('proxy')&.dispose
             end
+            gladiator_shells = display.shells.select {|s| s.get_data('custom_shell')&.is_a?(Glimmer::Gladiator)}
             body_root.close unless current_tab_folder.swt_widget.getItems.empty?
-          }
-          on_widget_disposed {
-            project_dir.selected_child&.write_dirty_content
+            async_exec { @@app_mode_shell.show } if defined?(@@app_mode_shell) && gladiator_shells.count <= 2
           }
           on_control_resized {
             save_config
@@ -308,6 +308,7 @@ module Glimmer
           }
           on_shell_deactivated {
             project_dir.selected_child&.write_dirty_content
+            save_config
           }
   
           # Menu Bar
@@ -920,7 +921,7 @@ module Glimmer
       async_exec {
         gladiator(project_dir_path: selected_directory) {
           on_swt_show {
-            body_root.close if app_mode?
+            @@app_mode_shell.hide if app_mode?
             @progress_shell.close
             @progress_shell = nil
           }

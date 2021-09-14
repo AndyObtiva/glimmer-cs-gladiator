@@ -117,7 +117,7 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Download
 
-[Download Gladiator 0.8.2 Mac DMG Installer](https://www.dropbox.com/s/jyaojy5z1lu5vnp/Gladiator-0.8.2.dmg?dl=1)
+[Download Gladiator 0.9.1 Mac DMG Installer](https://www.dropbox.com/s/s9yp6qtelh85qko/Gladiator-0.9.1.dmg?dl=1)
 
 [Download Gladiator 0.8.3 Windows MSI Installer](https://www.dropbox.com/s/7kcrf7r5p6vxfm7/Gladiator-0.8.3.msi?dl=1)
 

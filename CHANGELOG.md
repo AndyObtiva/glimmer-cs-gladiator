@@ -5,6 +5,7 @@
 - Upgrade to glimmer-dsl-swt 4.20.15.4
 - Fix issue with keyboard shortcuts not working in first tab (also fix scroll-jittering when performing CMD+] and CMD+[ in first tab)
 - Change Quit Project keyboard shortcut to ALT+F4
+- In app mode (packaged version), show "Open Project..." shell again after closing last open project
 
 ## 0.9.0
 
