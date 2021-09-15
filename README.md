@@ -119,7 +119,7 @@ Gladiator currently supports the following text editing features (including keyb
 
 [Download Gladiator 0.9.1 Mac DMG Installer](https://www.dropbox.com/s/s9yp6qtelh85qko/Gladiator-0.9.1.dmg?dl=1)
 
-[Download Gladiator 0.8.3 Windows MSI Installer](https://www.dropbox.com/s/7kcrf7r5p6vxfm7/Gladiator-0.8.3.msi?dl=1)
+[Download Gladiator 0.9.1 Windows MSI Installer](https://www.dropbox.com/s/ufxx1a9r10egybt/Gladiator-0.9.1.msi?dl=1)
 
 The packaged version starts with a dialog asking you what project to open. Gladiator does not fully show up until you have selected a project directory.
 
