@@ -177,7 +177,7 @@ module Glimmer
         # scratchpad scenario
         if selected_path.empty? # Scratchpad
           @selected_child&.write_dirty_content
-          @scratchpad = (self.selected_child = File.new('', project_dir.path)) if @scratchpad.nil? || @scratchpad.closed?
+          @scratchpad = (self.selected_child = File.new('', project_dir)) if @scratchpad.nil? || @scratchpad.closed?
           return @scratchpad
         end
         full_selected_path = selected_path.include?(project_dir.path) ? selected_path : ::File.join(project_dir.path, selected_path)

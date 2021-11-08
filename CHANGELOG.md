@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.9.2
+
+- Fix minor issue with leaving `'-J-Xrs'` option in `bin/gladiator`
+- Fix issue with Scratchpad
+
 ## 0.9.1
 
 - Upgrade to glimmer-dsl-swt 4.20.15.4
