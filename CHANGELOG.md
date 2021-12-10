@@ -2,6 +2,8 @@
 
 ## 0.9.2
 
+- Fix issue with sometimes not remembering last open tabs when opening Gladiator
+- Fix issues with renaming files in file explorer not reflecting change in open tab file name
 - Fix minor issue with leaving `'-J-Xrs'` option in `bin/gladiator`
 - Fix issue with Scratchpad
 

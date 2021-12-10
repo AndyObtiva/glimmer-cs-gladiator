@@ -96,7 +96,7 @@ module Glimmer
     ## Uncomment before_body block to pre-initialize variables to use in body
     #
     #
-    before_body {
+    before_body do
       # TODO consider doing loading project files after displaying the GUI instead of holding it up before
       project_dir #pre-initialize directory
       TOPLEVEL_BINDING.receiver.send(:at_exit) do
@@ -132,11 +132,11 @@ module Glimmer
         @config = {}
         load_config_ignore_paths
       end
-    }
+    end
 
     ## Uncomment after_body block to setup observers for widgets in body
     #
-    after_body {
+    after_body do
       observe(project_dir, 'children') do
         @file_explorer_tree.select_tree_item unless Gladiator.startup
       end
@@ -244,7 +244,7 @@ module Glimmer
         save_config
       end
       load_config unless app_mode?
-    }
+    end
 
     ## Add widget content inside custom shell body
     ## Top-most widget must be a shell or another custom shell

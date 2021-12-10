@@ -218,14 +218,14 @@ module Glimmer
                 found_tab_item&.setData('file', file)
                 found_tab_item&.setData('file_path', file.path)
                 found_tab_item&.setText(file.name)
-                body_root.pack_same_size
                 if current_file
                   project_dir.selected_child_path = file_path
                 else
-                  selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
+                  gladiator.selected_tab_item&.getData('text_editor')&.text_widget&.setFocus
                 end
                 async_exec {
                   swt_widget.showItem(edited_tree_item)
+                  gladiator.body_root.pack_same_size
                 }
               end
             end

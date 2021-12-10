@@ -7,7 +7,9 @@
 - Fix issue with general gladiator command from gladiator-setup not passing argument in
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
+- Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
 
+- Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
 - Upgrade tabs to c_tab_folder to enable more tabs to fit
 - Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
 - Show saved scratch from last scratchpad session when opening scratchpad
