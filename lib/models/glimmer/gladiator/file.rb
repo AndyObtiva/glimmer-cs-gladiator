@@ -245,7 +245,7 @@ module Glimmer
       def start_filewatcher
         return if scratchpad?
         @filewatcher = Filewatcher.new(@path)
-        @thread = Thread.new(@filewatcher) do |fw|
+        @filewatcher_thread = Thread.new(@filewatcher) do |fw|
           fw.watch do |filename, event|
             async_exec do
               begin
@@ -261,6 +261,10 @@ module Glimmer
 
       def stop_filewatcher
         @filewatcher&.stop
+        @filewatcher_thread&.join
+        @filewatcher_thread = nil
+        @filewatcher&.finalize
+        @filewatcher = nil
       end
 
       def write_dirty_content
@@ -519,6 +523,7 @@ module Glimmer
         self.dirty_content = new_dirty_content
         find_next
         find_next if replace_text.to_s.include?(find_text) && !replace_text.to_s.start_with?(find_text)
+        write_dirty_content
       end
       
       def page_up

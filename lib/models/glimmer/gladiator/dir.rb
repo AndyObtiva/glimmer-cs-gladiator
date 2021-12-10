@@ -16,7 +16,7 @@ module Glimmer
         @project_dir = project_dir
         if is_local_dir
           @filewatcher = Filewatcher.new(path)
-          Thread.new(@filewatcher) do |fw|
+          @filewatcher_thread = Thread.new(@filewatcher) do |fw|
             begin
               fw.watch do |filename, event|
                 # TODO do fine grained processing of events for enhanced performance (e.g. dir refresh vs file change)
@@ -108,6 +108,19 @@ module Glimmer
   
       def selected_child_path_history
         @selected_child_path_history ||= []
+      end
+      
+      def close
+        all_children_files.each(&:close)
+        stop_filewatcher
+      end
+      
+      def stop_filewatcher
+        @filewatcher&.stop
+        @filewatcher_thread&.join
+        @filewatcher_thread = nil
+        @filewatcher&.finalize
+        @filewatcher = nil
       end
   
       def pause_refresh

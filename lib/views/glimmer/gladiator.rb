@@ -97,10 +97,11 @@ module Glimmer
     #
     #
     before_body do
+      @@quitting = false
       # TODO consider doing loading project files after displaying the GUI instead of holding it up before
-      project_dir #pre-initialize directory
-      TOPLEVEL_BINDING.receiver.send(:at_exit) do
-        project_dir.selected_child&.write_raw_dirty_content
+      project_dir unless app_mode? #pre-initialize directory
+      TOPLEVEL_BINDING.receiver.send(:trap, "SIGINT") do |signal|
+        quit
       end
       Display.setAppName('Gladiator')
       Display.setAppVersion(VERSION)
@@ -108,20 +109,12 @@ module Glimmer
       unless defined?(@@display)
         @@display = display {
           # TODO look into why a weird java dialog comes up on about (maybe a non-issue once packaged)
-          on_about {
-            display_about_dialog
-          }
-          on_quit {
-            display.swt_display.shells.each { |shell|
-              gladiator = shell.get_data('custom_shell')
-              gladiator.project_dir.selected_child&.write_dirty_content
-              shell.close
-            }
-          }
-          on_swt_keydown { |key_event|
+          on_about { display_about_dialog }
+          on_quit { quit }
+          on_swt_keydown do |key_event|
             focused_gladiator = display.focus_control.shell&.get_data('custom_shell')
             focused_gladiator.handle_display_shortcut(key_event) if !focused_gladiator.nil? && focused_gladiator.is_a?(Glimmer::Gladiator) && key_event.widget.shell == focused_gladiator&.swt_widget
-          }
+          end
         }
       end
 
@@ -137,113 +130,115 @@ module Glimmer
     ## Uncomment after_body block to setup observers for widgets in body
     #
     after_body do
-      observe(project_dir, 'children') do
-        @file_explorer_tree.select_tree_item unless Gladiator.startup
-      end
-      observe(project_dir, 'selected_child') do |selected_file|
-        if selected_file
-          if Gladiator.drag && !@tab_folder2
-            self.tab_folder1 = current_tab_folder
-            @tab_folder_sash_form.content {
-              self.current_tab_folder = self.tab_folder2 = text_editor_group_tab_folder
-              @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
-            }
-            body_root.pack_same_size
-          end
+      unless app_mode?
+        observe(project_dir, 'children') do
           @file_explorer_tree.select_tree_item unless Gladiator.startup
-          found_tab_item = selected_tab_item
-          if found_tab_item
-            @current_tab_folder.swt_widget.setSelection(found_tab_item)
-            @current_tab_item = found_tab_item.getData('proxy')
-            @current_text_editor = found_tab_item.getData('text_editor') unless found_tab_item.getData('text_editor').nil?
-            @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-          else
-            begin
-              @current_tab_folder.content {
-                @current_tab_item = tab_item { |the_tab_item|
-                  text selected_file.name
-                  fill_layout(:horizontal) {
-                   margin_width 0
-                   margin_height 0
-                  }
-                  tab_folder = nil
-                  the_text_editor = nil
-                  the_tab_item.content {
-                    @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file) {
-                      layout_data :fill, :fill, true, true
+        end
+        observe(project_dir, 'selected_child') do |selected_file|
+          if selected_file
+            if Gladiator.drag && !@tab_folder2
+              self.tab_folder1 = current_tab_folder
+              @tab_folder_sash_form.content {
+                self.current_tab_folder = self.tab_folder2 = text_editor_group_tab_folder
+                @current_tab_folder.swt_widget.setData('proxy', @current_tab_folder)
+              }
+              body_root.pack_same_size
+            end
+            @file_explorer_tree.select_tree_item unless Gladiator.startup
+            found_tab_item = selected_tab_item
+            if found_tab_item
+              @current_tab_folder.swt_widget.setSelection(found_tab_item)
+              @current_tab_item = found_tab_item.getData('proxy')
+              @current_text_editor = found_tab_item.getData('text_editor') unless found_tab_item.getData('text_editor').nil?
+              @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+            else
+              begin
+                @current_tab_folder.content {
+                  @current_tab_item = tab_item { |the_tab_item|
+                    text selected_file.name
+                    fill_layout(:horizontal) {
+                     margin_width 0
+                     margin_height 0
                     }
-                    @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                    the_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
-                    @current_text_editor.text_proxy.content {
-                      on_focus_gained {
-                        tab_folder = the_text_editor.swt_widget.getParent.getParent
-                        self.current_tab_folder = tab_folder.getData('proxy')
-                        @current_tab_item = the_tab_item
-                        @current_text_editor = the_text_editor
-                        @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                        @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-                        project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
+                    tab_folder = nil
+                    the_text_editor = nil
+                    the_tab_item.content {
+                      @current_text_editor = the_text_editor = text_editor(project_dir: project_dir, file: selected_file) {
+                        layout_data :fill, :fill, true, true
+                      }
+                      @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                      the_tab_item.swt_tab_item.setData('text_editor', @current_text_editor)
+                      @current_text_editor.text_proxy.content {
+                        on_focus_gained {
+                          tab_folder = the_text_editor.swt_widget.getParent.getParent
+                          self.current_tab_folder = tab_folder.getData('proxy')
+                          @current_tab_item = the_tab_item
+                          @current_text_editor = the_text_editor
+                          @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                          @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                          project_dir.selected_child = @current_tab_item.swt_tab_item.getData('file')
+                        }
                       }
                     }
-                  }
-                  on_swt_show {
-                    @current_tab_item = the_tab_item
-                    @current_text_editor = the_text_editor
-                    self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
-                    @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
-                    @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-                    project_dir.selected_child = selected_file
-                    @current_text_editor&.load_content
-                    @current_text_editor&.text_widget&.setFocus
-                    save_config unless selected_file.nil?
-                  }
-                  on_widget_disposed {
-                    project_dir.selected_child&.write_dirty_content
-                    tab_item_file = the_tab_item.swt_tab_item.get_data('file')
-                    if (@tab_folder1 != @current_tab_folder && !@tab_folder1&.items&.detect {|ti| ti.get_data('file') == tab_item_file}) || (@tab_folder2 != @current_tab_folder && !@tab_folder2&.items&.detect {|ti| ti.get_data('file') == tab_item_file})
-                      tab_item_file.close
+                    
+                    on_swt_show do
+                      @current_tab_item = the_tab_item
+                      @current_text_editor = the_text_editor
+                      self.current_tab_folder = @current_tab_item.swt_widget.getParent.getData('proxy')
+                      @current_tab_folder.swt_widget.setData('selected_tab_item', @current_tab_item)
+                      @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                      project_dir.selected_child = selected_file
+                      @current_text_editor&.load_content
+                      @current_text_editor&.text_widget&.setFocus
+                      save_config unless selected_file.nil?
+                    end
+                    
+                    on_widget_disposed do
+                      project_dir.selected_child&.write_dirty_content
+                      tab_item_file = the_tab_item.swt_tab_item.get_data('file')
+                      tab_item_file.close if !@@quitting && (@tab_folder1 != @current_tab_folder && !@tab_folder1&.items&.detect {|ti| ti.get_data('file') == tab_item_file}) || (@tab_folder2 != @current_tab_folder && !@tab_folder2&.items&.detect {|ti| ti.get_data('file') == tab_item_file})
                     end
                   }
+                  @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
+                  @current_tab_item.swt_tab_item.setData('file', selected_file)
+                  @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
                 }
-                @current_tab_item.swt_tab_item.setData('file_path', selected_file.path)
-                @current_tab_item.swt_tab_item.setData('file', selected_file)
-                @current_tab_item.swt_tab_item.setData('proxy', @current_tab_item)
-              }
-              @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
-              body_root.pack_same_size
-            rescue => e
-              Glimmer::Config.logger.error {e.full_message}
+                @current_tab_folder.swt_widget.setSelection(@current_tab_item.swt_tab_item)
+                body_root.pack_same_size
+              rescue => e
+                Glimmer::Config.logger.error {e.full_message}
+              end
             end
+            @current_text_editor&.text_widget&.setFocus
           end
-          @current_text_editor&.text_widget&.setFocus
         end
-      end
-      observe(self, 'maximized_pane') do
-        if tab_folder2
-          @tab_folder_sash_form.maximized_control = (current_tab_folder.swt_widget if maximized_pane?)
+        observe(self, 'maximized_pane') do
+          if tab_folder2
+            @tab_folder_sash_form.maximized_control = (current_tab_folder.swt_widget if maximized_pane?)
+          end
         end
-      end
-      observe(self, 'maximized_editor') do
-        @file_area_and_editor_area_sash_form.maximized_control = (@editor_area_composite.swt_widget if maximized_editor?)
-        if !maximized_editor?
-          expand_navigation_expand_bar_height
-        else
-          collapse_navigation_expand_bar_height
+        observe(self, 'maximized_editor') do
+          @file_area_and_editor_area_sash_form.maximized_control = (@editor_area_composite.swt_widget if maximized_editor?)
+          if !maximized_editor?
+            expand_navigation_expand_bar_height
+          else
+            collapse_navigation_expand_bar_height
+          end
+          @navigation_expand_item.swt_expand_item.set_expanded !maximized_editor?
+          body_root.pack_same_size
+          async_exec { body_root.pack_same_size }
         end
-        @navigation_expand_item.swt_expand_item.set_expanded !maximized_editor?
-        body_root.pack_same_size
-        async_exec { body_root.pack_same_size }
+        observe(project_dir, 'selected_child') do
+          save_config
+        end
+        observe(project_dir, 'selected_child.caret_position') do
+          save_config
+        end
+        observe(project_dir, 'selected_child.top_pixel') do
+          save_config
+        end
+        load_config
       end
-      observe(project_dir, 'selected_child') do
-        save_config
-      end
-      observe(project_dir, 'selected_child.caret_position') do
-        save_config
-      end
-      observe(project_dir, 'selected_child.top_pixel') do
-        save_config
-      end
-      load_config unless app_mode?
     end
 
     ## Add widget content inside custom shell body
@@ -298,6 +293,7 @@ module Glimmer
               tab_item.getData('proxy')&.dispose
             end
             gladiator_shells = display.shells.select {|s| s.get_data('custom_shell')&.is_a?(Glimmer::Gladiator)}
+            project_dir.close unless @@quitting
             body_root.close unless current_tab_folder.swt_widget.getItems.empty?
             async_exec { @@app_mode_shell.show } if defined?(@@app_mode_shell) && gladiator_shells.count <= 2
           }
@@ -767,21 +763,21 @@ module Glimmer
               project_dir.selected_child&.top_pixel = @config[:top_pixel].to_i if @config[:top_pixel]
             end
           }
-          async_exec {
+          async_exec do
             Gladiator.drag = false
             @progress_shell&.close
             @progress_shell = nil
             @loaded_config = true
-          }
+          end
         }
-        async_exec {
+        async_exec do
           Thread.new {
             all_files = open_file_paths1.to_a + open_file_paths2.to_a
             all_files.each do |file|
               project_dir.find_child_file(file)&.dirty_content
             end
           }
-        }
+        end
       else
         @loaded_config = true
       end
@@ -919,7 +915,7 @@ module Glimmer
       async_exec {
         @progress_shell.open
       }
-      async_exec {
+      async_exec do
         gladiator(project_dir_path: selected_directory) {
           on_swt_show {
             @@app_mode_shell.hide if app_mode?
@@ -927,6 +923,15 @@ module Glimmer
             @progress_shell = nil
           }
         }.open if selected_directory
+      end
+    end
+    
+    def quit
+      @@quitting = true
+      display.shells.each { |shell|
+        gladiator = shell.get_data('custom_shell')
+        gladiator.project_dir.selected_child&.write_dirty_content unless app_mode?
+        shell.get_data('proxy').close
       }
     end
     
