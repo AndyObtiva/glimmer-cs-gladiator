@@ -244,8 +244,8 @@ module Glimmer
 
       def start_filewatcher
         return if scratchpad?
-        @filewatcher = Filewatcher.new(@path)
-        @filewatcher_thread = Thread.new(@filewatcher) do |fw|
+        @filewatcher ||= Filewatcher.new(@path)
+        @filewatcher_thread ||= Thread.new(@filewatcher) do |fw|
           fw.watch do |filename, event|
             async_exec do
               begin
@@ -261,7 +261,7 @@ module Glimmer
 
       def stop_filewatcher
         @filewatcher&.stop
-        @filewatcher_thread&.join
+        @filewatcher_thread&.kill
         @filewatcher_thread = nil
         @filewatcher&.finalize
         @filewatcher = nil

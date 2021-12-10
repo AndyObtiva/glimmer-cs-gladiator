@@ -117,7 +117,7 @@ module Glimmer
       
       def stop_filewatcher
         @filewatcher&.stop
-        @filewatcher_thread&.join
+        @filewatcher_thread&.kill
         @filewatcher_thread = nil
         @filewatcher&.finalize
         @filewatcher = nil
@@ -202,7 +202,6 @@ module Glimmer
           new_child = find_child_file(selected_path)
           begin
             unless new_child.dirty_content.nil?
-              self.selected_child&.stop_filewatcher
               selected_child_path_history << new_child.path if new_child && !selected_child_path_history.include?(new_child.path)
               self.selected_child = new_child
               self.selected_child.start_filewatcher
