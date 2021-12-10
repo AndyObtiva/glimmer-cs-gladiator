@@ -2,10 +2,11 @@
 
 ## 0.9.2
 
+- Fix issue with not being able to open a project by passing project directory as first argument to `gladiator` command
 - Fix issue with sometimes not remembering last open tabs when opening Gladiator
 - Fix issues with renaming files in file explorer not reflecting change in open tab file name
 - Fix minor issue with leaving `'-J-Xrs'` option in `bin/gladiator`
-- Fix issue with Scratchpad
+- Fix issue with Scratchpad not running content anymore
 
 ## 0.9.1
 

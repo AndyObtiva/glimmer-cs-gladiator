@@ -3,10 +3,12 @@
 ## Up Next
 
 - Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
+- Fix issue with making changes to file through Find/Replace not persisting if I close Gladiator right afterwards unless I focus/unfocus open text editor
 - Fix issue with losing some open files on close of Gladiator and openning again
 - Fix issue with general gladiator command from gladiator-setup not passing argument in
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
+- Fix issue with not being able to close Gladiator ran from Terminal via CMD+C anymore
 - Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
 
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed

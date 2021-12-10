@@ -158,6 +158,10 @@ source ~/.gladiator_source
 
 You should be able to run `gladiator` from anywhere now.
 
+You can pass a project path as a first argument to open a particular project.
+
+Alternatively, open in app mode (gives you a dialog to open any project) by passing `APP_MODE=true` argument/env-var.
+
 ## Usage
 
 You may run the `gladiator` command to bring up the text editor in the project directory you would like to edit:
@@ -205,6 +209,12 @@ And, then instantiate the Gladiator [custom shell](https://github.com/AndyObtiva
 
 ## Env Var Options
 
+Gladiator supports these environment variable options.
+
+### LOCAL_DIR
+
+(String / default: `'.'`)
+
 Gladiator opens with the current directory as the root by default.
 If you would like to open another directory, set `LOCAL_DIR` environment variable.
 
@@ -215,6 +225,18 @@ LOCAL_DIR="/Users/User/code" gladiator
 ```
 
 Opens Gladiator with "/Users/User/code" as the root directory.
+
+### APP_MODE
+
+(`true` or `false` / default: `false` from terminal/command-line and `true` from [packaged Gladiator](#download))
+
+Specifies whether to run in app mode, thus providing a dialog to open any project path instead of starting with a specific project from the get-go.
+
+Example:
+
+```
+APP_MODE=true gladiator
+```
 
 ## Configuration
 
