@@ -2,10 +2,9 @@
 
 ## Up Next
 
-- Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
-- Fix issue with not being able to close Gladiator ran from Terminal via CMD+C anymore
+- Fix issue with not being able to close Gladiator ran from Terminal via CTRL+C (caused by filewatcher gem, consider replacing by another file monitoring gem)
 - Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
 
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
