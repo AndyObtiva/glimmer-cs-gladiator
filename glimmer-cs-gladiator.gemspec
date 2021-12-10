@@ -53,7 +53,7 @@ Gem::Specification.new do |s|
   end
 
   if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.20.15.4"])
+    s.add_runtime_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.20.16.0"])
     s.add_runtime_dependency(%q<filewatcher>.freeze, ["~> 1.1.1"])
     s.add_runtime_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
     s.add_development_dependency(%q<rspec>.freeze, ["~> 3.5.0"])
@@ -61,7 +61,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency(%q<warbler>.freeze, ["= 2.0.5"])
     s.add_development_dependency(%q<simplecov>.freeze, [">= 0"])
   else
-    s.add_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.20.15.4"])
+    s.add_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.20.16.0"])
     s.add_dependency(%q<filewatcher>.freeze, ["~> 1.1.1"])
     s.add_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
     s.add_dependency(%q<rspec>.freeze, ["~> 3.5.0"])

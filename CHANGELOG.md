@@ -2,13 +2,15 @@
 
 ## 0.9.2
 
-- Clean filewatcher/thread resources when closing a project dir/file
+- Ensure cleaning filewatcher/thread resources when closing a project dir/file
+- Fix issue with `gladiator` function command produced by `gladiator-setup` not forwarding arguments in
 - Fix issue with making changes to file through Find/Replace not persisting if I close Gladiator right afterwards unless I focus/unfocus open text editor
 - Fix issue with not being able to open a project by passing project directory as first argument to `gladiator` command
 - Fix issue with sometimes not remembering last open tabs when opening Gladiator
 - Fix issues with renaming files in file explorer not reflecting change in open tab file name
 - Fix minor issue with leaving `'-J-Xrs'` option in `bin/gladiator`
 - Fix issue with Scratchpad not running content anymore
+- Fix issue of stopping file watcher for open files that still need watching
 
 ## 0.9.1
 

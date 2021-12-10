@@ -40,7 +40,7 @@ end
 gladiator_script = <<~SHELL_SCRIPT
   function gladiator()
   {
-    #{command}
+    #{command} $@
   }
 SHELL_SCRIPT
 

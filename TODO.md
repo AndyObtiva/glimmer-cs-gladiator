@@ -3,7 +3,6 @@
 ## Up Next
 
 - Fix issue with not being able to jump to File Lookup via CMD+R shortcut whening gladiator for the first time in a project with no files open for editing
-- Fix issue with general gladiator command from gladiator-setup not passing argument in
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 - Fix issue with not being able to close Gladiator ran from Terminal via CMD+C anymore
