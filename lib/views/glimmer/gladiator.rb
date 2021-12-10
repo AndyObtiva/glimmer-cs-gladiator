@@ -287,6 +287,7 @@ module Glimmer
           on_shell_closed {
             project_dir.selected_child&.write_dirty_content
             save_config
+            @paused_save_config = true
             if @tab_folder2
               current_tab_folder.swt_widget.getItems.each do |tab_item|
                 tab_item.getData('proxy')&.dispose
@@ -787,7 +788,7 @@ module Glimmer
     end
 
     def save_config
-      return if !@loaded_config || body_root&.disposed?
+      return if !@loaded_config || body_root&.disposed? || @paused_save_config
       child = project_dir.selected_child
       return if child.nil?
       tab_folder1 = @tab_folder1 || @current_tab_folder
