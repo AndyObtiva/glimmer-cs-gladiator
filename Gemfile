@@ -12,5 +12,6 @@ group :development do
   gem 'rspec', '~> 3.5.0'
   gem 'jeweler', '2.3.9'
   gem 'warbler', '2.0.5'
+  gem 'jruby-jars', '9.2.19.0'
   gem 'simplecov', '>= 0'
 end

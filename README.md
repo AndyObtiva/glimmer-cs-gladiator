@@ -4,16 +4,16 @@
 
 ![Gladiator](images/glimmer-gladiator.png)
 
-Gladiator (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample beta project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample beta project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
-Gladiator is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
-I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using Gladiator to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
+I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
 
-You may now [download](#download) a packaged version of Gladiator.
+You may now [download](#download) a packaged version of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator).
 
 ## Features
 
-Gladiator currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL/CTRL=ALT on Windows/Linux)
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) currently supports the following text editing features (including keyboard shortcuts with Mac CMD=CTRL/CTRL=ALT on Windows/Linux)
 
 ![Gladiator Demo](images/glimmer-gladiator.gif)
 
@@ -105,9 +105,9 @@ Gladiator currently supports the following text editing features (including keyb
 
 ## Platforms
 
-- Mac: Gladiator works best on the Mac. This is the platform it is most used on and receives the most maintenance for.
-- Windows: Gladiator works OK on Windows, but has a few annoying issues.
-- Linux: Gladiator works with handicaps on Linux (performing some text editing operations causes scroll jitter). Contributers could help fix.
+- Mac: [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) works best on the Mac. This is the platform it is most used on and receives the most maintenance for.
+- Windows: [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) works OK on Windows, but has a few annoying issues.
+- Linux: [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) works with handicaps on Linux (performing some text editing operations causes scroll jitter). Contributers could help fix.
 
 ## Pre-requisites
 
@@ -119,11 +119,11 @@ Gladiator currently supports the following text editing features (including keyb
 
 [Download Gladiator 0.9.2 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/8gvthczqhb9szwp/Gladiator-0.9.2.dmg?dl=1)
 
+[Download Gladiator 0.9.2 Windows MSI Installer (x64 Windows 10)](https://www.dropbox.com/s/xxik700jh0utn8q/Gladiator-0.9.2.msi?dl=1)
+
 [Download Gladiator 0.9.1 Mac DMG Installer (x64 Big Sur & Older)](https://www.dropbox.com/s/s9yp6qtelh85qko/Gladiator-0.9.1.dmg?dl=1)
 
-[Download Gladiator 0.9.1 Windows MSI Installer](https://www.dropbox.com/s/ufxx1a9r10egybt/Gladiator-0.9.1.msi?dl=1)
-
-The packaged version starts with a dialog asking you what project to open. Gladiator does not fully show up until you have selected a project directory.
+The packaged version starts with a dialog asking you what project to open. [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) does not fully show up until you have selected a project directory.
 
 Otherwise, if you prefer a command line version, then follow the Setup Instructions below.
 
@@ -131,7 +131,7 @@ Otherwise, if you prefer a command line version, then follow the Setup Instructi
 
 Note: if you encounter any issues, check if they are documented in [TODO.md](TODO.md), [issues](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues), or [pull requests](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls) as they might be on my radar to fix. Otherwise, please report as an [issue](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues) or better yet fix and submit a [pull request](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls). Also, try going back to a [previous version of the gem](https://rubygems.org/gems/glimmer-cs-gladiator/versions) until you find one that works. Keep in mind this is open-source software provided as is, so there are no guarantees of functionality. If you would like such guarantees, you are welcome to [hire me full-time](https://www.linkedin.com/in/andymaleh/).
 
-Install Gladiator gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
+Install [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
 
 ```
 jgem install glimmer-cs-gladiator
@@ -194,7 +194,7 @@ Note: If you cloned this project and bundle installed, you may invoke via `bin/g
 
 ### Glimmer Custom Shell Reuse
 
-To reuse Gladiator as a Glimmer Custom Shell inside another Glimmer application, add the
+To reuse [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) as a Glimmer Custom Shell inside another Glimmer application, add the
 following to the application's `Gemfile`:
 
 ```
@@ -207,17 +207,17 @@ Run:
 jruby -S bundle
 ```
 
-And, then instantiate the Gladiator [custom shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shells) in your [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) application via the `gladiator` keyword assuming you already have `include Glimmer` in your class, module, or main object.
+And, then instantiate the [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) [custom shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shells) in your [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) application via the `gladiator` keyword assuming you already have `include Glimmer` in your class, module, or main object.
 
 ## Env Var Options
 
-Gladiator supports these environment variable options.
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) supports these environment variable options.
 
 ### LOCAL_DIR
 
 (String / default: `'.'`)
 
-Gladiator opens with the current directory as the root by default.
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) opens with the current directory as the root by default.
 If you would like to open another directory, set `LOCAL_DIR` environment variable.
 
 Example:
@@ -226,7 +226,7 @@ Example:
 LOCAL_DIR="/Users/User/code" gladiator
 ```
 
-Opens Gladiator with "/Users/User/code" as the root directory.
+Opens [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) with "/Users/User/code" as the root directory.
 
 ### APP_MODE
 
@@ -242,7 +242,7 @@ APP_MODE=true gladiator
 
 ## Configuration
 
-Gladiator automatically saves configuration data in a `.gladiator` file at the directory it is run from. It may be edited to add extra ignore paths.
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) automatically saves configuration data in a `.gladiator` file at the directory it is run from. It may be edited to add extra ignore paths.
 
 It currently remembers:
 - Last opened files (in both split panes if split)
@@ -253,7 +253,7 @@ It currently remembers:
 
 ### Signaling Error
 
-Gladiator repetitively displays a signaling error that is harmless in practice:
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) repetitively displays a signaling error that is harmless in practice:
 ```
 The signal HUP is in use by the JVM and will not work correctly on this platform
 The signal INT is in use by the JVM and will not work correctly on this platform
@@ -263,7 +263,7 @@ The signal TERM is in use by the JVM and will not work correctly on this platfor
 ### App Is Not Responding
 
 If you run the `gladiator` command from the root directory or some parent directory to many projects, it assumes that is
-the project directory and attempts to pre-load all files (just part of Gladiator's architectural design and assumptions for optimizing use per project), taking a very long time and not responding for quite a while.
+the project directory and attempts to pre-load all files (just part of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator)'s architectural design and assumptions for optimizing use per project), taking a very long time and not responding for quite a while.
 
 To avoid this problem, always make sure you are running the `gladiator` command from a single project's directory.
 
