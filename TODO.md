@@ -2,13 +2,20 @@
 
 ## Up Next
 
+- Filter File Lookup List by non-binary files
+- Fix line position label display (does not move as the caret moves)
+- Duplicate file from file explorer tree
+- Duplicate dir from file explorer tree
+- Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
+- Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 - Fix issue with not being able to close Gladiator ran from Terminal via CTRL+C (caused by filewatcher gem, consider replacing by another file monitoring gem)
 - Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
 
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
-- Upgrade tabs to c_tab_folder to enable more tabs to fit
+- Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs
+- Support reordering tabs
 - Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
 - Show saved scratch from last scratchpad session when opening scratchpad
 - Auto-close brackets/do-end blocks
@@ -136,3 +143,8 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Support feature extensions via Ruby
 - Support feature of "repeat last operation" similar to that of VIM with .
 - Implement a feature showing beginning of a block when landing on a line that has end or }
+
+## Maybe
+
+- Build a bug commit finder that relies on `git bisect` just like [RubyMine's plugin](https://artspb.me/posts/getting-started-with-git-bisect-run-plugin/)
+- Show the lexical nesting of the code somewhere as breadcrumb (e.g. scope :module -> resoucres :campaigns -> resources :templates )

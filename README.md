@@ -7,7 +7,7 @@
 [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample beta project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
-I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) to develop all my [open-source projects](https://github.com/AndyObtiva) since May of 2020.
+I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) to develop all my [projects](https://github.com/AndyObtiva) since May of 2020.
 
 You may now [download](#download) a packaged version of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator).
 
