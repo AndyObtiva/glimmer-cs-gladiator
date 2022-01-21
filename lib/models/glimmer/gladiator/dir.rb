@@ -6,7 +6,7 @@ module Glimmer
       include Glimmer
       include Glimmer::DataBinding::ObservableModel
       
-      IGNORE_PATHS = ['.gladiator', '.gladiator-scratchpad', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist']
+      IGNORE_PATHS = ['.gladiator', '.gladiator-scratchpad', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist', 'log']
 
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
       attr_reader :name, :parent, :path

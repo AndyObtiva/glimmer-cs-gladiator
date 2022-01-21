@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.9.3
+
+- Support 'yml' file extensions as 'yaml' syntax coloring
+- Support 'kt', 'km', and 'kts' file extensions as 'kotlin' syntax coloring
+
 ## 0.9.2
 
 - Ensure cleaning filewatcher/thread resources when closing a project dir/file

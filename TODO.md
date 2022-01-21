@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Add 'log' directory to ignored files in .gladiator
 - Filter File Lookup List by non-binary files
 - Fix line position label display (does not move as the caret moves)
 - Duplicate file from file explorer tree
@@ -13,6 +14,7 @@
 - Fix issue with not being able to close Gladiator ran from Terminal via CTRL+C (caused by filewatcher gem, consider replacing by another file monitoring gem)
 - Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
 
+- Support find and replace all across all (multiple) files in project
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
 - Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs
 - Support reordering tabs
