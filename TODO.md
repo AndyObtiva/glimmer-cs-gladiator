@@ -2,8 +2,7 @@
 
 ## Up Next
 
-- Add 'log' directory to ignored files in .gladiator
-- Filter File Lookup List by non-binary files
+- Set app icon on progress bar dialog windows
 - Fix line position label display (does not move as the caret moves)
 - Duplicate file from file explorer tree
 - Duplicate dir from file explorer tree

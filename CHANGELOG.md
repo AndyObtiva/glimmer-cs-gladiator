@@ -4,6 +4,8 @@
 
 - Support 'yml' file extensions as 'yaml' syntax coloring
 - Support 'kt', 'km', and 'kts' file extensions as 'kotlin' syntax coloring
+- Add 'log' directory to ignored files in .gladiator
+- Fix slowdown in rails projects have nearly 100,000 files while using app or running tests (gladiator keeps refreshing file explorer tree from file changes caused in either log or tmp ignored directories, so the fix ensures not filewatching ignored paths)
 
 ## 0.9.2
 

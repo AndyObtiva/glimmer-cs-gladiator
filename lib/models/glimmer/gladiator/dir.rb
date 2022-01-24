@@ -22,7 +22,7 @@ module Glimmer
                 # TODO do fine grained processing of events for enhanced performance (e.g. dir refresh vs file change)
                 # TODO do fine grained file change only without a refresh delay for enhanced performance
                 begin
-                  if !@refresh_in_progress && !filename.include?('new_file') && (event != :updated || find_child_file(filename).nil?)
+                  if !@refresh_in_progress && !filename.include?('new_file') && !ignore_paths.any? { |ignore_path| filename.include?(ignore_path) } && (event != :updated || find_child_file(filename).nil?)
                     Thread.new {
                       refresh
                     }
