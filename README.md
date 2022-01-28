@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.9.2 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.9.3 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -78,30 +78,43 @@ You may now [download](#download) a packaged version of [Gladiator](https://ruby
 
 ### Multiple Language Syntax Highlighting
 
-- Ruby
-- Markdown
-- JavaScript
-- JSON
-- Yaml
-- HTML
-- C
-- Haskell
-- Gradle
-- C++
-- CSS
-- Java
-- JSP
-- plist
-- Haml
-- XML
-- INI
-- Perl
-- Tcl
-- SASS
-- SCSS
-- SQL
-- Shell (Bash / Zsh)
-- Vue
+Here is an exhaustive list of the file formats supported by [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator):
+- C (`'c', 'h'`)
+- Crystal (`'cr'`)
+- C++ (`'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++'`)
+- CSS (`'css'`)
+- Conf (`'conf'`)
+- CoffeeScript (`'coffee'`)
+- ERB (`'erb'`)
+- Gherkin Feature (`'feature'`)
+- Gradle (`'gradle'`)
+- Haml (`'haml'`)
+- HTML (`'html'`)
+- INI (`'ini'`)
+- Java (`'java'`)
+- JavaScript (`'js', 'cjs', 'mjs', 'es6', 'es'`)
+- JSON (`'json'`)
+- JSP (`'jsp'`)
+- Kotlin (`'kt', 'ktm', 'kts'`)
+- Make (`'Makefile', 'makefile', 'GNUmakefile'`)
+- Markdown (`'md', 'markdown'`)
+- Diff Patch (`'patch'`)
+- Pearl (`'pl'`)
+- Plist (`'plist'`)
+- Puppet (`'pp'`)
+- Properties (`'properties'`)
+- PostScript (`'ps'`)
+- PowerShell (`'ps1'`)
+- Python (`'py'`)
+- Ruby (`'rb'`)
+- SASS (`'sass'`)
+- Scheme (`'scm', 'sps', 'sls', 'sld'`)
+- SCSS (`'scss'`)
+- Shell (`'sh'`)
+- SQL (`'sql'`)
+- Tcl (`'tcl'`)
+- Yaml (`'yaml', 'yml'`)
+- XML (`'xml'`)
 
 ## Platforms
 
@@ -134,7 +147,7 @@ Note: if you encounter any issues, check if they are documented in [TODO.md](TOD
 Install [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
 
 ```
-jgem install glimmer-cs-gladiator
+jgem install glimmer-cs-gladiator -v0.9.3
 ```
 
 Or add to a JRuby project Bundler `Gemfile` under the `:developement` group:
@@ -198,7 +211,7 @@ To reuse [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) as a Glimme
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '>= 0.9.2'
+gem 'glimmer-cs-gladiator', '~> 0.9.2'
 ```
 
 Run:

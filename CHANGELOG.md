@@ -2,10 +2,11 @@
 
 ## 0.9.3
 
-- Support 'yml' file extensions as 'yaml' syntax coloring
-- Support 'kt', 'km', and 'kts' file extensions as 'kotlin' syntax coloring
-- Add 'log' directory to ignored files in .gladiator
-- Fix slowdown in rails projects have nearly 100,000 files while using app or running tests (gladiator keeps refreshing file explorer tree from file changes caused in either log or tmp ignored directories, so the fix ensures not filewatching ignored paths)
+- Support new file formats: 'cr', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++', 'conf',
+'coffee', 'erb', 'feature', 'cjs, 'mjs', 'es', 'kt', 'ktm', 'kts', 'patch', 'pp', 'properties', 'ps',
+'ps1', 'py', 'scm, 'sps', 'sls', 'sld', 'yml', 'Makefile', 'makefile', 'GNUmakefile'
+- Add 'log' directory to ignored files in `.gladiator`
+- Fix Gladiator slowdown encountered with a rails project having nearly 100,000 files while running app server or tests (gladiator keeps refreshing file explorer tree from file changes caused in either log or tmp directories, so the fix is to ignore them and ensure not filewatching ignored paths)
 
 ## 0.9.2
 
