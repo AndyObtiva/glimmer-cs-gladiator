@@ -307,7 +307,7 @@ to the `ignore_paths` array.
 
 [MIT](https://opensource.org/licenses/MIT)
 
-Copyright (c) 2020-2021 Andy Maleh. See [LICENSE.txt](LICENSE.txt) for further details.
+Copyright (c) 2020-2022 Andy Maleh. See [LICENSE.txt](LICENSE.txt) for further details.
 
 --
 
