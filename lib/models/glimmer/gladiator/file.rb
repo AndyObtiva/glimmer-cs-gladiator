@@ -350,8 +350,8 @@ module Glimmer
         lines[line_number - 1]
       end
 
-      def delete!
-        FileUtils.rm(path) unless scratchpad?
+      def remove!
+        FileUtils.rm_rf(path) unless scratchpad?
       end
 
       def prefix_new_line!
@@ -611,6 +611,7 @@ module Glimmer
         self.selection_count = (caret_position_for_line_index(self.line_number) - 1) - caret_position
       end
 
+      # deletes content that is highlighted
       def delete!
         new_dirty_content = dirty_content
         new_dirty_content[caret_position...(caret_position + selection_count)] = ''

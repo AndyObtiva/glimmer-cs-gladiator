@@ -150,7 +150,7 @@ module Glimmer
             found_tab_item.getData('proxy')&.dispose
           end
         end
-        file.delete! # TODO consider supporting command undo/redo
+        file.remove! # TODO consider supporting command undo/redo
         project_dir.refresh(async: false)
         parent_tree_item = body_root.depth_first_search {|ti| ti.getData.path == parent_path}.first
         swt_widget.showItem(parent_tree_item)

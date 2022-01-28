@@ -6,6 +6,7 @@
 'coffee', 'erb', 'feature', 'cjs, 'mjs', 'es', 'kt', 'ktm', 'kts', 'patch', 'pp', 'properties', 'ps',
 'ps1', 'py', 'scm, 'sps', 'sls', 'sld', 'yml', 'Makefile', 'makefile', 'GNUmakefile'
 - Add 'log' directory to ignored files in `.gladiator`
+- Fix issue with deleting files from File Explorer Tree (not they delete successfully)
 - Fix Gladiator slowdown encountered with a rails project having nearly 100,000 files while running app server or tests (gladiator keeps refreshing file explorer tree from file changes caused in either log or tmp directories, so the fix is to ignore them and ensure not filewatching ignored paths)
 
 ## 0.9.2

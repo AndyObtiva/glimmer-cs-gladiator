@@ -246,7 +246,7 @@ module Glimmer
         @selected_child.restore_properties(file_properties) if file_properties
       end
       
-      def delete!
+      def remove!
         FileUtils.rm_rf(path)
       end
   

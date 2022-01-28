@@ -36,6 +36,7 @@ module Glimmer
           }
           
           text 'Gladiator'
+          image ICON
           
           label(:center) {
             text progress_text
