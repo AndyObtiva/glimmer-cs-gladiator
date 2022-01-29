@@ -165,8 +165,8 @@ module Glimmer
         unless (current_line_number && current_line_number == new_line_number)
           self.line_number = new_line_number
           # TODO check if the following line is needed
-          self.line_position = caret_position - caret_position_for_line_index(line_number - 1) + 1
         end
+        self.line_position = caret_position - caret_position_for_line_index(line_number - 1) + 1
       end
       
       def path=(the_path)
