@@ -130,7 +130,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 
 ## Download
 
-[Download Gladiator 0.9.2 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/8gvthczqhb9szwp/Gladiator-0.9.2.dmg?dl=1)
+[Download Gladiator 0.9.3 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/ppq5owi2p8dgzkl/Gladiator-0.9.3.dmg?dl=1)
 
 [Download Gladiator 0.9.2 Windows MSI Installer (x64 Windows 10)](https://www.dropbox.com/s/xxik700jh0utn8q/Gladiator-0.9.2.msi?dl=1)
 
