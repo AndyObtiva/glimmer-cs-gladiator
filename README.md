@@ -130,11 +130,11 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 
 ## Download
 
-[Download Gladiator 0.9.3 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/ppq5owi2p8dgzkl/Gladiator-0.9.3.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.9.3 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/ppq5owi2p8dgzkl/Gladiator-0.9.3.dmg?dl=1)
 
-[Download Gladiator 0.9.2 Windows MSI Installer (x64 Windows 10)](https://www.dropbox.com/s/xxik700jh0utn8q/Gladiator-0.9.2.msi?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.9.3 Windows MSI Installer (x64 Windows 10)](https://www.dropbox.com/s/36dsfx6fqw8x0kp/Gladiator-0.9.3.msi?dl=1)
 
-[Download Gladiator 0.9.1 Mac DMG Installer (x64 Big Sur & Older)](https://www.dropbox.com/s/s9yp6qtelh85qko/Gladiator-0.9.1.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.9.1 Mac DMG Installer (x64 Big Sur & Older)](https://www.dropbox.com/s/s9yp6qtelh85qko/Gladiator-0.9.1.dmg?dl=1)
 
 The packaged version starts with a dialog asking you what project to open. [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) does not fully show up until you have selected a project directory.
 

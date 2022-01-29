@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/AndyObtiva/glimmer-cs-gladiator".freeze
   s.licenses = ["MIT".freeze]
   s.post_install_message = "\nTo make the gladiator command available system-wide (especially with RVM), make sure you run this command with jruby in path: gladiator-setup\n\n".freeze
-  s.rubygems_version = "3.1.6".freeze
+  s.rubygems_version = "3.3.6".freeze
   s.summary = "Gladiator (Glimmer Editor) - Glimmer Custom Shell - Text Editor Built in Ruby".freeze
 
   if s.respond_to? :specification_version then
