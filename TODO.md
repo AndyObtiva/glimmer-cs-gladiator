@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Add Refresh File Exporer Tree action as a Menu Bar menu item
 - Duplicate file from file explorer tree
 - Duplicate dir from file explorer tree
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
