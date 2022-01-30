@@ -2,17 +2,30 @@
 
 ## Up Next
 
+- Add a Dark Theme
+- Support increasing/decreasing size of font in text editor
+- Support `.jsx` and `.rake` file extensions
+- Support project-wide full-text-search
+- Add Refresh File Exporer Tree action as a Menu Bar menu item
 - Duplicate file from file explorer tree
 - Duplicate dir from file explorer tree
+- Reopen last closed tab with the CMD+SHIFT+T shortcut just like in web browsers
+- Highlight all found strings of text when performing find with CMD+F (CTRL+F)
+- Avoid using a file watcher per file. Watch the entire project directory with one watcher instead. This should yield less CPU usage.
+- Fix issue with split view that happens when splitting a file, closing the file on the left side (original), and then attempting to make changes to file on the right side (no changes occur visibly though if file is closed and reopend, changes made do show up)
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
-- Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
+- Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated (it seems to happen when the replace word includes the original word at the end)
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 - Fix issue with not being able to close Gladiator ran from Terminal via CTRL+C (caused by filewatcher gem, consider replacing by another file monitoring gem)
 - Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
+- Fix issue where if you split view, resulting in same file open on both sides, and then close the originally opened file on the left, leaving the one on the right open, when you go to edit the file on the right side, it does not respond to any command shortcuts like CMD+D for duplicate
+- Optimize performance of file tree updates in bigger projects
+- Prefix with the correct single-line comment character depending on the current file's language when hitting the CMD+/ shortcut (e.g. '#' in Ruby and '//' in Java)
 
 - Support find and replace all across all (multiple) files in project
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
+- Save open tabs under a named group (or auto-save all open tabs under an automatically incremented name for convenience)
 - Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs
 - Support reordering tabs
 - Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
@@ -30,7 +43,6 @@
 - Support jumping up to dots only in code method invocation expressions (e.g. object.methods.anothermethod) using ALT+LEFT / ALT+RIGHT
 - Fix reset view making sure it expands left expand bars
 - Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find
-- Fix issue with losing all remembered tabs sometimes except one
 - Fix issue with split and reopen file originally showing on the left side, opens again on the right side (shouldn't)
 - Copy file or entire directory (into the OS)
 - avoid issue in Run -> Run with eval not allowing 'include Glimmer' by evaling in the right context
@@ -62,6 +74,7 @@
 
 - Show Progress Bar ticks while opening a new project
 - Show Progress Bar ticks while opening last open files
+- Show Progress Bar while refreshing File Explorer Tree directories/files
 - Run specs (rake spec) by preloading Rakefile of open app in addition to app Gemfile (default,development,test)
 - Add Edit menu with copy, paste, duplicate, comment, uncomment, indent, outdent
 - Add Coolbar/Toolbar with edit menu operations
@@ -125,7 +138,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Split screen
 - Support Copy/Paste in File Tree
 - Support Cut/Paste in File Tree
-- Support project-wide full-text-search
 - Move files/directories in file tree using Drag & Drop
 - Support duplicate file functionality
 - Drag & Drop Editor Tabs
@@ -147,3 +159,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 
 - Build a bug commit finder that relies on `git bisect` just like [RubyMine's plugin](https://artspb.me/posts/getting-started-with-git-bisect-run-plugin/)
 - Show the lexical nesting of the code somewhere as breadcrumb (e.g. scope :module -> resoucres :campaigns -> resources :templates )
+- Explore the idea of following search results of text with a checkbox (e.g. some text leads to an en.yml key, and by following key, we find the true end-result needed)
+- Consider saving tab groups into named tab groups that can be switched between and easily filled/cleared
+- Bookmark a line of code in a file (and have a bookmarks dialog)

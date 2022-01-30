@@ -54,10 +54,10 @@ module Glimmer
         # TODO extract case statement to an external config file
         when 'c', 'h'
           'c'
-        when 'cr'
-          'crystal'
         when 'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++'
           'cpp'
+        when 'cr'
+          'crystal'
         when 'css'
           'css'
         when 'conf'
