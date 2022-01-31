@@ -6,6 +6,7 @@
 - Add Refresh File Exporer Tree action as a Menu Bar menu item
 - Duplicate file from file explorer tree
 - Duplicate dir from file explorer tree
+- Explore the idea of following search results of text with a checkbox (e.g. some text leads to an en.yml key, and by following key, we find the true end-result needed)
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
 - Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
 - Fix crazy cursor jumping on indent/outdent on Windows
