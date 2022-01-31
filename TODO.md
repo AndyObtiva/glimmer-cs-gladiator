@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Support project-wide full-text-search
 - Add Refresh File Exporer Tree action as a Menu Bar menu item
 - Duplicate file from file explorer tree
 - Duplicate dir from file explorer tree
@@ -126,7 +127,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Split screen
 - Support Copy/Paste in File Tree
 - Support Cut/Paste in File Tree
-- Support project-wide full-text-search
 - Move files/directories in file tree using Drag & Drop
 - Support duplicate file functionality
 - Drag & Drop Editor Tabs
