@@ -150,3 +150,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Build a bug commit finder that relies on `git bisect` just like [RubyMine's plugin](https://artspb.me/posts/getting-started-with-git-bisect-run-plugin/)
 - Show the lexical nesting of the code somewhere as breadcrumb (e.g. scope :module -> resoucres :campaigns -> resources :templates )
 - Explore the idea of following search results of text with a checkbox (e.g. some text leads to an en.yml key, and by following key, we find the true end-result needed)
+- Consider saving tab groups into named tab groups that can be switched between and easily filled/cleared
