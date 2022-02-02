@@ -7,6 +7,7 @@
 - Duplicate file from file explorer tree
 - Duplicate dir from file explorer tree
 - Highlight all found strings of text when performing find with CMD+F (CTRL+F)
+- Fix issue with split view that happens when splitting a file, closing the file on the left side (original), and then attempting to make changes to file on the right side (no changes occur visibly though if file is closed and reopend, changes made do show up)
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
 - Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
 - Fix crazy cursor jumping on indent/outdent on Windows
