@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Support JSX
 - Support project-wide full-text-search
 - Add Refresh File Exporer Tree action as a Menu Bar menu item
 - Duplicate file from file explorer tree
