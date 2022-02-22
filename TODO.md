@@ -10,7 +10,7 @@
 - Highlight all found strings of text when performing find with CMD+F (CTRL+F)
 - Fix issue with split view that happens when splitting a file, closing the file on the left side (original), and then attempting to make changes to file on the right side (no changes occur visibly though if file is closed and reopend, changes made do show up)
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
-- Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
+- Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated (it seems to happen when the replace word includes the original word at the end)
 - Fix crazy cursor jumping on indent/outdent on Windows
 - Fix issue with losing white space indent on hitting ENTER in an indented method on Windows
 - Fix issue with not being able to close Gladiator ran from Terminal via CTRL+C (caused by filewatcher gem, consider replacing by another file monitoring gem)
