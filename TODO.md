@@ -153,3 +153,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Show the lexical nesting of the code somewhere as breadcrumb (e.g. scope :module -> resoucres :campaigns -> resources :templates )
 - Explore the idea of following search results of text with a checkbox (e.g. some text leads to an en.yml key, and by following key, we find the true end-result needed)
 - Consider saving tab groups into named tab groups that can be switched between and easily filled/cleared
+- Bookmark a line of code in a file (and have a bookmarks dialog)
