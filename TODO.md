@@ -2,7 +2,7 @@
 
 ## Up Next
 
-- Support JSX
+- Support `.jsx` and `.rake` file extensions
 - Support project-wide full-text-search
 - Add Refresh File Exporer Tree action as a Menu Bar menu item
 - Duplicate file from file explorer tree
