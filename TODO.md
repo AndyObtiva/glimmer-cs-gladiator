@@ -18,6 +18,7 @@
 
 - Support find and replace all across all (multiple) files in project
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
+- Save open tabs under a named group (or auto-save all open tabs under an automatically incremented name for convenience)
 - Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs
 - Support reordering tabs
 - Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
@@ -35,7 +36,6 @@
 - Support jumping up to dots only in code method invocation expressions (e.g. object.methods.anothermethod) using ALT+LEFT / ALT+RIGHT
 - Fix reset view making sure it expands left expand bars
 - Fix issue with going into both maximizes (editor and pane) and then hitting CMD+F not bringing up Find
-- Fix issue with losing all remembered tabs sometimes except one
 - Fix issue with split and reopen file originally showing on the left side, opens again on the right side (shouldn't)
 - Copy file or entire directory (into the OS)
 - avoid issue in Run -> Run with eval not allowing 'include Glimmer' by evaling in the right context
