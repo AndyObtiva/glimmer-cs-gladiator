@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.9.4 (unreleased)
+
+- Support `.jsx` and `.rake` file extensions
+
 ## 0.9.3
 
 - Support new file formats: 'cr', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++', 'conf',

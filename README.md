@@ -95,6 +95,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 1. JavaScript (`'js', 'cjs', 'mjs', 'es6', 'es'`)
 1. JSON (`'json'`)
 1. JSP (`'jsp'`)
+1. JSX (`'jsx'`) [currently in beta testing, coming in upcoming version]
 1. Kotlin (`'kt', 'ktm', 'kts'`)
 1. Make (`'Makefile', 'makefile', 'GNUmakefile'`)
 1. Markdown (`'md', 'markdown'`)
@@ -106,7 +107,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 1. PostScript (`'ps'`)
 1. PowerShell (`'ps1'`)
 1. Python (`'py'`)
-1. Ruby (`'rb'`)
+1. Ruby (`'rb'`, `'rake'`) [`.rake` support is currently in beta testing, coming in upcoming version]
 1. SASS (`'sass'`)
 1. Scheme (`'scm', 'sps', 'sls', 'sld'`)
 1. SCSS (`'scss'`)
