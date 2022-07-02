@@ -23,7 +23,7 @@
 
 require 'glimmer/launcher'
 
-gladiator_runner = File.expand_path('../glimmer-cs-gladiator', __FILE__)
+gladiator_runner = File.expand_path('../lib/glimmer-cs-gladiator/launch.rb', __dir__)
 launcher = Glimmer::Launcher.new([gladiator_runner] + ARGV)
 local_dir = ARGV.find {|arg| !arg.include?('=') }
 local_dir = File.expand_path(local_dir) if local_dir

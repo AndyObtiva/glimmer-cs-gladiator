@@ -70,14 +70,12 @@ end
 
 require 'glimmer/rake_task'
 
-Glimmer::RakeTask::Package.javapackager_extra_args =
-  " -name 'Gladiator'" +
-  " -title 'Gladiator'" +
-  " -Bwin.menuGroup='Gladiator'" +
-  " -Bmac.CFBundleName='Gladiator'" +
-  " -Bmac.CFBundleIdentifier='org.glimmer.application.Gladiator'" +
-  " -BappVersion=1.0.0 " + # TODO drop this once app crosses v1.0.0 (currently is below and cannot packaged, so must set 1)
-  " -Bmac.CFBundleVersion=1.0.0 " # TODO drop this once app crosses v1.0.0 (currently is below and cannot packaged, so must set 1)
-  # " -BlicenseType=" +
-  # " -Bmac.category=" +
-  # " -Bmac.signing-key-developer-id-app="
+Glimmer::RakeTask::Package.jpackage_extra_args =
+  " --name 'Gladiator'" +
+  " --description 'Gladiator'" +
+  (OS.mac? ? " --mac-package-name 'Gladiator'" : '') +
+  (OS.mac? ? " --mac-package-identifier 'org.glimmer.application.Gladiator'" : '') +
+  (OS.windows? ? " --win-menu-group 'Gladiator'" : '') +
+  " --app-version '1.0.0'" + # specify only while the real VERSION is below 1.0.0 because 1.0.0 minimum is required by Mac
+  " --icon 'icons/#{OS.mac? ? 'macosx' : (OS.windows? ? 'windows' : 'linux')}/Gladiator.#{OS.mac? ? 'icns' : (OS.windows? ? 'ico' : 'png')}'"
+  # You can add more options from https://docs.oracle.com/en/java/javase/16/jpackage/packaging-tool-user-guide.pdf

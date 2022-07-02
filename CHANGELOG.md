@@ -1,8 +1,12 @@
 # Change Log
 
-## 0.9.4 (unreleased)
+## 0.10.0
 
+- Upgrade to glimmer-dsl-swt 4.23.0.0
+- Upgrade to JRuby 9.3.4.0
+- Compatibility with ARM64 machines
 - Support `.jsx` and `.rake` file extensions
+- Add `'test/reports'` to `ignore_paths`
 
 ## 0.9.3
 

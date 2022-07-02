@@ -1,15 +1,21 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.9.3 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.10.0 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
+Mac
+
 ![Gladiator](images/glimmer-gladiator.png)
+
+Windows
+
+![Gladiator](images/glimmer-gladiator-windows.png)
 
 [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample beta project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) to develop all my [projects](https://github.com/AndyObtiva) since May of 2020.
 
-You may now [download](#download) a packaged version of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator).
+You may now [download](#download) a packaged version of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator), including new support for Mac ARM64.
 
 ## Features
 
@@ -95,19 +101,19 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 1. JavaScript (`'js', 'cjs', 'mjs', 'es6', 'es'`)
 1. JSON (`'json'`)
 1. JSP (`'jsp'`)
-1. JSX (`'jsx'`) [currently in beta testing, coming in upcoming version]
+1. JSX (`'jsx'`)
 1. Kotlin (`'kt', 'ktm', 'kts'`)
 1. Make (`'Makefile', 'makefile', 'GNUmakefile'`)
 1. Markdown (`'md', 'markdown'`)
 1. Diff Patch (`'patch'`)
-1. Pearl (`'pl'`)
+1. Perl (`'pl'`)
 1. Plist (`'plist'`)
 1. Puppet (`'pp'`)
 1. Properties (`'properties'`)
 1. PostScript (`'ps'`)
 1. PowerShell (`'ps1'`)
 1. Python (`'py'`)
-1. Ruby (`'rb'`, `'rake'`) [`.rake` support is currently in beta testing, coming in upcoming version]
+1. Ruby (`'rb'`, `'rake'`)
 1. SASS (`'sass'`)
 1. Scheme (`'scm', 'sps', 'sls', 'sld'`)
 1. SCSS (`'scss'`)
@@ -125,17 +131,17 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 
 ## Pre-requisites
 
-- [JDK](https://www.oracle.com/java/technologies/javase-downloads.html): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
-- [JRuby](https://www.jruby.org/download): Same version required by [Glimmer](https://github.com/AndyObtiva/glimmer-dsl-swt)
+- [JDK](https://www.oracle.com/java/technologies/javase-downloads.html): Same version required by [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt)
+- [JRuby](https://www.jruby.org/download): Same version required by [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt)
 - [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Framework) (dependency included in Ruby gem).
 
 ## Download
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.9.3 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/ppq5owi2p8dgzkl/Gladiator-0.9.3.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (ARM64 Monterey & Older)](https://www.dropbox.com/s/7qagm9hsm1dyqel/Gladiator-0.10.0-arm64.dmg?dl=1)
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.9.3 Windows MSI Installer (x64 Windows 10)](https://www.dropbox.com/s/36dsfx6fqw8x0kp/Gladiator-0.9.3.msi?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/rxta4yio71mei8f/Gladiator-0.10.0.dmg?dl=1)
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.9.1 Mac DMG Installer (x64 Big Sur & Older)](https://www.dropbox.com/s/s9yp6qtelh85qko/Gladiator-0.9.1.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Windows MSI Installer (x64 Windows 10)](https://www.dropbox.com/s/3arjz0754j5nul2/Gladiator-0.10.0.msi?dl=1)
 
 The packaged version starts with a dialog asking you what project to open. [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) does not fully show up until you have selected a project directory.
 
@@ -148,7 +154,7 @@ Note: if you encounter any issues, check if they are documented in [TODO.md](TOD
 Install [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
 
 ```
-jgem install glimmer-cs-gladiator -v0.9.3
+jgem install glimmer-cs-gladiator -v0.10.0
 ```
 
 Or add to a JRuby project Bundler `Gemfile` under the `:developement` group:
@@ -212,7 +218,7 @@ To reuse [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) as a Glimme
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.9.2'
+gem 'glimmer-cs-gladiator', '~> 0.10.0'
 ```
 
 Run:
