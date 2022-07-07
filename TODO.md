@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Support TypeScript, Rust, Elixir, and C# (C Sharp)
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
@@ -28,6 +29,7 @@
 - Prefix with the correct single-line comment character depending on the current file's language when hitting the CMD+/ shortcut (e.g. '#' in Ruby and '//' in Java)
 
 - Support find and replace all across all (multiple) files in project
+- Support a menu bar menu item to Format Ruby code using prettier or rubocop
 - Run tests/specs through the GUI, with options to re-run failed tests only or a specific test.
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
 - Save open tabs under a named group (or auto-save all open tabs under an automatically incremented name for convenience)
@@ -167,3 +169,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Explore the idea of following search results of text with a checkbox (e.g. some text leads to an en.yml key, and by following key, we find the true end-result needed)
 - Consider saving tab groups into named tab groups that can be switched between and easily filled/cleared
 - Bookmark a line of code in a file (and have a bookmarks dialog)
+- Git Merge Comparison Text Editor View
