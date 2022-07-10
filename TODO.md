@@ -2,13 +2,13 @@
 
 ## Up Next
 
+- Support TypeScript, Rust, and Elixir
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
 - Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
 - Add a Dark Theme
-- Support TypeScript
 - Support increasing/decreasing size of font in text editor
 - Support project-wide full-text-search
 - Add Refresh File Exporer Tree action as a Menu Bar menu item
@@ -29,6 +29,7 @@
 - Prefix with the correct single-line comment character depending on the current file's language when hitting the CMD+/ shortcut (e.g. '#' in Ruby and '//' in Java)
 
 - Support find and replace all across all (multiple) files in project
+- Support a menu bar menu item to Format Ruby code using prettier or rubocop
 - Run tests/specs through the GUI, with options to re-run failed tests only or a specific test.
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
 - Save open tabs under a named group (or auto-save all open tabs under an automatically incremented name for convenience)
