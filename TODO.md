@@ -2,7 +2,7 @@
 
 ## Up Next
 
-- Support TypeScript, Rust, and Elixir
+- Support TypeScript, Rust, Elixir, and C# (C Sharp)
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
