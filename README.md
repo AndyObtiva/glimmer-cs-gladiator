@@ -15,7 +15,7 @@ It is not intended to be a full-fledged editor by any means, yet mostly a fun ed
 [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) to develop all my [projects](https://github.com/AndyObtiva) since May of 2020.
 
-You may now [download](#download) a packaged version of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator), including new support for Mac ARM64.
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 />  You may now download a packaged version of Gladiator, including new support for Mac ARM64](#download)
 
 ## Features
 
