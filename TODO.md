@@ -27,6 +27,7 @@
 - Fix issue where if you split view, resulting in same file open on both sides, and then close the originally opened file on the left, leaving the one on the right open, when you go to edit the file on the right side, it does not respond to any command shortcuts like CMD+D for duplicate
 - Optimize performance of file tree updates in bigger projects
 - Prefix with the correct single-line comment character depending on the current file's language when hitting the CMD+/ shortcut (e.g. '#' in Ruby and '//' in Java)
+- Git Merge Comparison Text Editor View
 
 - Support find and replace all across all (multiple) files in project
 - Support a menu bar menu item to Format Ruby code using prettier or rubocop
