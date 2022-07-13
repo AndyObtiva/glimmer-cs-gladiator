@@ -3,6 +3,12 @@
 ## Up Next
 
 - Support TypeScript, Rust, Elixir, and C# (C Sharp)
+- Support tab and menu extensions
+- gladiator-browser extension 
+
+- Preferences for installing extensions from packaged version
+
+- Show TODO code lines in a list
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
@@ -170,3 +176,4 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Consider saving tab groups into named tab groups that can be switched between and easily filled/cleared
 - Bookmark a line of code in a file (and have a bookmarks dialog)
 - Git Merge Comparison Text Editor View
+- Support tightly integrated Git features in Gladiator

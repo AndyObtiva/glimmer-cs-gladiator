@@ -2,6 +2,8 @@
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
+[Check out my Montreal.rb presentation about Gladiator.](https://andymaleh.blogspot.com/2022/07/montrealrb-2022-07-07-talk-how-i-built.html)
+
 Mac
 
 ![Gladiator](images/glimmer-gladiator.png)
@@ -10,12 +12,12 @@ Windows
 
 ![Gladiator](images/glimmer-gladiator-windows.png)
 
-[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) sample beta project under on-going development that demonstrates how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
+[Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) (short for Glimmer Editor) is a [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) beta project under on-going development that explores how to build a text editor in Ruby using [Glimmer DSL for SWT](https://github.com/AndyObtiva/glimmer-dsl-swt) (JRuby Desktop Development GUI Library).
 It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using [Glimmer](https://github.com/AndyObtiva/glimmer).
 [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) is also a personal tool for shaping an editor exactly the way I like, with all the keyboard shortcuts I prefer.
 I leave building truly professional text editors to software tooling experts who would hopefully use [Glimmer](https://github.com/AndyObtiva/glimmer) one day. Otherwise, I have been happily using [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) to develop all my [projects](https://github.com/AndyObtiva) since May of 2020.
 
-You may now [download](#download) a packaged version of [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator), including new support for Mac ARM64.
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 />  You may now download a packaged version of Gladiator, including new support for Mac ARM64](#download)
 
 ## Features
 
@@ -137,9 +139,9 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 
 ## Download
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (ARM64 Monterey & Older)](https://www.dropbox.com/s/7qagm9hsm1dyqel/Gladiator-0.10.0-arm64.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (ARM64 Monterey & Big Sur)](https://www.dropbox.com/s/7qagm9hsm1dyqel/Gladiator-0.10.0-arm64.dmg?dl=1) (this version starts in about 2.5 seconds)
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Monterey & Older)](https://www.dropbox.com/s/6155qdxv7j6hnsi/Gladiator-0.10.0-x64-monterey.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Monterey & Big Sur)](https://www.dropbox.com/s/6155qdxv7j6hnsi/Gladiator-0.10.0-x64-monterey.dmg?dl=1)
 
 [<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/rxta4yio71mei8f/Gladiator-0.10.0.dmg?dl=1)
 
