@@ -137,7 +137,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 
 ## Download
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (ARM64 Monterey & Older)](https://www.dropbox.com/s/7qagm9hsm1dyqel/Gladiator-0.10.0-arm64.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (ARM64 Monterey & Older)](https://www.dropbox.com/s/7qagm9hsm1dyqel/Gladiator-0.10.0-arm64.dmg?dl=1) (this version starts in about 2.5 seconds)
 
 [<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Monterey & Older)](https://www.dropbox.com/s/6155qdxv7j6hnsi/Gladiator-0.10.0-x64-monterey.dmg?dl=1)
 
