@@ -3,6 +3,11 @@
 ## Up Next
 
 - Support TypeScript, Rust, Elixir, and C# (C Sharp)
+- Support tab and menu extensions
+- gladiator-browser extension 
+
+- Preferences for installing extensions from packaged version
+
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
