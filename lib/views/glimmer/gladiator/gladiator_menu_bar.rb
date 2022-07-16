@@ -163,6 +163,40 @@ module Glimmer
             }
           end
           menu {
+            text '&Extensions'
+            
+            menu {
+              text '&Browser'
+              
+              menu_item {
+                text '&New Tab'
+                
+                on_widget_selected {
+                  browser_tab_item = nil
+                  gladiator.current_tab_folder.content {
+                    browser_tab_item = tab_item {
+                      fill_layout
+                      
+                      text 'www.google.com'
+                      
+                      the_browser = browser {
+                        url 'https://www.google.com'
+                      }
+                      the_browser.swt_widget.addLocationListener do
+                        web_url = the_browser.url
+                        domain = web_url.sub(/https?:\/\//, '').split('/').first
+                        browser_tab_item.swt_tab_item.text = domain
+                        gladiator.body_root.pack_same_size
+                      end
+                    }
+                  }
+                  gladiator.current_tab_folder.swt_widget.setSelection(browser_tab_item.swt_tab_item)
+                  gladiator.body_root.pack_same_size
+                }
+              }
+            }
+          }
+          menu {
             text '&Help'
             menu_item {
               text '&About'
