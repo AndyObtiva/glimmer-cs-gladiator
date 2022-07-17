@@ -8,6 +8,7 @@
 
 - Preferences for installing extensions from packaged version
 
+- Show TODO code lines in a list
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
