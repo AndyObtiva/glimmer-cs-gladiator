@@ -2,7 +2,9 @@
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
-[Check out my Montreal.rb presentation about Gladiator.](https://andymaleh.blogspot.com/2022/07/montrealrb-2022-07-07-talk-how-i-built.html)
+(**[***Montreal.rb Talk - How I Built My Code Editor in Ruby***](https://andymaleh.blogspot.com/2022/07/montrealrb-2022-07-07-talk-how-i-built.html)**)
+
+![rapid prototyping of desktop app GUI with Gladiator](https://raw.githubusercontent.com/AndyObtiva/glimmer-dsl-swt/master/images/glimmer-dsl-swt-demo-hello-world.gif)
 
 Mac
 
@@ -294,6 +296,10 @@ To avoid this problem, always make sure you are running the `gladiator` command 
 Also, if you encounter this issue with projects that contain a lot of extra files that you do not need to edit, you
 could later open the generated `.gladiator` file at the root of the project directory and add unnecessary subdirectories
 to the `ignore_paths` array.
+
+### Freezing in large projects
+
+Gladiator right now assumes smaller projects with a few files only as it always opens all file contents in memory for better searching. So, when a file is updated externally (e.g. change git branch), it reloads its entire tree, including all the file contents too, which causes a temporary freeze. This may get fixed in the future, but it is not annoying enough in smaller projects to be fixed right away. The change might include diffing the tree to avoid refreshing file contents for unchanged files, and perhaps multi-threaded loading of file contents to avoid freezing the GUI.
 
 ## TODO
 

@@ -3,8 +3,11 @@
 ## Up Next
 
 - Support TypeScript, Rust, Elixir, and C# (C Sharp)
-- Support tab and menu extensions
-- gladiator-browser extension 
+- Refator code_text to utilize line numbers from Glimmer not from Gladiator
+- System-wide ZOOM setup
+- Show saved scratch from last scratchpad session when opening scratchpad
+- Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
+- Ignore `:` character in File Lookup (just like ignoring `_`)
 
 - Preferences for installing extensions from packaged version
 
@@ -14,6 +17,7 @@
 - Duplicate dir feature
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
 - Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
+- Exclude `:` character from file lookup list search (just like `_`) as it's used in Ruby namespaces
 - Add a Dark Theme
 - Support increasing/decreasing size of font in text editor
 - Support project-wide full-text-search
@@ -42,12 +46,9 @@
 - Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs
 - Support reordering tabs
 - Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
-- Show saved scratch from last scratchpad session when opening scratchpad
 - Auto-close brackets/do-end blocks
 - Make Undo/Redo menu items disabled when operation is not valid (not undoable or redoable)
 - Fix issue with right-clicking a tree node in Windows getting defaulted back to selected node (thus unable to create a new file deep in the tree nesting when an outside file is selected)
-- Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
-- Save a Scratchpad into a real file
 - Add a Gladiator log feature for when running in app mode
 - Fix issue with startup via app mode leaving an extra shell after opening first project (look into closing first shell if a new one replaces it)
 - Fix issue with rename directory (and perhaps file) not renaming in tab file path, thus losing file changes
@@ -177,3 +178,7 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Bookmark a line of code in a file (and have a bookmarks dialog)
 - Git Merge Comparison Text Editor View
 - Support tightly integrated Git features in Gladiator
+- Support tab and menu extensions
+- gladiator-browser extension 
+- Automatically split text-editor by 2 text-editor panes by dividing open tabs in half and moving the 2nd half to the 2nd text-editor pane
+

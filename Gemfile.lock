@@ -28,7 +28,7 @@ GEM
     glimmer (2.7.3)
       array_include_methods (~> 1.4.0)
       facets (>= 3.1.0, < 4.0.0)
-    glimmer-dsl-swt (4.24.0.0)
+    glimmer-dsl-swt (4.24.3.2)
       concurrent-ruby (>= 1.1.7, < 2.0.0)
       glimmer (~> 2.7.3)
       jruby-win32ole (>= 0.8.5, < 2.0.0)
@@ -54,17 +54,17 @@ GEM
       rake
       rdoc
       semver2
-    jruby-jars (9.2.19.0)
-    jruby-rack (1.1.21)
+    jruby-jars (9.3.7.0)
+    jruby-rack (1.1.22)
     jruby-win32ole (0.8.5)
-    jwt (2.4.1)
+    jwt (2.5.0)
     method_source (1.0.0)
     mime-types (2.99.3)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.2.3)
     nested_inherited_jruby_include_package (0.3.0)
-    nokogiri (1.13.6-java)
+    nokogiri (1.13.8-java)
       racc (~> 1.4)
     oauth2 (1.4.8)
       faraday (>= 0.8, < 3.0)
@@ -76,7 +76,7 @@ GEM
     os (1.1.4)
     pastel (0.8.0)
       tty-color (~> 0.5)
-    psych (4.0.4-java)
+    psych (4.0.5-java)
       jar-dependencies (>= 0.1.7)
     puts_debuggerer (0.13.5)
       awesome_print (~> 1.9.2)
@@ -88,7 +88,7 @@ GEM
     rchardet (1.8.0)
     rdoc (6.4.0)
       psych (>= 4.0.0)
-    rouge (3.29.0)
+    rouge (3.30.0)
     rspec (3.5.0)
       rspec-core (~> 3.5.0)
       rspec-expectations (~> 3.5.0)
@@ -139,12 +139,11 @@ PLATFORMS
 DEPENDENCIES
   clipboard (~> 1.3.5)
   filewatcher (~> 1.1.1)
-  glimmer-dsl-swt (~> 4.24.0.0)
+  glimmer-dsl-swt (~> 4.24.3.1)
   jeweler (= 2.3.9)
-  jruby-jars (= 9.2.19.0)
   rspec (~> 3.5.0)
   simplecov
   warbler (= 2.0.5)
 
 BUNDLED WITH
-   2.3.17
+   2.3.22

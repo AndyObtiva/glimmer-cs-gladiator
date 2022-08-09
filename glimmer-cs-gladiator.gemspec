@@ -11,12 +11,11 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Andy Maleh".freeze]
-  s.date = "2022-07-04"
-  s.description = "Gladiator (short for Glimmer Editor) is a Glimmer sample project under on-going development. It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using Glimmer to build a text editor. Gladiator is also a personal tool for shaping an editor exactly the way I like. I leave building truly professional text editors to software tooling experts who would hopefully use Glimmer one day.".freeze
+  s.date = "2022-10-06"
+  s.description = "Gladiator (short for Glimmer Editor) is a Glimmer beta project under on-going development. It is not intended to be a full-fledged editor by any means, yet mostly a fun educational exercise in using Glimmer to build a text editor. Gladiator is also a personal tool for shaping an editor exactly the way I like. I leave building truly professional text editors to software tooling experts who would hopefully use Glimmer one day.".freeze
   s.email = "andy.am@gmail.com".freeze
   s.executables = ["glimmer-cs-gladiator".freeze, "gladiator".freeze, "gladiator-setup".freeze]
   s.extra_rdoc_files = [
-    "CHANGELOG.md",
     "LICENSE.txt",
     "README.md"
   ]
@@ -54,22 +53,20 @@ Gem::Specification.new do |s|
   end
 
   if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.24.0.0"])
+    s.add_runtime_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.24.3.1"])
     s.add_runtime_dependency(%q<filewatcher>.freeze, ["~> 1.1.1"])
     s.add_runtime_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
     s.add_development_dependency(%q<rspec>.freeze, ["~> 3.5.0"])
     s.add_development_dependency(%q<jeweler>.freeze, ["= 2.3.9"])
     s.add_development_dependency(%q<warbler>.freeze, ["= 2.0.5"])
-    s.add_development_dependency(%q<jruby-jars>.freeze, ["= 9.2.19.0"])
     s.add_development_dependency(%q<simplecov>.freeze, [">= 0"])
   else
-    s.add_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.24.0.0"])
+    s.add_dependency(%q<glimmer-dsl-swt>.freeze, ["~> 4.24.3.1"])
     s.add_dependency(%q<filewatcher>.freeze, ["~> 1.1.1"])
     s.add_dependency(%q<clipboard>.freeze, ["~> 1.3.5"])
     s.add_dependency(%q<rspec>.freeze, ["~> 3.5.0"])
     s.add_dependency(%q<jeweler>.freeze, ["= 2.3.9"])
     s.add_dependency(%q<warbler>.freeze, ["= 2.0.5"])
-    s.add_dependency(%q<jruby-jars>.freeze, ["= 9.2.19.0"])
     s.add_dependency(%q<simplecov>.freeze, [">= 0"])
   end
 end
