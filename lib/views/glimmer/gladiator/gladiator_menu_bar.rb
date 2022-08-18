@@ -169,7 +169,7 @@ module Glimmer
               text '&Browser'
               
               menu_item {
-                text '&New Tab'
+                text '&Confluence'
                 
                 on_widget_selected {
                   browser_tab_item = nil
@@ -177,10 +177,10 @@ module Glimmer
                     browser_tab_item = tab_item {
                       fill_layout
                       
-                      text 'www.google.com'
+                      text 'https://lexop.atlassian.net/wiki'
                       
                       the_browser = browser {
-                        url 'https://www.google.com'
+                        url 'https://lexop.atlassian.net/wiki'
                       }
                       the_browser.swt_widget.addLocationListener do
                         web_url = the_browser.url
