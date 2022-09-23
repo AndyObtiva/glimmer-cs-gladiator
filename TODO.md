@@ -14,6 +14,7 @@
 - Duplicate dir feature
 - Fix issue with CTRL+F Find backwards not taking case-sensitivity into account (only forward)
 - Fix issue with CTRL+F Find/Replace forward sometimes relanding on the same word after it's been updated
+- Exclude `:` character from file lookup list search (just like `_`) as it's used in Ruby namespaces
 - Add a Dark Theme
 - Support increasing/decreasing size of font in text editor
 - Support project-wide full-text-search
