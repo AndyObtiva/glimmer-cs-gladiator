@@ -295,6 +295,10 @@ Also, if you encounter this issue with projects that contain a lot of extra file
 could later open the generated `.gladiator` file at the root of the project directory and add unnecessary subdirectories
 to the `ignore_paths` array.
 
+### Freezing upon making external file changes in large projects
+
+Gladiator right now assumes smaller projects with a few files only. So, when a file is updated externally (e.g. change git branch), it reloads its entire tree, including all the file contents too, which causes a freeze. This may get fixed in the future, but it is not annoying enough in smaller projects to be fixed right away.
+
 ## TODO
 
 [TODO.md](TODO.md)
