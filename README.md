@@ -4,6 +4,8 @@
 
 [Check out my Montreal.rb presentation about Gladiator.](https://andymaleh.blogspot.com/2022/07/montrealrb-2022-07-07-talk-how-i-built.html)
 
+![rapid prototyping of desktop app GUI with Gladiator](https://raw.githubusercontent.com/AndyObtiva/glimmer-dsl-swt/master/images/glimmer-dsl-swt-demo-hello-world.gif)
+
 Mac
 
 ![Gladiator](images/glimmer-gladiator.png)
