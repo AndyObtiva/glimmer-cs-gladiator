@@ -3,6 +3,8 @@
 ## Up Next
 
 - Support TypeScript, Rust, Elixir, and C# (C Sharp)
+- Refator code_text to utilize line numbers from Glimmer not from Gladiator
+- System-wide ZOOM setup
 - Show saved scratch from last scratchpad session when opening scratchpad
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
 - Ignore `:` character in File Lookup (just like ignoring `_`)
