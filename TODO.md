@@ -5,6 +5,7 @@
 - Support TypeScript, Rust, Elixir, and C# (C Sharp)
 - Show saved scratch from last scratchpad session when opening scratchpad
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
+- Ignore `:` character in File Lookup (just like ignoring `_`)
 
 - Preferences for installing extensions from packaged version
 
