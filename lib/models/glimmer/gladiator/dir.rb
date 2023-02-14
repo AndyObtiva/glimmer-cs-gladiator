@@ -28,6 +28,7 @@ module Glimmer
       include Glimmer::DataBinding::ObservableModel
       
       IGNORE_PATHS = ['.gladiator', '.gladiator-scratchpad', '.git', 'coverage', 'packages', 'node_modules', 'tmp', 'vendor', 'pkg', 'dist', 'log', 'test/reports']
+      REGEXP_FILTER = /[:_\/.-]/
 
       attr_accessor :selected_child, :filter, :children, :filtered_path_options, :filtered_path, :display_path, :ignore_paths
       attr_reader :name, :parent, :path
@@ -184,7 +185,7 @@ module Glimmer
         children_files.select do |child|
           child_path = child.path.to_s.sub(project_dir.path, '')
           child_path.downcase.include?(filter.downcase) ||
-            child_path.downcase.gsub(/[_\/.-]/, '').include?(filter.downcase.gsub(/[_\/.-]/, ''))
+            child_path.downcase.gsub(REGEXP_FILTER, '').include?(filter.downcase.gsub(REGEXP_FILTER, ''))
         end.sort_by {|c| c.path.to_s.downcase}
       end
   
