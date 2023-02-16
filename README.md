@@ -2,7 +2,7 @@
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
-[Check out my Montreal.rb presentation about Gladiator.](https://andymaleh.blogspot.com/2022/07/montrealrb-2022-07-07-talk-how-i-built.html)
+(**[***Montreal.rb Talk - How I Built My Code Editor in Ruby***](https://andymaleh.blogspot.com/2022/07/montrealrb-2022-07-07-talk-how-i-built.html)**)
 
 ![rapid prototyping of desktop app GUI with Gladiator](https://raw.githubusercontent.com/AndyObtiva/glimmer-dsl-swt/master/images/glimmer-dsl-swt-demo-hello-world.gif)
 
