@@ -66,6 +66,8 @@ GEM
     nested_inherited_jruby_include_package (0.3.0)
     nokogiri (1.13.6-java)
       racc (~> 1.4)
+    nokogiri (1.13.6-x86_64-linux)
+      racc (~> 1.4)
     oauth2 (1.4.8)
       faraday (>= 0.8, < 3.0)
       jwt (>= 1.0, < 3.0)
@@ -76,12 +78,15 @@ GEM
     os (1.1.4)
     pastel (0.8.0)
       tty-color (~> 0.5)
+    psych (4.0.4)
+      stringio
     psych (4.0.4-java)
       jar-dependencies (>= 0.1.7)
     puts_debuggerer (0.13.5)
       awesome_print (~> 1.9.2)
+    racc (1.6.0)
     racc (1.6.0-java)
-    rack (2.2.4)
+    rack (2.2.6.3)
     rake (13.0.6)
     rake-tui (0.2.3)
       tty-prompt
@@ -110,9 +115,11 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.4)
+    stringio (3.0.5)
     super_module (1.4.1)
       method_source (>= 0.8.2, < 1.1.0)
     text-table (1.2.4)
+    thread_safe (0.3.6)
     thread_safe (0.3.6-java)
     tty-color (0.6.0)
     tty-cursor (0.7.1)
@@ -135,6 +142,7 @@ PLATFORMS
   universal-java-16
   universal-java-17
   universal-java-18
+  x86_64-linux
 
 DEPENDENCIES
   clipboard (~> 1.3.5)
