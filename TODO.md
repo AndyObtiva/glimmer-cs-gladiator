@@ -178,4 +178,5 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Support tightly integrated Git features in Gladiator
 - Support tab and menu extensions
 - gladiator-browser extension 
+- Automatically split text-editor by 2 text-editor panes by dividing open tabs in half and moving the 2nd half to the 2nd text-editor pane
 
