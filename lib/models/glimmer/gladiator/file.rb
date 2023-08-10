@@ -41,9 +41,12 @@ module Glimmer
         @init = nil
       end
       
+      def extension
+        path.split('.').last if path.to_s.include?('.')
+      end
+      
       def language
         # TODO consider using Rouge::Lexer.guess_by_filename instead and perhaps guess_by_source when it fails
-        extension = path.split('.').last if path.to_s.include?('.')
         return 'ruby' if scratchpad?
         return 'ruby' if path.to_s.end_with?('Gemfile') || path.to_s.end_with?('Rakefile')
         return 'ruby' if dirty_content.start_with?('#!/usr/bin/env ruby') || dirty_content.start_with?('#!/usr/bin/env jruby')
@@ -126,8 +129,68 @@ module Glimmer
           'yaml'
         when 'xml'
           'xml'
+        else
+          'plain_text'
         end
       end
+      
+      def single_line_comment_prefix
+        case extension
+        when 'c', 'h',
+             'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++',
+             'gradle',
+             'java',
+             'js', 'cjs', 'mjs', 'es6', 'es',
+             'jsx',
+             'kt', 'ktm', 'kts',
+             'sass',
+             'scss'
+          '//'
+        when 'cr',
+             'conf',
+             'coffee',
+             'feature',
+             'ini',
+             'pl',
+             'pp',
+             'properties',
+             'ps1',
+             'py',
+             'rb', 'rake',
+             'sh',
+             'tcl',
+             'yaml', 'yml'
+          '#'
+        when 'css'
+          '/*'
+        when 'erb',
+             'html',
+             'jsp',
+             'plist',
+             'xml'
+          # TODO in the future, have .erb support `#` single line comment inside Ruby code scriptlets as opposed to scriptlet-free code
+          '<!--'
+        when 'haml'
+          '/'
+        when 'md', 'markdown'
+          '<!---'
+        when 'ps'
+          '%'
+        when 'scm', 'sps', 'sls', 'sld'
+          ';'
+        when 'sql'
+          '--'
+        when 'json',
+             'patch',
+             'txt',
+             nil
+          nil
+        else
+          '#'
+        end
+      end
+      
+      # TODO support: def single_line_comment_postfix
       
       def init_content
         unless @init
@@ -386,14 +449,17 @@ module Glimmer
           delta = 0
           the_line = old_lines[the_line_index]
           return if the_line.nil?
-          if the_line.strip.start_with?('# ')
-            new_lines[the_line_index] = the_line.sub(/# /, '')
+          if the_line.strip.start_with?("#{single_line_comment_prefix} ")
+            new_lines[the_line_index] = the_line.sub(/#{single_line_comment_prefix} /, '')
+            # TODO single_line_comment_postfix if needed
             delta -= 2
-          elsif the_line.strip.start_with?('#')
-            new_lines[the_line_index] = the_line.sub(/#/, '')
+          elsif the_line.strip.start_with?(single_line_comment_prefix)
+            new_lines[the_line_index] = the_line.sub(/#{single_line_comment_prefix}/, '')
+            # TODO single_line_comment_postfix if needed
             delta -= 1
           else
-            new_lines[the_line_index] = "# #{the_line}"
+            new_lines[the_line_index] = "#{single_line_comment_prefix} #{the_line}"
+            # TODO single_line_comment_postfix if needed
             delta += 2
           end
         end
