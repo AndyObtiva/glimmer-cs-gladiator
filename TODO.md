@@ -2,10 +2,10 @@
 
 ## Up Next
 
-- Improve Undo/Redo for partial text entry by detecting words and pauses to avoid undoing too much text at a time
-- Upgrade to newer Glimmer DSL for SWT with newer Rouge version to support Elixer code
+- Upgrade to newer Glimmer DSL for SWT with newer Rouge version to support Elixer file format syntax highlighting
 
-
+- Fix Linux issue with opening tabs as empty (due to not loading content) It might be caused by an optimization that should be disabled on Linux
+- Improve Undo/Redo support by storing data for in-progress text entry by detecting words (e.g. via spaces, commas, slashes, periods, newlines, etc...). This would replace the implemented time-based solution
 - Refator code_text to utilize line numbers from Glimmer not from Gladiator
 - System-wide ZOOM setup
 - Show saved scratch from last scratchpad session when opening scratchpad

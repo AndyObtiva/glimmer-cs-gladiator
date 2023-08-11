@@ -38,13 +38,12 @@ module Glimmer
         
         def do(file, method = nil, *args, command: nil)
           if command.nil?
-            command ||= Command.new(file, method, *args)
+            command = Command.new(file, method, *args)
             command.previous_command = command_history_for(file).last
-            unless command_history_for(file).last.method == :change_content! && method == :change_content!
-              command_history_for(file).last.next_command = command
-            end
+            save_new_command = command_history_for(file).last.method == :change_content! && method == :change_content! && !time_for_new_command?
+            command_history_for(file).last.next_command = command unless save_new_command
             command.do
-            command_history_for(file) << command unless command_history_for(file).last.method == :change_content! && method == :change_content!
+            command_history_for(file) << command unless save_new_command
           else
             command_history_for(file) << command
           end
@@ -64,7 +63,16 @@ module Glimmer
         def clear(file)
           command_history[file] = [Command.new(file)]
         end
+        
+        def time_for_new_command?
+          @time ||= Time.now
+          time_for_new_command = (Time.now - @time) > TIME_INTERVAL_SECONDS_NEW_COMMAND
+          @time = Time.now if time_for_new_command
+          time_for_new_command
+        end
       end
+      
+      TIME_INTERVAL_SECONDS_NEW_COMMAND = (ENV['UNDO_TIME_INTERVAL_SECONDS'] || 1).to_f # seconds
     
       attr_accessor :file, :method, :args, :previous_command, :next_command,
                     :file_dirty_content, :file_caret_position, :file_selection_count, :previous_file_dirty_content, :previous_file_caret_position, :previous_file_selection_count
