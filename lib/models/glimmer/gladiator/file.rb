@@ -61,6 +61,8 @@ module Glimmer
           'cpp'
         when 'cr'
           'crystal'
+        when 'cs'
+          'csharp'
         when 'css'
           'css'
         when 'conf'
@@ -69,6 +71,8 @@ module Glimmer
           'coffeescript'
         when 'erb'
           'erb'
+        when 'ex', 'exs'
+          'eex'
         when 'feature'
           'gherkin'
         when 'gradle'
@@ -109,6 +113,8 @@ module Glimmer
           'powershell'
         when 'py'
           'python'
+        when 'rs'
+          'rust'
         when 'rb', 'rake'
           'ruby'
         when 'sass'
@@ -123,6 +129,10 @@ module Glimmer
           'sql'
         when 'tcl'
           'tcl'
+        when 'ts'
+          'typescript'
+        when 'tsx'
+          'tsx'
         when 'txt', nil
           'plain_text'
         when 'yaml', 'yml'
@@ -138,17 +148,22 @@ module Glimmer
         case extension
         when 'c', 'h',
              'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++',
+             'cs',
              'gradle',
              'java',
              'js', 'cjs', 'mjs', 'es6', 'es',
              'jsx',
              'kt', 'ktm', 'kts',
+             'rs',
+             'ts',
+             'tsx',
              'sass',
              'scss'
           '//'
         when 'cr',
              'conf',
              'coffee',
+             'ex', 'exs',
              'feature',
              'ini',
              'pl',

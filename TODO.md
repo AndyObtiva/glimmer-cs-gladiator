@@ -2,7 +2,10 @@
 
 ## Up Next
 
-- Support TypeScript, Rust, Elixir, and C# (C Sharp)
+- Improve Undo/Redo for partial text entry by detecting words and pauses to avoid undoing too much text at a time
+- Upgrade to newer Glimmer DSL for SWT with newer Rouge version to support Elixer code
+
+
 - Refator code_text to utilize line numbers from Glimmer not from Gladiator
 - System-wide ZOOM setup
 - Show saved scratch from last scratchpad session when opening scratchpad
@@ -181,4 +184,3 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Support tab and menu extensions
 - gladiator-browser extension 
 - Automatically split text-editor by 2 text-editor panes by dividing open tabs in half and moving the 2nd half to the 2nd text-editor pane
-

@@ -4,6 +4,7 @@
 
 - Use the correct single line comment prefix for each programming language (e.g. `//` in JS/Java/C and `#` in Ruby/Perl/Python)
 - File Lookup ignores `:` in filename search terms
+- Support TypeScript, Rust, Elixir, and C# (C Sharp)
 - Upgrade to JRuby 9.3.4.0
 - Upgrade to Glimmer DSL for SWT 4.24.3.1
 
