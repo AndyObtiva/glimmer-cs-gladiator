@@ -69,10 +69,12 @@ module Glimmer
           'conf'
         when 'coffee'
           'coffeescript'
+        when 'eex', 'leex', 'heex'
+          'eex' # embedded elixir
         when 'erb'
           'erb'
         when 'ex', 'exs'
-          'eex'
+          'elixir'
         when 'feature'
           'gherkin'
         when 'gradle'
@@ -134,17 +136,18 @@ module Glimmer
         when 'tsx'
           'tsx'
         when 'txt', nil
-          'plain_text'
+          'plaintext'
         when 'yaml', 'yml'
           'yaml'
         when 'xml'
           'xml'
         else
-          'plain_text'
+          'plaintext'
         end
       end
       
       def single_line_comment_prefix
+        # TODO redo this implementation using language instead of extension
         case extension
         when 'c', 'h',
              'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++',
@@ -178,7 +181,8 @@ module Glimmer
           '#'
         when 'css'
           '/*'
-        when 'erb',
+        when 'eex', 'leex', 'heex',
+             'erb',
              'html',
              'jsp',
              'plist',

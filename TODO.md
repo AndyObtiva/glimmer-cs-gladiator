@@ -2,8 +2,6 @@
 
 ## Up Next
 
-- Upgrade to newer Glimmer DSL for SWT with newer Rouge version to support Elixer file format syntax highlighting
-
 - Fix Linux issue with opening tabs as empty (due to not loading content) It might be caused by an optimization that should be disabled on Linux
 - Improve Undo/Redo support by storing data for in-progress text entry by detecting words (e.g. via spaces, commas, slashes, periods, newlines, etc...). This would replace the implemented time-based solution
 - Refator code_text to utilize line numbers from Glimmer not from Gladiator
@@ -12,6 +10,7 @@
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
 - Ignore `:` character in File Lookup (just like ignoring `_`)
 
+- Confirmation message box for deleting files from File Explorer
 - Preferences for installing extensions from packaged version
 
 - Show TODO code lines in a list
@@ -182,5 +181,5 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Git Merge Comparison Text Editor View
 - Support tightly integrated Git features in Gladiator
 - Support tab and menu extensions
-- gladiator-browser extension 
+- gladiator-browser extension
 - Automatically split text-editor by 2 text-editor panes by dividing open tabs in half and moving the 2nd half to the 2nd text-editor pane

@@ -3,6 +3,7 @@
 ## 0.11.1
 
 - [CONTRIBUTION BY keeperotphones] Support Ruby file formats: `'rbw', 'gemspec'`
+- Support new file formats: Elixir (`'ex', 'exs'`) & Embedded Elixir (`'eex', 'leex', 'heex'`)
 
 ## 0.11.0
 
