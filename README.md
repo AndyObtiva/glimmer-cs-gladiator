@@ -118,7 +118,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 1. PostScript (`'ps'`)
 1. PowerShell (`'ps1'`)
 1. Python (`'py'`)
-1. Ruby (`'rb'`, `'rake'`)
+1. Ruby (`'rb'`, `'rbw'`, `'rake'`, `'gemspec'`)
 1. Rust (`'rs'`)
 1. SASS (`'sass'`)
 1. Scheme (`'scm', 'sps', 'sls', 'sld'`)

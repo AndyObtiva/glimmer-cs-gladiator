@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.11.1
+
+- [CONTRIBUTION BY keeperotphones] Support Ruby file formats: `'rbw', 'gemspec'`
+
 ## 0.11.0
 
 - Support new file formats: 'ts' (TypeScript), 'tsx', 'rs' (Rust), and 'cs' (C#)

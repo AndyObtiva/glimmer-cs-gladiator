@@ -115,7 +115,7 @@ module Glimmer
           'python'
         when 'rs'
           'rust'
-        when 'rb', 'rake'
+        when 'rb', 'rbw', 'rake', 'gemspec'
           'ruby'
         when 'sass'
           'sass'
@@ -171,7 +171,7 @@ module Glimmer
              'properties',
              'ps1',
              'py',
-             'rb', 'rake',
+             'rb', 'rbw', 'rake', 'gemspec',
              'sh',
              'tcl',
              'yaml', 'yml'
