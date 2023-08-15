@@ -88,7 +88,7 @@ I leave building truly professional text editors to software tooling experts who
 
 ### Multiple Language Syntax Highlighting
 
-Here is an exhaustive list of the file formats supported by [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator):
+Here is an exhaustive list of all the file formats supported by [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) (if you would like support for more file formats, feel free to suggest in a [GitHub Issue](https://github.com/AndyObtiva/glimmer-cs-gladiator/issues) or submit a [Pull Request](https://github.com/AndyObtiva/glimmer-cs-gladiator/pulls)):
 1. C (`'c', 'h'`)
 1. C++ (`'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++'`)
 1. C# (`'cs'`)
@@ -149,7 +149,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 
 [<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.11.1 Mac DMG Installer (ARM64 Ventura 13.4.1 & Older)](https://www.dropbox.com/scl/fi/iyyubcqekhtn4rv91feka/Gladiator-0.11.1-arm64-ventura-13.4.1.dmg?rlkey=ht2bt4jqf6bmgfjy0aurt2fem&dl=1) (this version starts in about 2.5 seconds)
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Monterey & Big Sur)](https://www.dropbox.com/s/6155qdxv7j6hnsi/Gladiator-0.10.0-x64-monterey.dmg?dl=1)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.11.1 Mac DMG Installer (x64 Ventura 13.4.1 & Older)](https://www.dropbox.com/scl/fi/04y1zkslld876cqv3mbls/Gladiator-0.11.1-x86_64-ventura-13.4.1.dmg?rlkey=0dhzhcejgx31w6iuj3qs2z7zs&dl=1)
 
 [<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.10.0 Mac DMG Installer (x64 Catalina & Older)](https://www.dropbox.com/s/rxta4yio71mei8f/Gladiator-0.10.0.dmg?dl=1)
 
