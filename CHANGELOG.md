@@ -2,7 +2,7 @@
 
 ## 0.11.0
 
-- Support new file formats: 'ts' (TypeScript), 'rs' (Rust), and 'cs' (C#)
+- Support new file formats: 'ts' (TypeScript), 'tsx', 'rs' (Rust), and 'cs' (C#)
 - Use the correct single line comment prefix for each programming language (e.g. `//` in JS/Java/C and `#` in Ruby/Perl/Python)
 - Improve Undo/Redo support by storing data for in-progress text entry every 1 second (or ENV['UNDO_TIME_INTERVAL_SECONDS'] if specified) while typing to enable undoing partial text instead of everything
 - File Lookup ignores `:` in filename search terms to enable looking up files for namespaced Ruby class (e.g. `Glimmer::Gladiator::Command` will find `lib/models/glimmer/gladiator/command.rb`)

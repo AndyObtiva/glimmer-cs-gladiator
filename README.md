@@ -127,6 +127,7 @@ Here is an exhaustive list of the file formats supported by [Gladiator](https://
 1. SQL (`'sql'`)
 1. Tcl (`'tcl'`)
 1. TypeScript (`'ts'`)
+1. TSX (`'tsx'`)
 1. Yaml (`'yaml', 'yml'`)
 1. XML (`'xml'`)
 
