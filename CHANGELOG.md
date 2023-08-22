@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.11.2
+
+- Fix issue with zoom (via -, =, 0) not zooming line numbers too.
+
 ## 0.11.1
 
 - [CONTRIBUTION BY keeperotphones] Support Ruby file formats: `'rbw', 'gemspec'`

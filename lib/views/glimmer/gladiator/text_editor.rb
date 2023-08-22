@@ -187,6 +187,12 @@ module Glimmer
             elsif key_event.stateMask == swt(COMMAND_KEY) && key_event.keyCode == swt(:arrow_down)
               Command.do(file, :move_down!)
               key_event.doit = false
+            elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '='
+              bump_font_height_up
+            elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '-'
+              bump_font_height_down
+            elsif key_event.stateMask == swt(COMMAND_KEY) && extract_char(key_event) == '0'
+              restore_font_height
             end
           }
           on_verify_text { |verify_event|
@@ -205,6 +211,37 @@ module Glimmer
           }
         }
       end
+        
+      def bump_font_height_up
+        @original_font_height ||= font_datum.height
+        new_font_height = font_datum.height + 1
+        update_font_height(new_font_height)
+      end
+      
+      def bump_font_height_down
+        @original_font_height ||= font_datum.height
+        new_font_height = (font_datum.height - 1) == 0 ? font_datum.height : (font_datum.height - 1)
+        update_font_height(new_font_height)
+      end
+      
+      def restore_font_height
+        return if @original_font_height.nil?
+        update_font_height(@original_font_height)
+        @original_font_height = nil
+      end
+      
+      def update_font_height(new_font_height)
+        return if new_font_height.nil?
+        @text_proxy.font = {name: font_datum.name, height: new_font_height, style: font_datum.style}
+        @line_numbers_text&.font = {name: font_datum.name, height: new_font_height, style: font_datum.style}
+        @body_root.shell_proxy.layout(true, true)
+        @body_root.shell_proxy.pack_same_size
+      end
+      
+      def font_datum
+        @text_proxy.font.font_data.first
+      end
+      
       
     end
     

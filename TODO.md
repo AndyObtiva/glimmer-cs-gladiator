@@ -2,6 +2,8 @@
 
 ## Up Next
 
+- Fix issue with not being able to comment/uncomment inside `Gemfile` (and check if issue happens in special Ruby files that don't have an `.rb` extension)
+- Support config.ru Ruby format
 - Fix Linux issue with opening tabs as empty (due to not loading content) It might be caused by an optimization that should be disabled on Linux
 - Improve Undo/Redo support by storing data for in-progress text entry by detecting words (e.g. via spaces, commas, slashes, periods, newlines, etc...). This would replace the implemented time-based solution
 - Refator code_text to utilize line numbers from Glimmer not from Gladiator
@@ -15,7 +17,8 @@
 - Confirmation message box for deleting files from File Explorer
 - Preferences for installing extensions from packaged version
 
-- Show TODO code lines in a list
+- Show TODO code lines in a list or table
+- Consider CMD+SHIFT+/ shortcut for doing an additive comment operation that would ignore any already commented lines if any exist inside the selection being commented
 - Filter File Lookup List by non-binary files
 - Duplicate file feature
 - Duplicate dir feature
@@ -40,15 +43,14 @@
 - Fix issue with clearing open file when closing Gladiator from terminal with CMD+C
 - Fix issue where if you split view, resulting in same file open on both sides, and then close the originally opened file on the left, leaving the one on the right open, when you go to edit the file on the right side, it does not respond to any command shortcuts like CMD+D for duplicate
 - Optimize performance of file tree updates in bigger projects
-- Prefix with the correct single-line comment character depending on the current file's language when hitting the CMD+/ shortcut (e.g. '#' in Ruby and '//' in Java)
 
 - Support find and replace all across all (multiple) files in project
 - Support a menu bar menu item to Format Ruby code using prettier or rubocop
 - Run tests/specs through the GUI, with options to re-run failed tests only or a specific test.
 - Have gladiator always open in app_mode and then quickly open a project afterwards to provide app_mode even in command line mode once open project is closed
 - Save open tabs under a named group (or auto-save all open tabs under an automatically incremented name for convenience)
-- Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs
-- Support reordering tabs
+- Upgrade tabs to c_tab_folder to enable more tabs to fit and to support reordering tabs (UPDATE: it seems c_tab_folder performance is slow when there are many tabs)
+- Support reordering tabs (consider doing it without direct drag & drop like through editing a table/list of tab names with list item drag & drop or something similar)
 - Add a fuzz factor to CMD+R file look up with `operation_length.times.map {|n| operation.chars.combination(operation_length - n).to_a}.reduce(:+).map(&:join)`
 - Auto-close brackets/do-end blocks
 - Make Undo/Redo menu items disabled when operation is not valid (not undoable or redoable)
@@ -183,5 +185,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Git Merge Comparison Text Editor View
 - Support tightly integrated Git features in Gladiator
 - Support tab and menu extensions
+- Consider supporting the idea of keeping a history of all open tabs on every change to open tabs, allowing the user to go into any point back in time
 - gladiator-browser extension
 - Automatically split text-editor by 2 text-editor panes by dividing open tabs in half and moving the 2nd half to the 2nd text-editor pane
