@@ -1,4 +1,4 @@
-# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.11.1 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
+# <img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=85 /> Gladiator 0.11.2 - [Ugliest Text Editor Ever!](https://www.reddit.com/r/ruby/comments/hgve8k/gladiator_glimmer_editor_ugliest_text_editor_ever/)
 ## [<img src="https://raw.githubusercontent.com/AndyObtiva/glimmer/master/images/glimmer-logo-hi-res.png" height=40 /> Glimmer Custom Shell](https://github.com/AndyObtiva/glimmer-dsl-swt#custom-shell-gem)
 [![Gem Version](https://badge.fury.io/rb/glimmer-cs-gladiator.svg)](http://badge.fury.io/rb/glimmer-cs-gladiator)
 
@@ -110,6 +110,7 @@ Here is an exhaustive list of all the file formats supported by [Gladiator](http
 1. JSP (`'jsp'`)
 1. JSX (`'jsx'`)
 1. Kotlin (`'kt', 'ktm', 'kts'`)
+1. Lisp (`'lisp', 'cl', 'el', 'asd'`)
 1. Make (`'Makefile', 'makefile', 'GNUmakefile'`)
 1. Markdown (`'md', 'markdown'`)
 1. Diff Patch (`'patch'`)
@@ -147,7 +148,7 @@ Here is an exhaustive list of all the file formats supported by [Gladiator](http
 
 ## Download
 
-[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.11.1 Mac DMG Installer (ARM64 Ventura 13.4.1 & Older)](https://www.dropbox.com/scl/fi/iyyubcqekhtn4rv91feka/Gladiator-0.11.1-arm64-ventura-13.4.1.dmg?rlkey=ht2bt4jqf6bmgfjy0aurt2fem&dl=1) (this version starts in about 2.5 seconds)
+[<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.11.2 Mac DMG Installer (ARM64 Ventura 13.4.1 & Older)](https://www.dropbox.com/scl/fi/456pqc4th4q2yjlue2y8o/Gladiator-0.11.2-arm64-ventura-13.4.1.dmg?rlkey=qsdvshabpolvgev6w7ku4ana9&dl=1) (this version starts in about 2.5 seconds)
 
 [<img src='https://raw.githubusercontent.com/AndyObtiva/glimmer-cs-gladiator/master/images/glimmer-cs-gladiator-logo.svg' height=40 /> Download Gladiator 0.11.1 Mac DMG Installer (x64 Ventura 13.4.1 & Older)](https://www.dropbox.com/scl/fi/04y1zkslld876cqv3mbls/Gladiator-0.11.1-x86_64-ventura-13.4.1.dmg?rlkey=0dhzhcejgx31w6iuj3qs2z7zs&dl=1)
 
@@ -166,7 +167,7 @@ Note: if you encounter any issues, check if they are documented in [TODO.md](TOD
 Install [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) gem by running (`jgem`, `jruby -S gem`, or `gem` directly if you have [RVM](https://rvm.io/)):
 
 ```
-jgem install glimmer-cs-gladiator -v0.11.1
+jgem install glimmer-cs-gladiator -v0.11.2
 ```
 
 Or add to a JRuby project Bundler `Gemfile` under the `:developement` group:
@@ -230,7 +231,7 @@ To reuse [Gladiator](https://rubygems.org/gems/glimmer-cs-gladiator) as a Glimme
 following to the application's `Gemfile`:
 
 ```
-gem 'glimmer-cs-gladiator', '~> 0.11.1'
+gem 'glimmer-cs-gladiator', '~> 0.11.2'
 ```
 
 Run:

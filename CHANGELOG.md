@@ -2,6 +2,8 @@
 
 ## 0.11.2
 
+- Support 'lisp', 'cl', 'el', 'asd' file formats
+- Fix issue with not being able to comment/uncomment in `Gemfile`
 - Fix issue with zoom (via -, =, 0) not zooming line numbers too.
 
 ## 0.11.1

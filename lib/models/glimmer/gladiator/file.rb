@@ -97,6 +97,8 @@ module Glimmer
           'jsx'
         when 'kt', 'ktm', 'kts'
           'kotlin'
+        when 'lisp', 'cl', 'el', 'asd'
+          'lisp'
         when 'md', 'markdown'
           'markdown'
         when 'patch'
@@ -147,61 +149,27 @@ module Glimmer
       end
       
       def single_line_comment_prefix
-        # TODO redo this implementation using language instead of extension
-        case extension
-        when 'c', 'h',
-             'cpp', 'cc', 'C', 'cxx', 'c++', 'hpp', 'hh', 'H', 'hxx', 'h++',
-             'cs',
-             'gradle',
-             'java',
-             'js', 'cjs', 'mjs', 'es6', 'es',
-             'jsx',
-             'kt', 'ktm', 'kts',
-             'rs',
-             'ts',
-             'tsx',
-             'sass',
-             'scss'
+        case language
+        when 'c', 'cpp', 'csharp', 'gradle', 'java', 'javascript', 'jsx', 'kotlin', 'rust', 'typescript', 'tsx', 'sass', 'scss'
           '//'
-        when 'cr',
-             'conf',
-             'coffee',
-             'ex', 'exs',
-             'feature',
-             'ini',
-             'pl',
-             'pp',
-             'properties',
-             'ps1',
-             'py',
-             'rb', 'rbw', 'rake', 'gemspec',
-             'sh',
-             'tcl',
-             'yaml', 'yml'
+        when 'crystal', 'conf', 'coffeescript', 'elixir', 'gherkin', 'ini', 'perl', 'puppet', 'properties', 'powershell', 'python', 'ruby', 'shell', 'tcl', 'yaml'
           '#'
         when 'css'
           '/*'
-        when 'eex', 'leex', 'heex',
-             'erb',
-             'html',
-             'jsp',
-             'plist',
-             'xml'
+        when 'eex', 'leex', 'heex', 'erb', 'html', 'jsp', 'plist', 'xml'
           # TODO in the future, have .erb support `#` single line comment inside Ruby code scriptlets as opposed to scriptlet-free code
           '<!--'
         when 'haml'
           '/'
-        when 'md', 'markdown'
+        when 'markdown'
           '<!---'
-        when 'ps'
+        when 'postscript'
           '%'
-        when 'scm', 'sps', 'sls', 'sld'
+        when 'lisp', 'scheme'
           ';'
         when 'sql'
           '--'
-        when 'json',
-             'patch',
-             'txt',
+        when 'json', 'diff', 'plaintext'
              nil
           nil
         else
