@@ -186,5 +186,6 @@ This allows easy copying/pasting of big blocks of code without making mistakes i
 - Support tightly integrated Git features in Gladiator
 - Support tab and menu extensions
 - Consider supporting the idea of keeping a history of all open tabs on every change to open tabs, allowing the user to go into any point back in time
+- Keep a history of last usage of open tabs (different from the item above), maintaining the order of last opened files among open tabs only
 - gladiator-browser extension
 - Automatically split text-editor by 2 text-editor panes by dividing open tabs in half and moving the 2nd half to the 2nd text-editor pane
