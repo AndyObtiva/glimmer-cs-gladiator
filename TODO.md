@@ -120,7 +120,9 @@
 
 - Fix caret position after formatting dirty content (perhaps relying on diffing)
 - troubleshoot why adding margin to body root composite in Texteditor with margin_height 0 causes gladiator to start resizing window smaller than necessary upon launch of Gladiator
-- Fix issue with slowdown upon inserting a new file/directory into the tree
+- Fix performance slowdown hanging issue upon inserting a new file/directory into the tree. Avoid refreshing the whole tree.
+- Fix performance slowdown hanging issue upon adding a file to the project outside of Gladiator due to refreshing all directories upon detecting that instead of only refreshing the subdirectory that changed
+- Fix performance slowdown hanging issue upon refresh of the file tree by using a diffing mechanism to avoid reloading all files/directories
 - Fix case-sensitive Find Back (currently ignoring case sensitivity option)
 - Fix issue with line numbers not expanding when adding enough lines to hit 3 digits (from 2 digits)
 - Stop tree from scrolling upon renaming a file
