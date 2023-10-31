@@ -2,6 +2,7 @@
 
 ## Up Next
 
+- Support asterisk (*) in File Lookup
 - Fix issue with not being able to comment/uncomment inside `Gemfile` (and check if issue happens in special Ruby files that don't have an `.rb` extension)
 - Support config.ru Ruby format
 - Fix Linux issue with opening tabs as empty (due to not loading content) It might be caused by an optimization that should be disabled on Linux
