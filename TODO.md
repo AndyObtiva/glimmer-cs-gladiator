@@ -16,7 +16,7 @@
 
 - Fix issue regarding closing the last open project in Gladiator not causing the project open button to show up, thus getting stuck with Gladiator open with no way to open a new project (at least provide a way to capture a keyboard shortcut for opening a new project that does not rely on the menu since it is gone after closing the last window). 
 
-- Confirmation message box for deleting files from File Explorer
+- Confirmation message box for deleting files from File Explorer (delete menu item action)
 - Preferences for installing extensions from packaged version
 
 - Show TODO code lines in a list or table
