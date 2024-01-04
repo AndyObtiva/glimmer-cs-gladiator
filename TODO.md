@@ -13,7 +13,7 @@
 - Show saved scratch from last scratchpad session when opening scratchpad
 - Fix issue with scratchpad getting opened twice if you perform a FIND in the scratchpad then hit ESC
 - Ignore `:` character in File Lookup (just like ignoring `_`)
-
+- When adding extra whitespace at the end of a line, focusing out, which then gets the line trimmed, make sure to adjust the caret position by the amount of whitespace trimmed to keep it where it was
 - Fix issue regarding closing the last open project in Gladiator not causing the project open button to show up, thus getting stuck with Gladiator open with no way to open a new project (at least provide a way to capture a keyboard shortcut for opening a new project that does not rely on the menu since it is gone after closing the last window). 
 
 - Confirmation message box for deleting files from File Explorer (delete menu item action)
