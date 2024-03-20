@@ -5,6 +5,7 @@
 - Support asterisk (*) in File Lookup
 - Fix issue with not being able to comment/uncomment inside `Gemfile` (and check if issue happens in special Ruby files that don't have an `.rb` extension)
 - Fix issue with Reset All menu item action not also applying the Reset Panes menu item action under Split Pane
+- Support Dockerfile file format
 - Support config.ru Ruby format
 - Fix Linux issue with opening tabs as empty (due to not loading content) It might be caused by an optimization that should be disabled on Linux
 - Improve Undo/Redo support by storing data for in-progress text entry by detecting words (e.g. via spaces, commas, slashes, periods, newlines, etc...). This would replace the implemented time-based solution
